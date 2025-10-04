@@ -1,0 +1,136 @@
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { Button } from "./ui/button";
+import { useState } from "react";
+import logo from "@/assets/logo.png";
+import { supabase } from "@/integrations/supabase/client";
+
+export const Navbar = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  // Check if user is logged in
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setUser(session?.user || null);
+  });
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
+
+  return (
+    <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <img src={logo} alt="MIRGHANIYA SUPER CENTRE" className="h-12 w-12 object-contain transition-transform group-hover:scale-105" />
+            <span className="font-playfair font-bold text-xl text-primary hidden sm:block">
+              MIRGHANIYA SUPER CENTRE
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-foreground hover:text-primary transition-colors font-inter">
+              Home
+            </Link>
+            <Link to="/products" className="text-foreground hover:text-primary transition-colors font-inter">
+              Products
+            </Link>
+            <Link to="/about" className="text-foreground hover:text-primary transition-colors font-inter">
+              About
+            </Link>
+            <Link to="/contact" className="text-foreground hover:text-primary transition-colors font-inter">
+              Contact
+            </Link>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-4">
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+            </Link>
+            
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <Link to="/dashboard">
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button variant="outline" size="sm" onClick={handleLogout} className="hidden md:inline-flex">
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" size="sm" className="hidden md:inline-flex">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 space-y-4 border-t border-border animate-fade-in">
+            <Link
+              to="/"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/products"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Products
+            </Link>
+            <Link
+              to="/about"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+            {!user && (
+              <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="default" size="sm" className="w-full">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+            {user && (
+              <Button variant="outline" size="sm" onClick={handleLogout} className="w-full">
+                Logout
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
