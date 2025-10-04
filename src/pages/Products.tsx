@@ -6,11 +6,12 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useCart } from "@/contexts/CartContext";
 
 const Products = () => {
   const [category, setCategory] = useState<string>("all");
+  const { addToCart, isLoading: isAddingToCart } = useCart();
 
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", category],
@@ -92,12 +93,15 @@ const Products = () => {
                         <span className="font-inter font-bold text-2xl text-primary">
                           ${product.price}
                         </span>
-                        <Link to={`/products/${product.id}`}>
-                          <Button size="sm" variant="default">
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            View
-                          </Button>
-                        </Link>
+                        <Button 
+                          size="sm" 
+                          variant="default"
+                          onClick={() => addToCart(product.id)}
+                          disabled={isAddingToCart}
+                        >
+                          <ShoppingCart className="h-4 w-4 mr-2" />
+                          Add to Cart
+                        </Button>
                       </div>
                     </div>
                   </CardContent>

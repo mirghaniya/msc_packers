@@ -1,19 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Shield } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/contexts/CartContext";
+import { Badge } from "./ui/badge";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  // Check if user is logged in
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    setUser(session?.user || null);
-  });
+  const { user, isAdmin } = useAuth();
+  const { cartCount } = useCart();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -53,11 +52,23 @@ export const Navbar = () => {
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {cartCount}
+                  </Badge>
+                )}
               </Button>
             </Link>
             
             {user ? (
               <div className="flex items-center space-x-2">
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="ghost" size="icon" title="Admin Panel">
+                      <Shield className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                )}
                 <Link to="/dashboard">
                   <Button variant="ghost" size="icon">
                     <User className="h-5 w-5" />
