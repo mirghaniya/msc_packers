@@ -21,41 +21,25 @@ const Checkout = () => {
     setIsProcessing(true);
 
     try {
-      // Create order
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          user_id: user.id,
-          total_amount: cartTotal,
-          status: "Pending",
-        })
-        .select()
-        .single();
+      // Use secure server-side validation function to create order
+      // This prevents price manipulation attacks by validating prices on the server
+      const cartItemsPayload = items.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+      }));
+
+      const { data: orderId, error: orderError } = await supabase.rpc(
+        "create_validated_order",
+        { p_cart_items: cartItemsPayload }
+      );
 
       if (orderError) throw orderError;
 
-      // Create order items
-      const orderItems = items.map((item) => ({
-        order_id: order.id,
-        product_id: item.product_id,
-        product_name: item.product.name,
-        product_sr_number: item.product.sr_number,
-        quantity: item.quantity,
-        unit_price: item.product.price,
-        total_price: item.product.price * item.quantity,
-      }));
-
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems);
-
-      if (itemsError) throw itemsError;
-
-      // Clear cart
+      // Clear local cart state (DB cart already cleared by the function)
       await clearCart();
 
       // Simulate WhatsApp message
-      const message = `Order Confirmation\nOrder ID: ${order.id}\nTotal: $${cartTotal.toFixed(2)}\nThank you for your order!`;
+      const message = `Order Confirmation\nOrder ID: ${orderId}\nTotal: $${cartTotal.toFixed(2)}\nThank you for your order!`;
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank");
 
@@ -66,10 +50,13 @@ const Checkout = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      console.error("Checkout error:", error);
+      // Log only in development to prevent information leakage
+      if (import.meta.env.DEV) {
+        console.error("Checkout error:", error);
+      }
       toast({
         title: "Error",
-        description: "Failed to place order",
+        description: "Failed to place order. Please try again.",
         variant: "destructive",
       });
     } finally {
