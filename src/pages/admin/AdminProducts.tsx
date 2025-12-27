@@ -12,6 +12,36 @@ import { useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
+// Validate image URL for security
+const validateImageUrl = (url: string): { valid: boolean; error?: string } => {
+  if (!url || url.trim() === "") return { valid: true }; // Allow empty
+  
+  try {
+    const parsed = new URL(url);
+    
+    // Only allow HTTPS
+    if (parsed.protocol !== "https:") {
+      return { valid: false, error: "Only HTTPS URLs are allowed" };
+    }
+    
+    // Check file extension for common image formats
+    const pathname = parsed.pathname.toLowerCase();
+    const validExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif"];
+    const hasValidExt = validExtensions.some(ext => pathname.endsWith(ext));
+    
+    // Also allow URLs without extensions (e.g., CDN URLs with query params)
+    const hasQueryParams = parsed.search.length > 0;
+    
+    if (!hasValidExt && !hasQueryParams) {
+      return { valid: false, error: "URL must point to an image file (.jpg, .png, .webp, .gif, .svg, .avif)" };
+    }
+    
+    return { valid: true };
+  } catch {
+    return { valid: false, error: "Invalid URL format" };
+  }
+};
+
 const AdminProducts = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -91,6 +121,18 @@ const AdminProducts = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate image URL before submission
+    const imageValidation = validateImageUrl(formData.image_url);
+    if (!imageValidation.valid) {
+      toast({
+        title: "Invalid Image URL",
+        description: imageValidation.error,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const data = {
       ...formData,
       price: parseFloat(formData.price),

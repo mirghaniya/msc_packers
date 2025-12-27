@@ -13,9 +13,6 @@ import { Footer } from "@/components/Footer";
 const Auth = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [showOTP, setShowOTP] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
 
   // Login form
   const [loginEmail, setLoginEmail] = useState("");
@@ -67,64 +64,14 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Account created! Simulating 2FA...");
-      setPhone(signupPhone);
-      setShowOTP(true);
+      toast.success("Account created successfully!");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     } finally {
       setIsLoading(false);
     }
   };
-
-  const handleVerifyOTP = () => {
-    // Simulate OTP verification
-    if (otp === "1234") {
-      toast.success("Phone verified!");
-      navigate("/");
-    } else {
-      toast.error("Invalid OTP. Use 1234 for demo");
-    }
-  };
-
-  if (showOTP) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center py-12 px-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="font-playfair">Verify Your Phone</CardTitle>
-              <CardDescription>
-                Enter the 4-digit code sent to {phone}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="otp">OTP Code</Label>
-                  <Input
-                    id="otp"
-                    placeholder="1234"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    maxLength={4}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Demo: Use 1234 as OTP
-                  </p>
-                </div>
-                <Button onClick={handleVerifyOTP} className="w-full">
-                  Verify
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
