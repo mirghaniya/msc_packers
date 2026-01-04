@@ -96,12 +96,12 @@ const UserDashboard = () => {
                           <span>
                             {item.product_name} (x{item.quantity})
                           </span>
-                          <span>${item.total_price}</span>
+                          <span>₹{item.total_price}</span>
                         </div>
                       ))}
                       <div className="border-t pt-2 mt-2 flex justify-between font-semibold">
                         <span>Total</span>
-                        <span className="text-primary">${order.total_amount}</span>
+                        <span className="text-primary">₹{order.total_amount}</span>
                       </div>
                     </div>
                   </CardContent>

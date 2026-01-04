@@ -271,7 +271,7 @@ const AdminProducts = () => {
                 />
                 <h3 className="font-playfair font-semibold text-lg mb-2">{product.name}</h3>
                 <p className="text-sm text-muted-foreground mb-2">SR: {product.sr_number}</p>
-                <p className="font-bold text-primary mb-4">${product.price}</p>
+                <p className="font-bold text-primary mb-4">₹{product.price}</p>
                 <div className="flex gap-2">
                   <Dialog>
                     <DialogTrigger asChild>

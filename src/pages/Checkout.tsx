@@ -39,7 +39,7 @@ const Checkout = () => {
       await clearCart();
 
       // Simulate WhatsApp message
-      const message = `Order Confirmation\nOrder ID: ${orderId}\nTotal: $${cartTotal.toFixed(2)}\nThank you for your order!`;
+      const message = `Order Confirmation\nOrder ID: ${orderId}\nTotal: ₹${cartTotal.toFixed(2)}\nThank you for your order!`;
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank");
 
@@ -98,11 +98,11 @@ const Checkout = () => {
                     <div>
                       <p className="font-semibold">{item.product.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        Qty: {item.quantity} × ${item.product.price}
+                        Qty: {item.quantity} × ₹{item.product.price}
                       </p>
                     </div>
                     <p className="font-semibold">
-                      ${(item.quantity * item.product.price).toFixed(2)}
+                      ₹{(item.quantity * item.product.price).toFixed(2)}
                     </p>
                   </div>
                 ))}
@@ -110,7 +110,7 @@ const Checkout = () => {
               <div className="border-t pt-4 mb-6">
                 <div className="flex justify-between text-xl font-bold">
                   <span>Total</span>
-                  <span className="text-primary">${cartTotal.toFixed(2)}</span>
+                  <span className="text-primary">₹{cartTotal.toFixed(2)}</span>
                 </div>
               </div>
               <Button

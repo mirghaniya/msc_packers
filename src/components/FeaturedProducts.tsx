@@ -92,7 +92,7 @@ export const FeaturedProducts = () => {
                   </h3>
                   <div className="flex items-center justify-between mt-4">
                     <span className="font-inter font-bold text-2xl text-primary">
-                      ${product.price}
+                      ₹{product.price}
                     </span>
                     <Link to={`/products/${product.id}`}>
                       <Button size="sm" variant="default" className="group/btn">

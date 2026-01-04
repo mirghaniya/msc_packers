@@ -114,15 +114,15 @@ const AdminOrders = () => {
                       <div>
                         <p className="font-semibold">{item.product_name}</p>
                         <p className="text-muted-foreground">
-                          SR: {item.product_sr_number} | Qty: {item.quantity} × ${item.unit_price}
+                          SR: {item.product_sr_number} | Qty: {item.quantity} × ₹{item.unit_price}
                         </p>
                       </div>
-                      <span className="font-semibold">${item.total_price}</span>
+                      <span className="font-semibold">₹{item.total_price}</span>
                     </div>
                   ))}
                   <div className="flex justify-between font-bold text-lg pt-2">
                     <span>Total</span>
-                    <span className="text-primary">${order.total_amount}</span>
+                    <span className="text-primary">₹{order.total_amount}</span>
                   </div>
                 </div>
               </CardContent>
