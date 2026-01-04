@@ -13,6 +13,21 @@ const Products = () => {
   const [category, setCategory] = useState<string>("all");
   const { addToCart, isLoading: isAddingToCart } = useCart();
 
+  // Fetch categories from database
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", category],
     queryFn: async () => {
@@ -51,11 +66,11 @@ const Products = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Products</SelectItem>
-                <SelectItem value="Bags">Bags</SelectItem>
-                <SelectItem value="Purses">Purses</SelectItem>
-                <SelectItem value="Display Stands">Display Stands</SelectItem>
-                <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
-                <SelectItem value="Gift Items">Gift Items</SelectItem>
+                {categories?.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
