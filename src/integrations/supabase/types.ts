@@ -79,6 +79,35 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -201,24 +230,42 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
+          city: string | null
+          country: string | null
           created_at: string | null
           full_name: string
           id: string
           phone: string
+          postal_code: string | null
+          state: string | null
           updated_at: string | null
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
           full_name: string
           id: string
           phone: string
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string | null
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
           full_name?: string
           id?: string
           phone?: string
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string | null
         }
         Relationships: []
