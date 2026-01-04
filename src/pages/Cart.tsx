@@ -70,7 +70,7 @@ const Cart = () => {
                             SR: {item.product.sr_number}
                           </p>
                           <p className="font-bold text-primary mt-2">
-                            ${item.product.price}
+                            ₹{item.product.price}
                           </p>
                         </div>
                         <div className="flex flex-col items-end justify-between">
@@ -115,11 +115,11 @@ const Cart = () => {
                     <div className="space-y-2 mb-6">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>${cartTotal.toFixed(2)}</span>
+                        <span>₹{cartTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between font-bold text-lg border-t pt-2">
                         <span>Total</span>
-                        <span className="text-primary">${cartTotal.toFixed(2)}</span>
+                        <span className="text-primary">₹{cartTotal.toFixed(2)}</span>
                       </div>
                     </div>
                     <Button

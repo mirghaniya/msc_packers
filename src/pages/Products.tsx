@@ -106,7 +106,7 @@ const Products = () => {
                       </p>
                       <div className="flex items-center justify-between">
                         <span className="font-inter font-bold text-2xl text-primary">
-                          ${product.price}
+                          ₹{product.price}
                         </span>
                         <Button 
                           size="sm" 
