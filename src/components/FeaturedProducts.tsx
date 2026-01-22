@@ -62,7 +62,7 @@ export const FeaturedProducts = () => {
 
   const handleEnquiry = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
-    window.open(`https://wa.me/?text=${message}`, "_blank");
+    window.open(`https://wa.me/918851882465?text=${message}`, "_blank");
   };
 
   return (
