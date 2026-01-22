@@ -60,9 +60,9 @@ export const FeaturedProducts = () => {
     },
   });
 
-  const handleEnquiry = (productName: string) => {
+  const getEnquiryUrl = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
-    window.open(`https://wa.me/918851882465?text=${message}`, "_blank");
+    return `https://wa.me/918851882465?text=${message}`;
   };
 
   return (
@@ -132,13 +132,14 @@ export const FeaturedProducts = () => {
                       <ShoppingCart className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
                       Add
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEnquiry(product.name)}
+                    <a
+                      href={getEnquiryUrl(product.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
                     >
                       Enquiry
-                    </Button>
+                    </a>
                   </div>
                 </div>
               </CardContent>
