@@ -3,7 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Heart, MessageCircle } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { useFavorites } from "@/hooks/useFavorites";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
@@ -41,6 +43,9 @@ const fallbackProducts = [
 ];
 
 export const FeaturedProducts = () => {
+  const { addToCart, isLoading: isAddingToCart } = useCart();
+  const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
+
   const { data: products } = useQuery({
     queryKey: ["featured-products"],
     queryFn: async () => {
@@ -54,6 +59,11 @@ export const FeaturedProducts = () => {
       return data && data.length > 0 ? data : fallbackProducts;
     },
   });
+
+  const handleEnquiry = (productName: string) => {
+    const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
+    window.open(`https://wa.me/?text=${message}`, "_blank");
+  };
 
   return (
     <section className="py-20 bg-background">
@@ -82,6 +92,22 @@ export const FeaturedProducts = () => {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Favorite Heart Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md"
+                    onClick={() => toggleFavorite(product.id)}
+                    disabled={isFavoritePending}
+                  >
+                    <Heart
+                      className={`h-5 w-5 transition-colors ${
+                        isFavorite(product.id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-muted-foreground hover:text-red-500"
+                      }`}
+                    />
+                  </Button>
                 </div>
                 <div className="p-6">
                   <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-2">
@@ -90,16 +116,29 @@ export const FeaturedProducts = () => {
                   <h3 className="font-playfair font-semibold text-xl text-foreground mb-2 group-hover:text-primary transition-colors">
                     {product.name}
                   </h3>
-                  <div className="flex items-center justify-between mt-4">
+                  <div className="flex items-center justify-between mt-4 mb-3">
                     <span className="font-inter font-bold text-2xl text-primary">
                       ₹{product.price}
                     </span>
-                    <Link to={`/products/${product.id}`}>
-                      <Button size="sm" variant="default" className="group/btn">
-                        <ShoppingCart className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
-                        Add
-                      </Button>
-                    </Link>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="default"
+                      className="flex-1 group/btn"
+                      onClick={() => addToCart(product.id)}
+                      disabled={isAddingToCart}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
+                      Add
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleEnquiry(product.name)}
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </CardContent>

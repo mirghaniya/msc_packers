@@ -5,13 +5,16 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Heart, MessageCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
+import { useFavorites } from "@/hooks/useFavorites";
+import { Link } from "react-router-dom";
 
 const Products = () => {
   const [category, setCategory] = useState<string>("all");
   const { addToCart, isLoading: isAddingToCart } = useCart();
+  const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
   // Fetch categories from database
   const { data: categories } = useQuery({
@@ -42,6 +45,11 @@ const Products = () => {
       return data;
     },
   });
+
+  const handleEnquiry = (productName: string) => {
+    const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
+    window.open(`https://wa.me/?text=${message}`, "_blank");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -93,6 +101,22 @@ const Products = () => {
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       />
+                      {/* Favorite Heart Button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md"
+                        onClick={() => toggleFavorite(product.id)}
+                        disabled={isFavoritePending}
+                      >
+                        <Heart
+                          className={`h-5 w-5 transition-colors ${
+                            isFavorite(product.id)
+                              ? "fill-red-500 text-red-500"
+                              : "text-muted-foreground hover:text-red-500"
+                          }`}
+                        />
+                      </Button>
                     </div>
                     <div className="p-6">
                       <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-2">
@@ -104,18 +128,28 @@ const Products = () => {
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                         {product.description}
                       </p>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-3">
                         <span className="font-inter font-bold text-2xl text-primary">
                           ₹{product.price}
                         </span>
+                      </div>
+                      <div className="flex gap-2">
                         <Button 
                           size="sm" 
                           variant="default"
+                          className="flex-1"
                           onClick={() => addToCart(product.id)}
                           disabled={isAddingToCart}
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" />
                           Add to Cart
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEnquiry(product.name)}
+                        >
+                          <MessageCircle className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
