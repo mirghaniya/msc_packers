@@ -137,7 +137,7 @@ export const FeaturedProducts = () => {
                       variant="outline"
                       onClick={() => handleEnquiry(product.name)}
                     >
-                      <MessageCircle className="h-4 w-4" />
+                      Enquiry
                     </Button>
                   </div>
                 </div>
