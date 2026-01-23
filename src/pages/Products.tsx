@@ -122,9 +122,11 @@ const Products = () => {
                       <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-2">
                         {product.category}
                       </p>
-                      <h3 className="font-playfair font-semibold text-xl text-foreground mb-2">
-                        {product.name}
-                      </h3>
+                      <Link to={`/product/${product.id}`}>
+                        <h3 className="font-playfair font-semibold text-xl text-foreground mb-2 hover:text-primary transition-colors">
+                          {product.name}
+                        </h3>
+                      </Link>
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                         {product.description}
                       </p>

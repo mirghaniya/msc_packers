@@ -108,6 +108,45 @@ export type Database = {
           },
         ]
       }
+      hero_slides: {
+        Row: {
+          button_link: string | null
+          button_text: string | null
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          is_active: boolean | null
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          button_link?: string | null
+          button_text?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          button_link?: string | null
+          button_text?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -186,6 +225,38 @@ export type Database = {
         }
         Relationships: []
       }
+      product_images: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          product_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          product_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category: Database["public"]["Enums"]["product_category"]
@@ -235,6 +306,7 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string | null
+          email: string | null
           full_name: string
           id: string
           phone: string
@@ -248,6 +320,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string | null
+          email?: string | null
           full_name: string
           id: string
           phone: string
@@ -261,6 +334,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string | null
+          email?: string | null
           full_name?: string
           id?: string
           phone?: string
@@ -291,6 +365,51 @@ export type Database = {
           customer_name?: string
           id?: string
           rating?: number
+        }
+        Relationships: []
+      }
+      user_addresses: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          country: string | null
+          created_at: string
+          id: string
+          is_default: boolean | null
+          label: string | null
+          postal_code: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          label?: string | null
+          postal_code: string
+          state: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          label?: string | null
+          postal_code?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
