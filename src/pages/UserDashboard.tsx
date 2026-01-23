@@ -12,7 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { User, MapPin, Heart, ShoppingBag, Trash2 } from "lucide-react";
+import { User, MapPin, Heart, ShoppingBag, Trash2, Lock } from "lucide-react";
+import { PasswordChange } from "@/components/user/PasswordChange";
+import { AddressManager } from "@/components/user/AddressManager";
 
 const UserDashboard = () => {
   const { user, loading } = useAuth();
@@ -326,6 +328,16 @@ const UserDashboard = () => {
                 >
                   {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
                 </Button>
+              </div>
+
+              {/* Password Change Section */}
+              <div className="mt-8">
+                <PasswordChange />
+              </div>
+
+              {/* Address Manager Section */}
+              <div className="mt-8">
+                <AddressManager />
               </div>
             </TabsContent>
 

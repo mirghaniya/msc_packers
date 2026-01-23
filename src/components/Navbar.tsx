@@ -26,8 +26,8 @@ export const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img src={logo} alt="MIRGHANIYA SUPER CENTRE" className="h-12 w-12 object-contain transition-transform group-hover:scale-105" />
-            <span className="font-playfair font-bold text-xl text-primary hidden sm:block">
-              MIRGHANIYA SUPER CENTRE
+            <span className="font-playfair font-bold text-xl hidden sm:block" style={{ color: '#4B164C' }}>
+              Mirghaniya
             </span>
           </Link>
 
