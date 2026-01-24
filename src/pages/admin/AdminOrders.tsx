@@ -27,7 +27,7 @@ const AdminOrders = () => {
         data.map(async (order) => {
           const { data: profile } = await supabase
             .from("profiles")
-            .select("full_name, phone")
+            .select("full_name, phone, email")
             .eq("id", order.user_id)
             .single();
           return { ...order, profile };
@@ -39,16 +39,33 @@ const AdminOrders = () => {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled" }) => {
+    mutationFn: async ({ id, status, userEmail, userName }: { 
+      id: string; 
+      status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+      userEmail?: string;
+      userName?: string;
+    }) => {
       const { error } = await supabase
         .from("orders")
         .update({ status })
         .eq("id", id);
       if (error) throw error;
+
+      // Send notification email
+      if (userEmail) {
+        try {
+          await supabase.functions.invoke("send-order-notification", {
+            body: { orderId: id, newStatus: status, userEmail, userName: userName || "Customer" },
+          });
+        } catch (notifError) {
+          console.error("Failed to send notification:", notifError);
+          // Don't fail the mutation if notification fails
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
-      toast({ title: "Order status updated" });
+      toast({ title: "Order status updated", description: "Customer will be notified via email" });
     },
   });
 
@@ -82,6 +99,11 @@ const AdminOrders = () => {
                     <p className="text-sm mt-1">
                       Customer: {order.profile?.full_name} | {order.profile?.phone}
                     </p>
+                    {order.profile?.email && (
+                      <p className="text-sm text-muted-foreground">
+                        Email: {order.profile.email}
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-4 items-center">
                     <Badge className={getStatusColor(order.status || "Pending")}>
@@ -90,7 +112,12 @@ const AdminOrders = () => {
                     <Select
                       value={order.status || "Pending"}
                       onValueChange={(status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled") =>
-                        updateStatusMutation.mutate({ id: order.id, status })
+                        updateStatusMutation.mutate({ 
+                          id: order.id, 
+                          status,
+                          userEmail: order.profile?.email,
+                          userName: order.profile?.full_name
+                        })
                       }
                     >
                       <SelectTrigger className="w-[150px]">

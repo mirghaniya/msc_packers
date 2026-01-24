@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, MessageCircle } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import product1 from "@/assets/product-1.jpg";
@@ -77,7 +77,7 @@ export const FeaturedProducts = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {products?.map((product, index) => (
             <Card
               key={product.id}
@@ -96,12 +96,12 @@ export const FeaturedProducts = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md"
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
                     onClick={() => toggleFavorite(product.id)}
                     disabled={isFavoritePending}
                   >
                     <Heart
-                      className={`h-5 w-5 transition-colors ${
+                      className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${
                         isFavorite(product.id)
                           ? "fill-red-500 text-red-500"
                           : "text-muted-foreground hover:text-red-500"
@@ -109,34 +109,37 @@ export const FeaturedProducts = () => {
                     />
                   </Button>
                 </div>
-                <div className="p-6">
-                  <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-2">
+                <div className="p-3 md:p-6">
+                  <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1 md:mb-2">
                     {product.category}
                   </p>
-                  <h3 className="font-playfair font-semibold text-xl text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center justify-between mt-4 mb-3">
-                    <span className="font-inter font-bold text-2xl text-primary">
+                  <Link to={`/product/${product.id}`}>
+                    <h3 className="font-playfair font-semibold text-sm md:text-xl text-foreground mb-1 md:mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+                  </Link>
+                  <div className="flex items-center justify-between mt-2 md:mt-4 mb-2 md:mb-3">
+                    <span className="font-inter font-bold text-lg md:text-2xl text-primary">
                       ₹{product.price}
                     </span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 md:gap-2">
                     <Button
                       size="sm"
                       variant="default"
-                      className="flex-1 group/btn"
+                      className="flex-1 group/btn text-xs md:text-sm h-8 md:h-9"
                       onClick={() => addToCart(product.id)}
                       disabled={isAddingToCart}
                     >
-                      <ShoppingCart className="h-4 w-4 mr-2 group-hover/btn:rotate-12 transition-transform" />
-                      Add
+                      <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 group-hover/btn:rotate-12 transition-transform" />
+                      <span className="hidden sm:inline">Add to Cart</span>
+                      <span className="sm:hidden">Add</span>
                     </Button>
                     <a
                       href={getEnquiryUrl(product.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
                     >
                       Enquiry
                     </a>

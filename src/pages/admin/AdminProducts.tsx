@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ImageUpload } from "@/components/ImageUpload";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Validate image URL for security
 const validateImageUrl = (url: string): { valid: boolean; error?: string } => {
@@ -24,18 +26,6 @@ const validateImageUrl = (url: string): { valid: boolean; error?: string } => {
       return { valid: false, error: "Only HTTPS URLs are allowed" };
     }
     
-    // Check file extension for common image formats
-    const pathname = parsed.pathname.toLowerCase();
-    const validExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif"];
-    const hasValidExt = validExtensions.some(ext => pathname.endsWith(ext));
-    
-    // Also allow URLs without extensions (e.g., CDN URLs with query params)
-    const hasQueryParams = parsed.search.length > 0;
-    
-    if (!hasValidExt && !hasQueryParams) {
-      return { valid: false, error: "URL must point to an image file (.jpg, .png, .webp, .gif, .svg, .avif)" };
-    }
-    
     return { valid: true };
   } catch {
     return { valid: false, error: "Invalid URL format" };
@@ -46,6 +36,7 @@ const AdminProducts = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url">("upload");
   const [formData, setFormData] = useState({
     name: "",
     sr_number: "",
@@ -117,20 +108,23 @@ const AdminProducts = () => {
       is_featured: false,
     });
     setEditingProduct(null);
+    setImageInputMethod("upload");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate image URL before submission
-    const imageValidation = validateImageUrl(formData.image_url);
-    if (!imageValidation.valid) {
-      toast({
-        title: "Invalid Image URL",
-        description: imageValidation.error,
-        variant: "destructive",
-      });
-      return;
+    // Validate image URL if provided via URL method
+    if (imageInputMethod === "url" && formData.image_url) {
+      const imageValidation = validateImageUrl(formData.image_url);
+      if (!imageValidation.valid) {
+        toast({
+          title: "Invalid Image URL",
+          description: imageValidation.error,
+          variant: "destructive",
+        });
+        return;
+      }
     }
     
     const data = {
@@ -158,7 +152,115 @@ const AdminProducts = () => {
       stock_quantity: product.stock_quantity?.toString() || "0",
       is_featured: product.is_featured || false,
     });
+    setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
   };
+
+  const handleImageUpload = (url: string) => {
+    setFormData({ ...formData, image_url: url });
+  };
+
+  const ProductForm = () => (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Label>Product Name</Label>
+        <Input
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          required
+        />
+      </div>
+      <div>
+        <Label>SR Number</Label>
+        <Input
+          value={formData.sr_number}
+          onChange={(e) => setFormData({ ...formData, sr_number: e.target.value })}
+          required
+        />
+      </div>
+      <div>
+        <Label>Description</Label>
+        <Textarea
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Price</Label>
+          <Input
+            type="number"
+            step="0.01"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <Label>Stock Quantity</Label>
+          <Input
+            type="number"
+            value={formData.stock_quantity}
+            onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+          />
+        </div>
+      </div>
+      <div>
+        <Label>Category</Label>
+        <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Bags">Bags</SelectItem>
+            <SelectItem value="Purses">Purses</SelectItem>
+            <SelectItem value="Display Stands">Display Stands</SelectItem>
+            <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
+            <SelectItem value="Gift Items">Gift Items</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label>Product Image</Label>
+        <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url")} className="mt-2">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="upload">Upload Image</TabsTrigger>
+            <TabsTrigger value="url">Image URL</TabsTrigger>
+          </TabsList>
+          <TabsContent value="upload" className="pt-4">
+            <ImageUpload
+              onUpload={handleImageUpload}
+              currentImageUrl={formData.image_url}
+            />
+          </TabsContent>
+          <TabsContent value="url" className="pt-4">
+            <Input
+              value={formData.image_url}
+              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+              placeholder="https://..."
+            />
+            {formData.image_url && (
+              <img 
+                src={formData.image_url} 
+                alt="Preview" 
+                className="mt-2 w-32 h-32 object-cover rounded-lg border"
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+      <div className="flex gap-4">
+        <Button type="submit" className="flex-1">
+          {editingProduct ? "Update Product" : "Create Product"}
+        </Button>
+        {editingProduct && (
+          <Button type="button" variant="outline" onClick={resetForm}>
+            Cancel
+          </Button>
+        )}
+      </div>
+    </form>
+  );
 
   return (
     <AdminLayout>
@@ -178,84 +280,7 @@ const AdminProducts = () => {
                   {editingProduct ? "Edit Product" : "Add New Product"}
                 </DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label>Product Name</Label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label>SR Number</Label>
-                  <Input
-                    value={formData.sr_number}
-                    onChange={(e) => setFormData({ ...formData, sr_number: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label>Description</Label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Price</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label>Stock Quantity</Label>
-                    <Input
-                      type="number"
-                      value={formData.stock_quantity}
-                      onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Category</Label>
-                  <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Bags">Bags</SelectItem>
-                      <SelectItem value="Purses">Purses</SelectItem>
-                      <SelectItem value="Display Stands">Display Stands</SelectItem>
-                      <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
-                      <SelectItem value="Gift Items">Gift Items</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Image URL</Label>
-                  <Input
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    placeholder="https://..."
-                  />
-                </div>
-                <div className="flex gap-4">
-                  <Button type="submit" className="flex-1">
-                    {editingProduct ? "Update Product" : "Create Product"}
-                  </Button>
-                  {editingProduct && (
-                    <Button type="button" variant="outline" onClick={resetForm}>
-                      Cancel
-                    </Button>
-                  )}
-                </div>
-              </form>
+              <ProductForm />
             </DialogContent>
           </Dialog>
         </div>
@@ -284,80 +309,7 @@ const AdminProducts = () => {
                       <DialogHeader>
                         <DialogTitle className="font-playfair text-2xl">Edit Product</DialogTitle>
                       </DialogHeader>
-                      <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                          <Label>Product Name</Label>
-                          <Input
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label>SR Number</Label>
-                          <Input
-                            value={formData.sr_number}
-                            onChange={(e) => setFormData({ ...formData, sr_number: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label>Description</Label>
-                          <Textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label>Price</Label>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={formData.price}
-                              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                              required
-                            />
-                          </div>
-                          <div>
-                            <Label>Stock Quantity</Label>
-                            <Input
-                              type="number"
-                              value={formData.stock_quantity}
-                              onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <Label>Category</Label>
-                          <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Bags">Bags</SelectItem>
-                              <SelectItem value="Purses">Purses</SelectItem>
-                              <SelectItem value="Display Stands">Display Stands</SelectItem>
-                              <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
-                              <SelectItem value="Gift Items">Gift Items</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label>Image URL</Label>
-                          <Input
-                            value={formData.image_url}
-                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                            placeholder="https://..."
-                          />
-                        </div>
-                        <div className="flex gap-4">
-                          <Button type="submit" className="flex-1">Update Product</Button>
-                          <Button type="button" variant="outline" onClick={resetForm}>
-                            Cancel
-                          </Button>
-                        </div>
-                      </form>
+                      <ProductForm />
                     </DialogContent>
                   </Dialog>
                   <Button
