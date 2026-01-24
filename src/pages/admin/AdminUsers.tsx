@@ -46,30 +46,23 @@ const AdminUsers = () => {
     },
   });
 
-  // Update user role mutation
+  // Update user role mutation - now uses edge function for secure server-side role management
   const updateRoleMutation = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: "admin" | "user" }) => {
-      // First, check if user already has a role entry
-      const { data: existingRole } = await supabase
-        .from("user_roles")
-        .select("*")
-        .eq("user_id", userId)
-        .single();
-
-      if (existingRole) {
-        // Update existing role
-        const { error } = await supabase
-          .from("user_roles")
-          .update({ role })
-          .eq("user_id", userId);
-        if (error) throw error;
-      } else {
-        // Insert new role
-        const { error } = await supabase
-          .from("user_roles")
-          .insert({ user_id: userId, role });
-        if (error) throw error;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("Not authenticated");
       }
+
+      const response = await supabase.functions.invoke("admin-manage-role", {
+        body: { userId, role },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message || "Failed to update role");
+      }
+
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
