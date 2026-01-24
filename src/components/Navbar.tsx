@@ -24,10 +24,10 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <img src={logo} alt="MIRGHANIYA SUPER CENTRE" className="h-12 w-12 object-contain transition-transform group-hover:scale-105" />
-            <span className="font-playfair font-bold text-xl hidden sm:block" style={{ color: '#4B164C' }}>
-              Mirghaniya
+          <Link to="/" className="flex items-center space-x-2 md:space-x-3 group">
+            <img src={logo} alt="MIRGHANIYA SUPER CENTRE" className="h-10 w-10 md:h-12 md:w-12 object-contain transition-transform group-hover:scale-105" />
+            <span className="font-playfair font-bold text-sm md:text-xl" style={{ color: '#4B164C' }}>
+              Mirghaniya Super Centre
             </span>
           </Link>
 

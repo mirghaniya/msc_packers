@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart, MessageCircle } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
+import { ProductSearch } from "@/components/ProductSearch";
 
 const Products = () => {
   const [category, setCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
@@ -46,6 +48,21 @@ const Products = () => {
     },
   });
 
+  // Filter products based on search query
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    if (!searchQuery.trim()) return products;
+    
+    const query = searchQuery.toLowerCase();
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query) ||
+        product.sr_number.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
+    );
+  }, [products, searchQuery]);
+
   const getEnquiryUrl = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
     return `https://wa.me/918851882465?text=${message}`;
@@ -67,9 +84,10 @@ const Products = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <ProductSearch onSearch={setSearchQuery} />
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
               <SelectContent>
@@ -87,9 +105,9 @@ const Products = () => {
             <div className="text-center py-12">
               <p className="font-inter text-muted-foreground">Loading products...</p>
             </div>
-          ) : products && products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {products.map((product) => (
+          ) : filteredProducts && filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
                   className="group overflow-hidden hover:shadow-elegant transition-all duration-300"
@@ -105,12 +123,12 @@ const Products = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md"
+                        className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
                         onClick={() => toggleFavorite(product.id)}
                         disabled={isFavoritePending}
                       >
                         <Heart
-                          className={`h-5 w-5 transition-colors ${
+                          className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${
                             isFavorite(product.id)
                               ? "fill-red-500 text-red-500"
                               : "text-muted-foreground hover:text-red-500"
@@ -118,39 +136,40 @@ const Products = () => {
                         />
                       </Button>
                     </div>
-                    <div className="p-6">
-                      <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-2">
+                    <div className="p-3 md:p-6">
+                      <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1 md:mb-2">
                         {product.category}
                       </p>
                       <Link to={`/product/${product.id}`}>
-                        <h3 className="font-playfair font-semibold text-xl text-foreground mb-2 hover:text-primary transition-colors">
+                        <h3 className="font-playfair font-semibold text-sm md:text-xl text-foreground mb-1 md:mb-2 hover:text-primary transition-colors line-clamp-2">
                           {product.name}
                         </h3>
                       </Link>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      <p className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-4 line-clamp-2 hidden md:block">
                         {product.description}
                       </p>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-inter font-bold text-2xl text-primary">
+                      <div className="flex items-center justify-between mb-2 md:mb-3">
+                        <span className="font-inter font-bold text-lg md:text-2xl text-primary">
                           ₹{product.price}
                         </span>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-1 md:gap-2">
                         <Button 
                           size="sm" 
                           variant="default"
-                          className="flex-1"
+                          className="flex-1 text-xs md:text-sm h-8 md:h-9"
                           onClick={() => addToCart(product.id)}
                           disabled={isAddingToCart}
                         >
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Add to Cart
+                          <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                          <span className="hidden sm:inline">Add to Cart</span>
+                          <span className="sm:hidden">Add</span>
                         </Button>
                         <a
                           href={getEnquiryUrl(product.name)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
                         >
                           Enquiry
                         </a>
@@ -162,7 +181,9 @@ const Products = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="font-inter text-muted-foreground">No products found.</p>
+              <p className="font-inter text-muted-foreground">
+                {searchQuery ? `No products found for "${searchQuery}"` : "No products found."}
+              </p>
             </div>
           )}
         </div>

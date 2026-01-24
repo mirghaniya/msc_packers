@@ -1,6 +1,6 @@
 import { Link, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, Package, ShoppingBag, LogOut, Tags } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, LogOut, Tags, Users, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
@@ -22,9 +22,9 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Featured", href: "/admin/featured", icon: Tags },
     { name: "Categories", href: "/admin/categories", icon: Tags },
-    { name: "Hero Slides", href: "/admin/hero-slides", icon: Package },
+    { name: "Hero Slides", href: "/admin/hero-slides", icon: Image },
     { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
-    { name: "Users", href: "/admin/users", icon: LayoutDashboard },
+    { name: "Users", href: "/admin/users", icon: Users },
   ];
 
   const handleLogout = async () => {
@@ -35,14 +35,14 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-card border-r min-h-screen">
+        <div className="w-64 bg-card border-r min-h-screen flex flex-col">
           <div className="p-6">
             <Link to="/" className="flex items-center space-x-2">
               <img src={logo} alt="Logo" className="h-10 w-10" />
               <span className="font-playfair font-bold text-lg">Admin Panel</span>
             </Link>
           </div>
-          <nav className="px-4 space-y-2">
+          <nav className="px-4 space-y-2 flex-1">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
               return (
@@ -61,10 +61,10 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               );
             })}
           </nav>
-          <div className="absolute bottom-6 left-4 right-4">
+          <div className="p-4 border-t">
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full sm:w-auto justify-start"
               onClick={handleLogout}
             >
               <LogOut className="h-5 w-5 mr-3" />

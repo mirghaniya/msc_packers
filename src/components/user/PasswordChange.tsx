@@ -19,6 +19,15 @@ export const PasswordChange = () => {
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!currentPassword) {
+      toast({
+        title: "Error",
+        description: "Please enter your current password",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast({
         title: "Error",
@@ -40,11 +49,13 @@ export const PasswordChange = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
+      // Call edge function to verify old password and update
+      const { data, error } = await supabase.functions.invoke("verify-old-password", {
+        body: { oldPassword: currentPassword, newPassword },
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       toast({
         title: "Success",
@@ -76,6 +87,26 @@ export const PasswordChange = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handlePasswordChange} className="space-y-4">
+          <div>
+            <Label htmlFor="currentPassword">Current Password</Label>
+            <div className="relative">
+              <Input
+                id="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
           <div>
             <Label htmlFor="newPassword">New Password</Label>
             <div className="relative">

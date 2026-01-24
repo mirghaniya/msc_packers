@@ -9,6 +9,7 @@ import { ShoppingCart, Heart, ArrowLeft, ChevronLeft, ChevronRight } from "lucid
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
+import { SuggestedProducts } from "@/components/SuggestedProducts";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -255,7 +256,7 @@ const ProductDetail = () => {
               <h2 className="font-playfair font-bold text-3xl text-foreground mb-8">
                 Related Products
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                 {relatedProducts.map((relatedProduct) => (
                   <Link key={relatedProduct.id} to={`/product/${relatedProduct.id}`}>
                     <Card className="group overflow-hidden hover:shadow-elegant transition-all duration-300">
@@ -271,10 +272,10 @@ const ProductDetail = () => {
                           <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1">
                             {relatedProduct.category}
                           </p>
-                          <h3 className="font-playfair font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                          <h3 className="font-playfair font-semibold text-sm md:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
                             {relatedProduct.name}
                           </h3>
-                          <p className="font-inter font-bold text-xl text-primary mt-2">
+                          <p className="font-inter font-bold text-lg md:text-xl text-primary mt-2">
                             ₹{relatedProduct.price}
                           </p>
                         </div>
@@ -285,6 +286,9 @@ const ProductDetail = () => {
               </div>
             </div>
           )}
+
+          {/* Suggested Products */}
+          <SuggestedProducts currentProductId={id!} category={product.category} />
         </div>
       </main>
       <Footer />
