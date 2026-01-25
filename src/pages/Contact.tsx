@@ -99,7 +99,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Phone</h3>
-                        <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                        <p className="text-muted-foreground">+91 88518 82465</p>
                       </div>
                     </div>
                   </CardContent>
@@ -113,7 +113,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Email</h3>
-                        <p className="text-muted-foreground">info@mirghaniya.com</p>
+                        <p className="text-muted-foreground">mirghaniyasupetcentre@gmail.com</p>
                       </div>
                     </div>
                   </CardContent>
@@ -128,8 +128,8 @@ const Contact = () => {
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Address</h3>
                         <p className="text-muted-foreground">
-                          123 Luxury Avenue<br />
-                          New York, NY 10001
+                          Usmanpur, Delhi<br />
+                          India - 110053
                         </p>
                       </div>
                     </div>
