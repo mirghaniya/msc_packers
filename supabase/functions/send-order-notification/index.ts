@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,6 +22,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
     
     // Create admin client
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
@@ -171,31 +173,54 @@ Deno.serve(async (req) => {
             </table>
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
-              <p>If you have any questions, feel free to contact us on WhatsApp.</p>
+              <p>If you have any questions, feel free to contact us at:</p>
+              <p><strong>Phone:</strong> +91 88518 82465</p>
+              <p><strong>Email:</strong> mirghaniyasupetcentre@gmail.com</p>
               <p style="margin-top: 20px;">Thank you for choosing Mirghaniya Super Centre!</p>
             </div>
           </div>
           
           <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
             <p>© 2024 Mirghaniya Super Centre. All rights reserved.</p>
+            <p>Usmanpur, Delhi, India - 110053</p>
           </div>
         </div>
       </body>
       </html>
     `;
 
-    // Log the email notification (in production, you would send via email service)
-    console.log("Order notification prepared for:", userEmail);
-    console.log("Subject: Order Status Update - #" + orderId.slice(0, 8));
-    
-    // Note: For actual email sending, you would integrate with Resend or similar service
-    // For now, we log the notification and return success
+    // Send email using Resend if API key is available
+    let emailSent = false;
+    if (resendApiKey) {
+      try {
+        const resend = new Resend(resendApiKey);
+        const { error: emailError } = await resend.emails.send({
+          from: "Mirghaniya Super Centre <onboarding@resend.dev>",
+          to: [userEmail],
+          subject: `Order Status Update - #${orderId.slice(0, 8)} - ${newStatus}`,
+          html: emailHtml,
+        });
+
+        if (emailError) {
+          console.error("Resend email error:", emailError);
+        } else {
+          emailSent = true;
+          console.log("Email sent successfully to:", userEmail);
+        }
+      } catch (emailErr) {
+        console.error("Email sending error:", emailErr);
+      }
+    } else {
+      console.log("RESEND_API_KEY not configured, skipping email");
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: `Order status notification prepared for ${userEmail}`,
-        emailHtml: emailHtml 
+        message: emailSent 
+          ? `Order status notification sent to ${userEmail}` 
+          : `Email notification prepared (email sending not configured)`,
+        emailSent
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

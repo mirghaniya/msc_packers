@@ -47,15 +47,15 @@ export const Footer = () => {
             <ul className="space-y-2 font-inter">
               <li className="flex items-center space-x-2 text-sm">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 88518 82465</span>
               </li>
               <li className="flex items-center space-x-2 text-sm">
                 <Mail className="h-4 w-4" />
-                <span>info@mirghaniya.com</span>
+                <span>mirghaniyasupetcentre@gmail.com</span>
               </li>
               <li className="flex items-center space-x-2 text-sm">
                 <MapPin className="h-4 w-4" />
-                <span>123 Luxury Avenue, NY 10001</span>
+                <span>Usmanpur, Delhi, India - 110053</span>
               </li>
             </ul>
           </div>

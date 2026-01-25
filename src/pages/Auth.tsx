@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -23,6 +24,11 @@ const Auth = () => {
   const [signupPassword, setSignupPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
+
+  // OTP Verification
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [otpValue, setOtpValue] = useState("");
+  const [pendingEmail, setPendingEmail] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,14 +70,130 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Account created successfully!");
-      navigate("/");
+      // Show OTP verification screen
+      setPendingEmail(signupEmail);
+      setShowOtpVerification(true);
+      toast.success("Verification code sent to your email!");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleVerifyOtp = async () => {
+    if (otpValue.length !== 6) {
+      toast.error("Please enter a valid 6-digit code");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email: pendingEmail,
+        token: otpValue,
+        type: "signup",
+      });
+
+      if (error) throw error;
+
+      toast.success("Email verified successfully!");
+      navigate("/");
+    } catch (error: any) {
+      toast.error(error.message || "Invalid verification code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingEmail,
+      });
+
+      if (error) throw error;
+      toast.success("New verification code sent!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to resend code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (showOtpVerification) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center py-12 px-4 bg-accent">
+          <Card className="w-full max-w-md shadow-elegant">
+            <CardHeader>
+              <CardTitle className="font-playfair text-3xl text-center">Verify Email</CardTitle>
+              <CardDescription className="text-center">
+                Enter the 6-digit code sent to<br />
+                <span className="font-medium text-foreground">{pendingEmail}</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={6}
+                  value={otpValue}
+                  onChange={setOtpValue}
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+
+              <Button
+                className="w-full"
+                onClick={handleVerifyOtp}
+                disabled={isLoading || otpValue.length !== 6}
+              >
+                {isLoading ? "Verifying..." : "Verify Email"}
+              </Button>
+
+              <div className="text-center space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Didn't receive the code?
+                </p>
+                <Button
+                  variant="link"
+                  onClick={handleResendOtp}
+                  disabled={isLoading}
+                  className="p-0 h-auto"
+                >
+                  Resend Code
+                </Button>
+              </div>
+
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={() => {
+                  setShowOtpVerification(false);
+                  setOtpValue("");
+                }}
+              >
+                Back to Sign Up
+              </Button>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -143,7 +265,7 @@ const Auth = () => {
                     <Input
                       id="signup-phone"
                       type="tel"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+91 98765 43210"
                       value={signupPhone}
                       onChange={(e) => setSignupPhone(e.target.value)}
                       required
@@ -174,6 +296,9 @@ const Auth = () => {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating account..." : "Sign Up"}
                   </Button>
+                  <p className="text-xs text-center text-muted-foreground">
+                    You'll receive a verification code via email
+                  </p>
                 </form>
               </TabsContent>
             </Tabs>
