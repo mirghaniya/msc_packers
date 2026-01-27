@@ -9,12 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { User, MapPin, Heart, ShoppingBag, Trash2, Lock } from "lucide-react";
+import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { PasswordChange } from "@/components/user/PasswordChange";
 import { AddressManager } from "@/components/user/AddressManager";
+import { OrderTimeline } from "@/components/OrderTimeline";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const UserDashboard = () => {
   const { user, loading } = useAuth();
@@ -354,39 +356,11 @@ const UserDashboard = () => {
               ) : (
                 <div className="space-y-6">
                   {orders.map((order) => (
-                    <Card key={order.id}>
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="font-playfair">
-                              Order #{order.id.slice(0, 8)}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {new Date(order.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <Badge className={getStatusColor(order.status || "Pending")}>
-                            {order.status}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          {order.order_items.map((item: any) => (
-                            <div key={item.id} className="flex justify-between text-sm">
-                              <span>
-                                {item.product_name} (x{item.quantity})
-                              </span>
-                              <span>₹{item.total_price}</span>
-                            </div>
-                          ))}
-                          <div className="border-t pt-2 mt-2 flex justify-between font-semibold">
-                            <span>Total</span>
-                            <span className="text-primary">₹{order.total_amount}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <OrderCard 
+                      key={order.id} 
+                      order={order} 
+                      getStatusColor={getStatusColor} 
+                    />
                   ))}
                 </div>
               )}
@@ -444,6 +418,71 @@ const UserDashboard = () => {
       </main>
       <Footer />
     </div>
+  );
+};
+
+// Order Card Component with Timeline
+const OrderCard = ({ order, getStatusColor }: { order: any; getStatusColor: (status: string) => string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Card>
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="font-playfair">
+                Order #{order.id.slice(0, 8)}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {new Date(order.created_at).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge className={getStatusColor(order.status || "Pending")}>
+                {order.status}
+              </Badge>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {order.order_items.map((item: any) => (
+              <div key={item.id} className="flex justify-between text-sm">
+                <Link 
+                  to={`/product/${item.product_id}`} 
+                  className="hover:text-primary hover:underline"
+                >
+                  {item.product_name} (x{item.quantity})
+                </Link>
+                <span>₹{item.total_price}</span>
+              </div>
+            ))}
+            <div className="border-t pt-2 mt-2 flex justify-between font-semibold">
+              <span>Total</span>
+              <span className="text-primary">₹{order.total_amount}</span>
+            </div>
+          </div>
+          
+          <CollapsibleContent className="mt-6">
+            <div className="border-t pt-6">
+              <h4 className="font-semibold mb-4">Order Tracking</h4>
+              <OrderTimeline
+                orderId={order.id}
+                currentStatus={order.status || "Pending"}
+                estimatedDeliveryDate={order.estimated_delivery_date}
+                orderCreatedAt={order.created_at}
+              />
+            </div>
+          </CollapsibleContent>
+        </CardContent>
+      </Collapsible>
+    </Card>
   );
 };
 

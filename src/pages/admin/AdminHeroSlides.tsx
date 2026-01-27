@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Image } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Pencil, Trash2, Image, Upload, X } from "lucide-react";
 
 interface HeroSlide {
   id: string;
@@ -27,6 +28,9 @@ const AdminHeroSlides = () => {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
+  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url">("upload");
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     image_url: "",
     title: "",
@@ -106,6 +110,67 @@ const AdminHeroSlides = () => {
     });
     setEditingSlide(null);
     setDialogOpen(false);
+    setImageInputMethod("upload");
+    setIsUploading(false);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!validTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a JPG, PNG, WEBP, or GIF image",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `hero/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { data, error } = await supabase.storage
+        .from("product-images")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(data.path);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      toast({ title: "Image uploaded successfully" });
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast({
+        title: "Upload failed",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   const handleEdit = (slide: HeroSlide) => {
@@ -156,14 +221,74 @@ const AdminHeroSlides = () => {
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="image_url">Image URL *</Label>
-                  <Input
-                    id="image_url"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
-                    required
-                  />
+                  <Label>Hero Image *</Label>
+                  <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url")} className="mt-2">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="upload">Upload Image</TabsTrigger>
+                      <TabsTrigger value="url">Image URL</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="upload" className="pt-4">
+                      <div className="space-y-3">
+                        {formData.image_url ? (
+                          <div className="relative inline-block">
+                            <img
+                              src={formData.image_url}
+                              alt="Preview"
+                              className="w-full max-w-xs h-32 object-cover rounded-lg border"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute -top-2 -right-2 h-6 w-6"
+                              onClick={() => setFormData({ ...formData, image_url: "" })}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div
+                            className="w-full max-w-xs h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            <Image className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/gif"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading}
+                        >
+                          <Upload className="h-4 w-4 mr-2" />
+                          {isUploading ? "Uploading..." : "Upload Image"}
+                        </Button>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="url" className="pt-4">
+                      <Input
+                        value={formData.image_url}
+                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                        placeholder="https://example.com/image.jpg"
+                      />
+                      {formData.image_url && imageInputMethod === "url" && (
+                        <img 
+                          src={formData.image_url} 
+                          alt="Preview" 
+                          className="mt-2 w-full max-w-xs h-32 object-cover rounded-lg border"
+                          onError={(e) => (e.currentTarget.style.display = 'none')}
+                        />
+                      )}
+                    </TabsContent>
+                  </Tabs>
                 </div>
                 <div>
                   <Label htmlFor="title">Title</Label>
