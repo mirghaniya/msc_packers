@@ -51,7 +51,7 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${stats?.totalRevenue.toFixed(2) || "0.00"}
+                ₹{stats?.totalRevenue.toFixed(2) || "0.00"}
               </div>
             </CardContent>
           </Card>

@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { SuggestedProducts } from "@/components/SuggestedProducts";
+import { ProductReviews } from "@/components/ProductReviews";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -289,6 +290,9 @@ const ProductDetail = () => {
 
           {/* Suggested Products */}
           <SuggestedProducts currentProductId={id!} category={product.category} />
+
+          {/* Product Reviews */}
+          <ProductReviews productId={id!} />
         </div>
       </main>
       <Footer />

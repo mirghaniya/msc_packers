@@ -191,24 +191,32 @@ Deno.serve(async (req) => {
 
     // Send email using Resend if API key is available
     let emailSent = false;
+    console.log("Checking RESEND_API_KEY:", resendApiKey ? "configured" : "not configured");
+    
     if (resendApiKey) {
       try {
+        console.log("Initializing Resend with API key");
         const resend = new Resend(resendApiKey);
-        const { error: emailError } = await resend.emails.send({
+        
+        console.log("Sending email to:", userEmail);
+        const emailResponse = await resend.emails.send({
           from: "Mirghaniya Super Centre <onboarding@resend.dev>",
           to: [userEmail],
           subject: `Order Status Update - #${orderId.slice(0, 8)} - ${newStatus}`,
           html: emailHtml,
         });
 
-        if (emailError) {
-          console.error("Resend email error:", emailError);
+        console.log("Resend response:", JSON.stringify(emailResponse));
+        
+        if (emailResponse.error) {
+          console.error("Resend email error:", JSON.stringify(emailResponse.error));
         } else {
           emailSent = true;
-          console.log("Email sent successfully to:", userEmail);
+          console.log("Email sent successfully to:", userEmail, "ID:", emailResponse.data?.id);
         }
       } catch (emailErr) {
         console.error("Email sending error:", emailErr);
+        console.error("Error details:", JSON.stringify(emailErr, Object.getOwnPropertyNames(emailErr)));
       }
     } else {
       console.log("RESEND_API_KEY not configured, skipping email");

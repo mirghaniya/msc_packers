@@ -45,18 +45,40 @@ const AdminOrders = () => {
       userEmail?: string;
       userName?: string;
     }) => {
+      // Update order status
       const { error } = await supabase
         .from("orders")
-        .update({ status })
+        .update({ 
+          status,
+          // Set estimated delivery for Processing/Shipped
+          ...(status === "Processing" || status === "Shipped" 
+            ? { estimated_delivery_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() }
+            : {}
+          )
+        })
         .eq("id", id);
       if (error) throw error;
+
+      // Add to status history
+      const { error: historyError } = await supabase
+        .from("order_status_history")
+        .insert({
+          order_id: id,
+          status,
+          notes: `Status updated to ${status}`,
+        });
+      
+      if (historyError) {
+        console.error("Failed to add status history:", historyError);
+      }
 
       // Send notification email
       if (userEmail) {
         try {
-          await supabase.functions.invoke("send-order-notification", {
+          const response = await supabase.functions.invoke("send-order-notification", {
             body: { orderId: id, newStatus: status, userEmail, userName: userName || "Customer" },
           });
+          console.log("Notification response:", response);
         } catch (notifError) {
           console.error("Failed to send notification:", notifError);
           // Don't fail the mutation if notification fails

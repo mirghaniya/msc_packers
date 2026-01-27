@@ -9,9 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Images } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
+import { MultiImageUpload } from "@/components/MultiImageUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Validate image URL for security
@@ -58,6 +59,22 @@ const AdminProducts = () => {
       if (error) throw error;
       return data;
     },
+  });
+
+  // Fetch additional images for the editing product
+  const { data: productImages, refetch: refetchProductImages } = useQuery({
+    queryKey: ["product-images", editingProduct?.id],
+    queryFn: async () => {
+      if (!editingProduct) return [];
+      const { data, error } = await supabase
+        .from("product_images")
+        .select("*")
+        .eq("product_id", editingProduct.id)
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!editingProduct,
   });
 
   const createMutation = useMutation({
@@ -249,6 +266,25 @@ const AdminProducts = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Multiple Images Section - Only show when editing */}
+      {editingProduct && (
+        <div>
+          <Label className="flex items-center gap-2">
+            <Images className="h-4 w-4" />
+            Gallery Images (for carousel)
+          </Label>
+          <p className="text-xs text-muted-foreground mb-2">
+            Add multiple images for the product carousel on the detail page
+          </p>
+          <MultiImageUpload
+            productId={editingProduct.id}
+            existingImages={productImages || []}
+            onImagesChange={() => refetchProductImages()}
+          />
+        </div>
+      )}
+
       <div className="flex gap-4">
         <Button type="submit" className="flex-1">
           {editingProduct ? "Update Product" : "Create Product"}

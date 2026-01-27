@@ -87,11 +87,25 @@ const Checkout = () => {
         ? `${selectedAddress.address_line1}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.postal_code}`
         : "";
 
-      // Prepare WhatsApp message
+      // Handle payment based on method
       const paymentMethodText = paymentMethod === "upi" ? "UPI" : paymentMethod === "card" ? "Card" : "Cash on Delivery";
-      const message = `🛍️ *New Order*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nThank you for your order!`;
-      const whatsappUrl = `https://wa.me/918851882465?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, "_blank");
+      
+      if (paymentMethod === "upi") {
+        // Redirect to UPI payment
+        const upiId = "8851882465@upi";
+        const upiUrl = `upi://pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${cartTotal.toFixed(2)}&cu=INR&tn=Order%20${orderId.slice(0, 8)}`;
+        window.location.href = upiUrl;
+      } else if (paymentMethod === "card") {
+        // For card payments, show message and redirect to WhatsApp for now
+        const message = `🛍️ *New Order - Card Payment*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nPlease share card payment details.`;
+        const whatsappUrl = `https://wa.me/918851882465?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+      } else {
+        // COD - send WhatsApp notification
+        const message = `🛍️ *New Order - COD*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nThank you for your order!`;
+        const whatsappUrl = `https://wa.me/918851882465?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+      }
 
       toast({
         title: "Order Placed Successfully",
