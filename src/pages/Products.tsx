@@ -13,7 +13,6 @@ import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const Products = () => {
@@ -21,7 +20,6 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
-  const [inStockOnly, setInStockOnly] = useState(false);
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
@@ -76,14 +74,9 @@ const Products = () => {
       const max = maxPrice ? parseFloat(maxPrice) : Infinity;
       if (product.price < min || product.price > max) return false;
 
-      // Stock filter
-      if (inStockOnly && (product.stock_quantity === null || product.stock_quantity <= 0)) {
-        return false;
-      }
-
       return true;
     });
-  }, [products, searchQuery, minPrice, maxPrice, inStockOnly]);
+  }, [products, searchQuery, minPrice, maxPrice]);
 
   const getEnquiryUrl = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
@@ -93,7 +86,6 @@ const Products = () => {
   const clearFilters = () => {
     setMinPrice("");
     setMaxPrice("");
-    setInStockOnly(false);
     setCategory("all");
   };
 
@@ -134,17 +126,6 @@ const Products = () => {
             className="w-1/2"
           />
         </div>
-      </div>
-
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="inStock"
-          checked={inStockOnly}
-          onCheckedChange={(checked) => setInStockOnly(checked as boolean)}
-        />
-        <Label htmlFor="inStock" className="text-sm font-medium cursor-pointer">
-          In Stock Only
-        </Label>
       </div>
 
       <Button variant="outline" onClick={clearFilters} className="w-full">
@@ -289,9 +270,9 @@ const Products = () => {
               ) : (
                 <div className="text-center py-12">
                   <p className="font-inter text-muted-foreground">
-                    {searchQuery || minPrice || maxPrice || inStockOnly ? "No products match your filters." : "No products found."}
+                    {searchQuery || minPrice || maxPrice ? "No products match your filters." : "No products found."}
                   </p>
-                  {(searchQuery || minPrice || maxPrice || inStockOnly) && (
+                  {(searchQuery || minPrice || maxPrice) && (
                     <Button variant="link" onClick={clearFilters} className="mt-2">
                       Clear all filters
                     </Button>

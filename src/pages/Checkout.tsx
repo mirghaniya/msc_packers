@@ -51,6 +51,22 @@ const Checkout = () => {
     enabled: !!user,
   });
 
+  // Fetch user profile for email
+  const { data: profile } = useQuery({
+    queryKey: ["user-profile-checkout", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, email, phone")
+        .eq("id", user.id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const handlePlaceOrder = async () => {
     if (!user) return;
     if (!selectedAddressId) {
@@ -77,6 +93,24 @@ const Checkout = () => {
       );
 
       if (orderError) throw orderError;
+
+      // Send order confirmation email
+      const userEmail = profile?.email || user.email;
+      if (userEmail) {
+        try {
+          await supabase.functions.invoke("send-order-confirmation", {
+            body: {
+              orderId,
+              userEmail,
+              userName: profile?.full_name || "Customer",
+            },
+          });
+          console.log("Order confirmation email sent");
+        } catch (emailError) {
+          console.error("Failed to send confirmation email:", emailError);
+          // Don't fail the order if email fails
+        }
+      }
 
       // Clear local cart state
       await clearCart();
@@ -109,7 +143,7 @@ const Checkout = () => {
 
       toast({
         title: "Order Placed Successfully",
-        description: "Your order has been confirmed",
+        description: "Your order has been confirmed. Check your email for details.",
       });
 
       navigate("/dashboard");

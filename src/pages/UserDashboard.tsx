@@ -16,6 +16,7 @@ import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp } from
 import { PasswordChange } from "@/components/user/PasswordChange";
 import { AddressManager } from "@/components/user/AddressManager";
 import { OrderTimeline } from "@/components/OrderTimeline";
+import { OrderBill } from "@/components/OrderBill";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const UserDashboard = () => {
@@ -463,9 +464,12 @@ const OrderCard = ({ order, getStatusColor }: { order: any; getStatusColor: (sta
                 <span>₹{item.total_price}</span>
               </div>
             ))}
-            <div className="border-t pt-2 mt-2 flex justify-between font-semibold">
+            <div className="border-t pt-2 mt-2 flex justify-between items-center font-semibold">
               <span>Total</span>
-              <span className="text-primary">₹{order.total_amount}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-primary">₹{order.total_amount}</span>
+                <OrderBill order={order} />
+              </div>
             </div>
           </div>
           
