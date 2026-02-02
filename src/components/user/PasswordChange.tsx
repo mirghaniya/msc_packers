@@ -37,10 +37,10 @@ export const PasswordChange = () => {
       return;
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters",
         variant: "destructive",
       });
       return;
@@ -117,6 +117,7 @@ export const PasswordChange = () => {
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 required
+                minLength={8}
               />
               <button
                 type="button"
@@ -126,6 +127,9 @@ export const PasswordChange = () => {
                 {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted rounded">
+              Password must contain: A combination of uppercase letters (A-Z), lowercase letters (a-z), numbers (0-9), and symbols.
+            </p>
           </div>
           <div>
             <Label htmlFor="confirmPassword">Confirm New Password</Label>

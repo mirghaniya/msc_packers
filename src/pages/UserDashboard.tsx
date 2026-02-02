@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp, Lock } from "lucide-react";
 import { PasswordChange } from "@/components/user/PasswordChange";
 import { AddressManager } from "@/components/user/AddressManager";
 import { OrderTimeline } from "@/components/OrderTimeline";
@@ -195,18 +195,26 @@ const UserDashboard = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Profile
+            <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsTrigger value="profile" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Profile</span>
+                <span className="sm:hidden">Profile</span>
               </TabsTrigger>
-              <TabsTrigger value="orders" className="flex items-center gap-2">
-                <ShoppingBag className="h-4 w-4" />
-                Orders
+              <TabsTrigger value="security" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <Lock className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Security</span>
+                <span className="sm:hidden">Security</span>
               </TabsTrigger>
-              <TabsTrigger value="favorites" className="flex items-center gap-2">
-                <Heart className="h-4 w-4" />
-                Favorites
+              <TabsTrigger value="orders" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Orders</span>
+                <span className="sm:hidden">Orders</span>
+              </TabsTrigger>
+              <TabsTrigger value="favorites" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Favorites</span>
+                <span className="sm:hidden">Favorites</span>
               </TabsTrigger>
             </TabsList>
 
@@ -333,14 +341,17 @@ const UserDashboard = () => {
                 </Button>
               </div>
 
-              {/* Password Change Section */}
-              <div className="mt-8">
-                <PasswordChange />
-              </div>
-
               {/* Address Manager Section */}
               <div className="mt-8">
                 <AddressManager />
+              </div>
+            </TabsContent>
+
+            {/* Security Tab */}
+            <TabsContent value="security">
+              <h2 className="font-playfair text-2xl sm:text-3xl font-semibold mb-8">Security Settings</h2>
+              <div className="max-w-xl">
+                <PasswordChange />
               </div>
             </TabsContent>
 

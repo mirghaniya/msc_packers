@@ -240,14 +240,6 @@ const ProductDetail = () => {
                 </a>
               </div>
 
-              {/* Stock Status */}
-              <div className="border-t pt-6">
-                <p className="text-sm text-muted-foreground">
-                  Stock: <span className={product.stock_quantity > 0 ? "text-green-600" : "text-red-600"}>
-                    {product.stock_quantity > 0 ? `${product.stock_quantity} available` : "Out of stock"}
-                  </span>
-                </p>
-              </div>
             </div>
           </div>
 

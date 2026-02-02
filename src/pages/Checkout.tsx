@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 
 type PaymentMethod = "upi" | "card" | "cod";
+type UPIApp = "bhim" | "phonepe" | "paytm" | "gpay";
 
 const Checkout = () => {
   const { items, cartTotal, clearCart } = useCart();
@@ -25,6 +26,7 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [selectedUPIApp, setSelectedUPIApp] = useState<UPIApp>("gpay");
 
   // Fetch user addresses
   const { data: addresses, isLoading: addressesLoading } = useQuery({
@@ -125,9 +127,28 @@ const Checkout = () => {
       const paymentMethodText = paymentMethod === "upi" ? "UPI" : paymentMethod === "card" ? "Card" : "Cash on Delivery";
       
       if (paymentMethod === "upi") {
-        // Redirect to UPI payment
+        // Redirect to selected UPI app
         const upiId = "8851882465@upi";
-        const upiUrl = `upi://pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${cartTotal.toFixed(2)}&cu=INR&tn=Order%20${orderId.slice(0, 8)}`;
+        const amount = cartTotal.toFixed(2);
+        const note = `Order ${orderId.slice(0, 8)}`;
+        
+        // Different deep link formats for different apps
+        let upiUrl = "";
+        switch (selectedUPIApp) {
+          case "gpay":
+            upiUrl = `tez://upi/pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+            break;
+          case "phonepe":
+            upiUrl = `phonepe://pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+            break;
+          case "paytm":
+            upiUrl = `paytmmp://pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+            break;
+          case "bhim":
+          default:
+            upiUrl = `upi://pay?pa=${upiId}&pn=Mirghaniya%20Super%20Centre&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+            break;
+        }
         window.location.href = upiUrl;
       } else if (paymentMethod === "card") {
         // For card payments, show message and redirect to WhatsApp for now
@@ -274,12 +295,66 @@ const Checkout = () => {
                     <RadioGroupItem value="upi" id="upi" />
                     <Label htmlFor="upi" className="flex items-center gap-3 cursor-pointer flex-1">
                       <Wallet className="h-5 w-5 text-primary" />
-                      <div>
+                      <div className="flex-1">
                         <p className="font-medium">UPI</p>
-                        <p className="text-sm text-muted-foreground">Pay using UPI apps like GPay, PhonePe, Paytm</p>
+                        <p className="text-sm text-muted-foreground">Pay using BHIM, PhonePe, Paytm, GPay</p>
                       </div>
                     </Label>
                   </div>
+
+                  {/* UPI App Selection */}
+                  {paymentMethod === "upi" && (
+                    <div className="ml-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedUPIApp("bhim")}
+                        className={`flex flex-col items-center gap-2 p-3 border rounded-lg transition-colors ${
+                          selectedUPIApp === "bhim" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
+                        }`}
+                      >
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                          BHIM
+                        </div>
+                        <span className="text-xs font-medium">BHIM</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedUPIApp("phonepe")}
+                        className={`flex flex-col items-center gap-2 p-3 border rounded-lg transition-colors ${
+                          selectedUPIApp === "phonepe" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
+                        }`}
+                      >
+                        <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-lg">₱</span>
+                        </div>
+                        <span className="text-xs font-medium">PhonePe</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedUPIApp("paytm")}
+                        className={`flex flex-col items-center gap-2 p-3 border rounded-lg transition-colors ${
+                          selectedUPIApp === "paytm" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
+                        }`}
+                      >
+                        <div className="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-xs">Paytm</span>
+                        </div>
+                        <span className="text-xs font-medium">Paytm</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedUPIApp("gpay")}
+                        className={`flex flex-col items-center gap-2 p-3 border rounded-lg transition-colors ${
+                          selectedUPIApp === "gpay" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
+                        }`}
+                      >
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-lg">G</span>
+                        </div>
+                        <span className="text-xs font-medium">GPay</span>
+                      </button>
+                    </div>
+                  )}
 
                   <div
                     className={`flex items-center space-x-3 border rounded-lg p-4 cursor-pointer transition-colors ${
