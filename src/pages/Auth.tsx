@@ -70,10 +70,8 @@ const Auth = () => {
 
       if (error) throw error;
 
-      // Show OTP verification screen
-      setPendingEmail(signupEmail);
-      setShowOtpVerification(true);
-      toast.success("Verification code sent to your email!");
+      toast.success("Account created successfully! Welcome!");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     } finally {
@@ -291,14 +289,15 @@ const Auth = () => {
                       value={signupPassword}
                       onChange={(e) => setSignupPassword(e.target.value)}
                       required
+                      minLength={8}
                     />
+                    <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted rounded">
+                      Password must contain: A combination of uppercase letters (A-Z), lowercase letters (a-z), numbers (0-9), and symbols.
+                    </p>
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating account..." : "Sign Up"}
                   </Button>
-                  <p className="text-xs text-center text-muted-foreground">
-                    You'll receive a verification code via email
-                  </p>
                 </form>
               </TabsContent>
             </Tabs>

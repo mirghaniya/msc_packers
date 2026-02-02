@@ -42,8 +42,10 @@ export const OrderBill = ({ order, customerName, customerPhone, customerEmail }:
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; }
           .invoice { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 40px; }
           .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 3px solid #4B164C; padding-bottom: 20px; }
-          .company-info h1 { color: #4B164C; font-size: 28px; margin-bottom: 5px; }
-          .company-info p { color: #666; font-size: 12px; line-height: 1.6; }
+          .company-info { display: flex; align-items: flex-start; gap: 15px; }
+          .company-logo { width: 60px; height: 60px; object-fit: contain; }
+          .company-details h1 { color: #4B164C; font-size: 28px; margin-bottom: 5px; }
+          .company-details p { color: #666; font-size: 12px; line-height: 1.6; }
           .invoice-details { text-align: right; }
           .invoice-details h2 { color: #4B164C; font-size: 24px; margin-bottom: 10px; }
           .invoice-details p { font-size: 14px; color: #666; }
@@ -75,11 +77,14 @@ export const OrderBill = ({ order, customerName, customerPhone, customerEmail }:
         <div class="invoice">
           <div class="header">
             <div class="company-info">
-              <h1>Mirghaniya Super Centre</h1>
-              <p>Premium Jewelry Packaging Solutions</p>
-              <p>Usmanpur, Delhi - 110053, India</p>
-              <p>Phone: +91 88518 82465</p>
-              <p>Email: mirghaniyasupercentre@gmail.com</p>
+              <img src="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/object/public/product-images/logo.png" alt="Logo" class="company-logo" onerror="this.style.display='none'" />
+              <div class="company-details">
+                <h1>Mirghaniya Super Centre</h1>
+                <p>Premium Jewelry Packaging Solutions</p>
+                <p>Usmanpur, Delhi - 110053, India</p>
+                <p>Phone: +91 88518 82465</p>
+                <p>Email: mirghaniyasupercentre@gmail.com</p>
+              </div>
             </div>
             <div class="invoice-details">
               <h2>INVOICE</h2>

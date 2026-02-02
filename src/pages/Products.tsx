@@ -241,11 +241,11 @@ const Products = () => {
                               ₹{product.price}
                             </span>
                           </div>
-                          <div className="flex gap-1 md:gap-2">
+                          <div className="flex flex-col gap-2">
                             <Button 
                               size="sm" 
                               variant="default"
-                              className="flex-1 text-xs md:text-sm h-8 md:h-9"
+                              className="w-full text-xs md:text-sm h-8 md:h-9"
                               onClick={() => addToCart(product.id)}
                               disabled={isAddingToCart || (product.stock_quantity !== null && product.stock_quantity <= 0)}
                             >
@@ -257,7 +257,7 @@ const Products = () => {
                               href={getEnquiryUrl(product.name)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
+                              className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
                             >
                               Enquiry
                             </a>

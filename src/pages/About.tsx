@@ -122,7 +122,7 @@ const About = () => {
                 </p>
                 <div className="grid grid-cols-2 gap-6 mt-8">
                   <div className="text-center p-6 bg-muted/50 rounded-xl">
-                    <p className="font-playfair font-bold text-3xl text-primary">5000+</p>
+                    <p className="font-playfair font-bold text-3xl text-primary">500+</p>
                     <p className="text-sm text-muted-foreground mt-1">Happy Clients</p>
                   </div>
                   <div className="text-center p-6 bg-muted/50 rounded-xl">
