@@ -11,11 +11,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Banknote, Wallet, MapPin, AlertCircle } from "lucide-react";
+import { Banknote, Wallet, MapPin, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 
-type PaymentMethod = "upi" | "card" | "cod";
+type PaymentMethod = "upi" | "cod";
 type UPIApp = "bhim" | "phonepe" | "paytm" | "gpay";
 
 const Checkout = () => {
@@ -124,7 +124,7 @@ const Checkout = () => {
         : "";
 
       // Handle payment based on method
-      const paymentMethodText = paymentMethod === "upi" ? "UPI" : paymentMethod === "card" ? "Card" : "Cash on Delivery";
+      const paymentMethodText = paymentMethod === "upi" ? "UPI" : "Cash on Delivery";
       
       if (paymentMethod === "upi") {
         // Redirect to selected UPI app
@@ -150,11 +150,6 @@ const Checkout = () => {
             break;
         }
         window.location.href = upiUrl;
-      } else if (paymentMethod === "card") {
-        // For card payments, show message and redirect to WhatsApp for now
-        const message = `🛍️ *New Order - Card Payment*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nPlease share card payment details.`;
-        const whatsappUrl = `https://wa.me/918851882465?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, "_blank");
       } else {
         // COD - send WhatsApp notification
         const message = `🛍️ *New Order - COD*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nThank you for your order!`;
@@ -274,7 +269,7 @@ const Checkout = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="font-playfair flex items-center gap-2">
-                  <CreditCard className="h-5 w-5" />
+                  <Wallet className="h-5 w-5" />
                   Payment Method
                 </CardTitle>
               </CardHeader>
@@ -356,23 +351,6 @@ const Checkout = () => {
                     </div>
                   )}
 
-                  <div
-                    className={`flex items-center space-x-3 border rounded-lg p-4 cursor-pointer transition-colors ${
-                      paymentMethod === "card"
-                        ? "border-primary bg-primary/5"
-                        : "hover:border-muted-foreground/50"
-                    }`}
-                    onClick={() => setPaymentMethod("card")}
-                  >
-                    <RadioGroupItem value="card" id="card" />
-                    <Label htmlFor="card" className="flex items-center gap-3 cursor-pointer flex-1">
-                      <CreditCard className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium">Credit / Debit Card</p>
-                        <p className="text-sm text-muted-foreground">Pay securely with your card</p>
-                      </div>
-                    </Label>
-                  </div>
 
                   <div
                     className={`flex items-center space-x-3 border rounded-lg p-4 cursor-pointer transition-colors ${

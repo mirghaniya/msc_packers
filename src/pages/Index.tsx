@@ -4,6 +4,7 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { PromotionalBanner } from "@/components/PromotionalBanner";
 import { TestimonialSlider } from "@/components/TestimonialSlider";
+import { BrandCarousel } from "@/components/BrandCarousel";
 
 const Index = () => {
   return (
@@ -13,6 +14,7 @@ const Index = () => {
         <HeroCarousel />
         <FeaturedProducts />
         <PromotionalBanner />
+        <BrandCarousel />
         <TestimonialSlider />
       </main>
       <Footer />
