@@ -1,6 +1,6 @@
 import { Link, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, Package, ShoppingBag, LogOut, Tags, Users, Image, MessageSquare, Menu, X } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, LogOut, Tags, Users, Image, MessageSquare, Menu, X, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
@@ -26,6 +26,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     { name: "Featured", href: "/admin/featured", icon: Tags },
     { name: "Categories", href: "/admin/categories", icon: Tags },
     { name: "Hero Slides", href: "/admin/hero-slides", icon: Image },
+    { name: "Brands", href: "/admin/brand-testimonials", icon: Building2 },
     { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
     { name: "Users", href: "/admin/users", icon: Users },
     { name: "Messages", href: "/admin/messages", icon: MessageSquare },

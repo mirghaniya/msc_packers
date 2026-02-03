@@ -47,11 +47,11 @@ const AdminFeaturedProducts = () => {
 
   return (
     <AdminLayout>
-      <div>
-        <div className="flex items-center justify-between mb-8">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="font-playfair text-4xl font-bold">Featured Products</h1>
-            <p className="text-muted-foreground mt-2">
+            <h1 className="font-playfair text-2xl md:text-4xl font-bold">Featured Products</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               {featuredCount} of {products?.length || 0} products are featured (recommended: 4)
             </p>
           </div>
@@ -60,33 +60,33 @@ const AdminFeaturedProducts = () => {
         {isLoading ? (
           <p className="text-muted-foreground">Loading products...</p>
         ) : products && products.length > 0 ? (
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {products.map((product) => (
               <Card key={product.id} className={product.is_featured ? "border-primary" : ""}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded overflow-hidden bg-muted">
+                <CardContent className="p-3 md:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded overflow-hidden bg-muted shrink-0">
                       <img
                         src={product.image_url || "/placeholder.svg"}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-playfair font-semibold text-lg">
+                        <h3 className="font-playfair font-semibold text-sm md:text-lg truncate">
                           {product.name}
                         </h3>
                         {product.is_featured && (
-                          <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                          <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-500 fill-yellow-500 shrink-0" />
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs md:text-sm text-muted-foreground truncate">
                         {product.category} | SR: {product.sr_number} | ₹{product.price}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-muted-foreground">Featured</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs md:text-sm text-muted-foreground hidden sm:block">Featured</span>
                       <Switch
                         checked={product.is_featured}
                         onCheckedChange={(checked) =>

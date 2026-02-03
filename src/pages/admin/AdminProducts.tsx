@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useState, useCallback } from "react";
 import { Pencil, Trash2, Plus, Images } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -195,10 +195,10 @@ const AdminProducts = () => {
 
   return (
     <AdminLayout>
-      <div>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="font-playfair text-4xl font-bold">Products</h1>
-          <Button onClick={handleAddNew}>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <h1 className="font-playfair text-2xl md:text-4xl font-bold">Products</h1>
+          <Button onClick={handleAddNew} className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Product
           </Button>
@@ -207,7 +207,7 @@ const AdminProducts = () => {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="font-playfair text-2xl">
+              <DialogTitle className="font-playfair text-xl md:text-2xl">
                 {editingProduct ? "Edit Product" : "Add New Product"}
               </DialogTitle>
             </DialogHeader>
@@ -331,22 +331,22 @@ const AdminProducts = () => {
           </DialogContent>
         </Dialog>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {products?.map((product) => (
             <Card key={product.id}>
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <img
                   src={product.image_url || "/placeholder.svg"}
                   alt={product.name}
-                  className="w-full h-48 object-cover rounded mb-4"
+                  className="w-full h-32 md:h-48 object-cover rounded mb-3"
                 />
-                <h3 className="font-playfair font-semibold text-lg mb-2">{product.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">SR: {product.sr_number}</p>
-                <p className="font-bold text-primary mb-4">₹{product.price}</p>
+                <h3 className="font-playfair font-semibold text-base md:text-lg mb-1 truncate">{product.name}</h3>
+                <p className="text-xs md:text-sm text-muted-foreground mb-2">SR: {product.sr_number}</p>
+                <p className="font-bold text-primary mb-3">₹{product.price}</p>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" className="flex-1" onClick={() => handleEdit(product)}>
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Edit
+                    <Pencil className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Edit</span>
                   </Button>
                   <Button
                     variant="destructive"

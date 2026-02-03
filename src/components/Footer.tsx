@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Mail, Phone, MapPin } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -63,29 +63,15 @@ export const Footer = () => {
           {/* Social Media */}
           <div className="space-y-4">
             <h4 className="font-playfair font-semibold text-lg">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="hover:text-secondary transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-6 w-6" />
-              </a>
-              <a
-                href="#"
-                className="hover:text-secondary transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-6 w-6" />
-              </a>
-              <a
-                href="#"
-                className="hover:text-secondary transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-6 w-6" />
-              </a>
-            </div>
+            <a
+              href="https://www.instagram.com/mirghaniyasupercentre/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-secondary transition-colors"
+            >
+              <Instagram className="h-6 w-6" />
+              <span className="text-sm font-inter">@mirghaniyasupercentre</span>
+            </a>
           </div>
         </div>
 

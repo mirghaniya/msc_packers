@@ -130,13 +130,13 @@ const AdminUsers = () => {
 
   return (
     <AdminLayout>
-      <div>
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="font-playfair text-4xl font-bold">Users</h1>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="font-playfair text-2xl md:text-4xl font-bold">Users</h1>
         </div>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="font-playfair">Edit User Role</DialogTitle>
             </DialogHeader>
@@ -178,38 +178,39 @@ const AdminUsers = () => {
           <div className="grid gap-4">
             {users?.map((user) => (
               <Card key={user.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-primary" />
+                <CardContent className="p-4 md:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                    {/* User Info */}
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <Users className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-playfair font-semibold text-lg">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-playfair font-semibold text-base md:text-lg truncate">
                             {user.full_name || "No name"}
                           </h3>
-                          <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+                          <Badge variant={user.role === "admin" ? "default" : "secondary"} className="shrink-0">
                             {user.role === "admin" && <Shield className="h-3 w-3 mr-1" />}
                             {user.role}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-1 sm:gap-3 mt-2 text-xs md:text-sm text-muted-foreground">
                           {user.email && (
-                            <div className="flex items-center gap-1">
-                              <Mail className="h-4 w-4" />
-                              {user.email}
+                            <div className="flex items-center gap-1 truncate">
+                              <Mail className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
+                              <span className="truncate">{user.email}</span>
                             </div>
                           )}
                           {user.phone && (
                             <div className="flex items-center gap-1">
-                              <Phone className="h-4 w-4" />
+                              <Phone className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
                               {user.phone}
                             </div>
                           )}
                           {user.city && (
                             <div className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />
+                              <MapPin className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
                               {user.city}, {user.state}
                             </div>
                           )}
@@ -219,20 +220,22 @@ const AdminUsers = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    
+                    {/* Actions */}
+                    <div className="flex gap-2 sm:shrink-0">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleEditUser(user)}
+                        className="flex-1 sm:flex-initial"
                       >
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit Role
+                        <Edit className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Edit Role</span>
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="destructive" size="sm">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>

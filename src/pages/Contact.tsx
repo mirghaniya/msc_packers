@@ -31,6 +31,20 @@ const Contact = () => {
 
       if (error) throw error;
 
+      // Send notification to admin
+      try {
+        await supabase.functions.invoke("send-contact-notification", {
+          body: {
+            name: name.trim(),
+            email: email.trim(),
+            message: message.trim(),
+          },
+        });
+      } catch (notifError) {
+        console.error("Failed to send notification:", notifError);
+        // Don't fail the submission if notification fails
+      }
+
       toast.success("Message sent! We'll get back to you soon.");
       setName("");
       setEmail("");
