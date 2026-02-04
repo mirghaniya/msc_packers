@@ -220,10 +220,10 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <div className="flex flex-col gap-4 mb-8">
                 <Button
                   size="lg"
-                  className="flex-1"
+                  className="w-full"
                   onClick={() => addToCart(product.id)}
                   disabled={isAddingToCart}
                 >
@@ -234,7 +234,7 @@ const ProductDetail = () => {
                   href={getEnquiryUrl(product.name)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8 w-full"
                 >
                   Enquiry on WhatsApp
                 </a>
