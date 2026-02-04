@@ -96,23 +96,7 @@ const Checkout = () => {
 
       if (orderError) throw orderError;
 
-      // Send order confirmation email
-      const userEmail = profile?.email || user.email;
-      if (userEmail) {
-        try {
-          await supabase.functions.invoke("send-order-confirmation", {
-            body: {
-              orderId,
-              userEmail,
-              userName: profile?.full_name || "Customer",
-            },
-          });
-          console.log("Order confirmation email sent");
-        } catch (emailError) {
-          console.error("Failed to send confirmation email:", emailError);
-          // Don't fail the order if email fails
-        }
-      }
+      // Note: Order confirmation email/WhatsApp is now sent after admin confirms payment
 
       // Clear local cart state
       await clearCart();
@@ -159,7 +143,7 @@ const Checkout = () => {
 
       toast({
         title: "Order Placed Successfully",
-        description: "Your order has been confirmed. Check your email for details.",
+        description: "Your order has been received. You'll get a confirmation once payment is verified.",
       });
 
       navigate("/dashboard");
