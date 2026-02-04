@@ -14,6 +14,10 @@ import { Label } from "@/components/ui/label";
 import { Banknote, Wallet, MapPin, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
+import upiBhimLogo from "@/assets/upi-bhim.png";
+import upiPhonepeLogo from "@/assets/upi-phonepe.png";
+import upiPaytmLogo from "@/assets/upi-paytm.png";
+import upiGpayLogo from "@/assets/upi-gpay.png";
 
 type PaymentMethod = "upi" | "cod";
 type UPIApp = "bhim" | "phonepe" | "paytm" | "gpay";
@@ -291,9 +295,7 @@ const Checkout = () => {
                           selectedUPIApp === "bhim" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
                         }`}
                       >
-                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
-                          BHIM
-                        </div>
+                        <img src={upiBhimLogo} alt="BHIM UPI" className="w-12 h-12 object-contain" />
                         <span className="text-xs font-medium">BHIM</span>
                       </button>
                       <button
@@ -303,9 +305,7 @@ const Checkout = () => {
                           selectedUPIApp === "phonepe" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
                         }`}
                       >
-                        <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-lg">₱</span>
-                        </div>
+                        <img src={upiPhonepeLogo} alt="PhonePe" className="w-12 h-12 object-contain" />
                         <span className="text-xs font-medium">PhonePe</span>
                       </button>
                       <button
@@ -315,9 +315,7 @@ const Checkout = () => {
                           selectedUPIApp === "paytm" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
                         }`}
                       >
-                        <div className="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-xs">Paytm</span>
-                        </div>
+                        <img src={upiPaytmLogo} alt="Paytm" className="w-12 h-12 object-contain" />
                         <span className="text-xs font-medium">Paytm</span>
                       </button>
                       <button
@@ -327,9 +325,7 @@ const Checkout = () => {
                           selectedUPIApp === "gpay" ? "border-primary bg-primary/10" : "hover:border-muted-foreground/50"
                         }`}
                       >
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-lg">G</span>
-                        </div>
+                        <img src={upiGpayLogo} alt="Google Pay" className="w-12 h-12 object-contain" />
                         <span className="text-xs font-medium">GPay</span>
                       </button>
                     </div>
