@@ -41,11 +41,12 @@ const AdminOrders = () => {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ id, status, userEmail, userName }: { 
+    mutationFn: async ({ id, status, userEmail, userName, userPhone }: { 
       id: string; 
       status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
       userEmail?: string;
       userName?: string;
+      userPhone?: string;
     }) => {
       // Update order status
       const { error } = await supabase
@@ -74,7 +75,27 @@ const AdminOrders = () => {
         console.error("Failed to add status history:", historyError);
       }
 
-      // Send notification email
+      // When admin confirms payment (Processing), send order confirmation email AND WhatsApp
+      if (status === "Processing" && userEmail) {
+        try {
+          // Send order confirmation email
+          await supabase.functions.invoke("send-order-confirmation", {
+            body: { orderId: id, userEmail, userName: userName || "Customer" },
+          });
+          console.log("Order confirmation email sent");
+        } catch (emailError) {
+          console.error("Failed to send confirmation email:", emailError);
+        }
+
+        // Open WhatsApp to send confirmation to customer
+        if (userPhone) {
+          const message = `🎉 *Order Confirmed!*\n\nHello ${userName || "Customer"},\n\nYour payment for Order #${id.slice(0, 8)} has been confirmed!\n\nWe are now processing your order and will notify you once it's shipped.\n\nThank you for shopping with Mirghaniya Super Centre! 🛍️`;
+          const whatsappUrl = `https://wa.me/91${userPhone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(message)}`;
+          window.open(whatsappUrl, "_blank");
+        }
+      }
+
+      // Send notification email for all status updates
       if (userEmail) {
         try {
           const response = await supabase.functions.invoke("send-order-notification", {
@@ -83,13 +104,15 @@ const AdminOrders = () => {
           console.log("Notification response:", response);
         } catch (notifError) {
           console.error("Failed to send notification:", notifError);
-          // Don't fail the mutation if notification fails
         }
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
-      toast({ title: "Order status updated", description: "Customer will be notified via email" });
+      const message = variables.status === "Processing" 
+        ? "Payment confirmed! Customer will be notified via email and WhatsApp"
+        : "Order status updated, customer notified via email";
+      toast({ title: "Status Updated", description: message });
     },
   });
 
@@ -284,7 +307,8 @@ const AdminOrders = () => {
                             id: order.id, 
                             status,
                             userEmail: order.profile?.email,
-                            userName: order.profile?.full_name
+                            userName: order.profile?.full_name,
+                            userPhone: order.profile?.phone
                           })
                         }
                       >

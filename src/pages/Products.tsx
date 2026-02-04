@@ -11,15 +11,12 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const Products = () => {
   const [category, setCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
@@ -53,7 +50,7 @@ const Products = () => {
     },
   });
 
-  // Filter products based on search query, price range, and stock
+  // Filter products based on search query
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     
@@ -69,14 +66,9 @@ const Products = () => {
         if (!matchesSearch) return false;
       }
 
-      // Price range filter
-      const min = minPrice ? parseFloat(minPrice) : 0;
-      const max = maxPrice ? parseFloat(maxPrice) : Infinity;
-      if (product.price < min || product.price > max) return false;
-
       return true;
     });
-  }, [products, searchQuery, minPrice, maxPrice]);
+  }, [products, searchQuery]);
 
   const getEnquiryUrl = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
@@ -84,8 +76,6 @@ const Products = () => {
   };
 
   const clearFilters = () => {
-    setMinPrice("");
-    setMaxPrice("");
     setCategory("all");
   };
 
@@ -108,29 +98,11 @@ const Products = () => {
         </Select>
       </div>
 
-      <div>
-        <Label className="text-sm font-medium mb-2 block">Price Range (₹)</Label>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="w-1/2"
-          />
-          <Input
-            type="number"
-            placeholder="Max"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-1/2"
-          />
-        </div>
-      </div>
-
-      <Button variant="outline" onClick={clearFilters} className="w-full">
-        Clear Filters
-      </Button>
+      {category !== "all" && (
+        <Button variant="outline" onClick={clearFilters} className="w-full">
+          Clear Filter
+        </Button>
+      )}
     </div>
   );
 
@@ -270,9 +242,9 @@ const Products = () => {
               ) : (
                 <div className="text-center py-12">
                   <p className="font-inter text-muted-foreground">
-                    {searchQuery || minPrice || maxPrice ? "No products match your filters." : "No products found."}
+                    {searchQuery || category !== "all" ? "No products match your filters." : "No products found."}
                   </p>
-                  {(searchQuery || minPrice || maxPrice) && (
+                  {(searchQuery || category !== "all") && (
                     <Button variant="link" onClick={clearFilters} className="mt-2">
                       Clear all filters
                     </Button>
