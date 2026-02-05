@@ -6,11 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Download } from "lucide-react";
+import { Download, Search, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useState, useMemo } from "react";
 
 const AdminOrders = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: orders } = useQuery({
     queryKey: ["admin-orders"],
@@ -39,6 +42,51 @@ const AdminOrders = () => {
       return ordersWithProfiles;
     },
   });
+
+  // Filter orders based on search query
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+    if (!searchQuery.trim()) return orders;
+    
+    const query = searchQuery.toLowerCase();
+    return orders.filter((order) => 
+      order.id.toLowerCase().includes(query) ||
+      order.profile?.full_name?.toLowerCase().includes(query) ||
+      order.profile?.email?.toLowerCase().includes(query) ||
+      order.profile?.phone?.toLowerCase().includes(query)
+    );
+  }, [orders, searchQuery]);
+
+  // Download ledger as CSV
+  const downloadLedger = () => {
+    if (!orders || orders.length === 0) {
+      toast({ title: "No orders", description: "There are no orders to export.", variant: "destructive" });
+      return;
+    }
+
+    const headers = ["Order ID", "Date", "Customer Name", "Phone", "Email", "Status", "Items", "Total Amount"];
+    const rows = orders.map((order) => [
+      order.id.slice(0, 8),
+      new Date(order.created_at).toLocaleDateString('en-IN'),
+      order.profile?.full_name || "N/A",
+      order.profile?.phone || "N/A",
+      order.profile?.email || "N/A",
+      order.status || "Pending",
+      order.order_items.length,
+      order.total_amount
+    ]);
+
+    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `orders-ledger-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    toast({ title: "Ledger Downloaded", description: "Orders ledger has been downloaded as CSV." });
+  };
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, userEmail, userName, userPhone }: { 
@@ -274,9 +322,29 @@ const AdminOrders = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <h1 className="font-playfair text-2xl md:text-4xl font-bold">Orders</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="font-playfair text-2xl md:text-4xl font-bold">Orders</h1>
+          <Button onClick={downloadLedger} variant="outline" className="w-full sm:w-auto">
+            <FileText className="h-4 w-4 mr-2" />
+            Download Ledger
+          </Button>
+        </div>
+        
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by order ID, name, email, or phone..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
         <div className="space-y-4">
-          {orders?.map((order) => (
+          {filteredOrders.length === 0 && searchQuery && (
+            <p className="text-center text-muted-foreground py-8">No orders found matching "{searchQuery}"</p>
+          )}
+          {filteredOrders.map((order) => (
             <Card key={order.id}>
               <CardHeader className="pb-3">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">

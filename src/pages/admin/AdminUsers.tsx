@@ -10,6 +10,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Users, Shield, Edit, Mail, Phone, MapPin, Trash2 } from "lucide-react";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const AdminUsers = () => {
@@ -18,6 +20,7 @@ const AdminUsers = () => {
   const [editingUser, setEditingUser] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch all profiles with their roles
   const { data: users, isLoading } = useQuery({
@@ -44,6 +47,18 @@ const AdminUsers = () => {
         role: roles?.find((r) => r.user_id === profile.id)?.role || "user",
       }));
     },
+  });
+
+  // Filter users based on search query
+  const filteredUsers = users?.filter((user) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      user.full_name?.toLowerCase().includes(query) ||
+      user.email?.toLowerCase().includes(query) ||
+      user.phone?.toLowerCase().includes(query) ||
+      user.city?.toLowerCase().includes(query)
+    );
   });
 
   // Update user role mutation - uses edge function for secure server-side role management
@@ -134,6 +149,16 @@ const AdminUsers = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="font-playfair text-2xl md:text-4xl font-bold">Users</h1>
         </div>
+        
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, phone, or city..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-md">
@@ -176,7 +201,10 @@ const AdminUsers = () => {
           <p className="text-muted-foreground">Loading users...</p>
         ) : (
           <div className="grid gap-4">
-            {users?.map((user) => (
+            {filteredUsers?.length === 0 && searchQuery && (
+              <p className="text-center text-muted-foreground py-8">No users found matching "{searchQuery}"</p>
+            )}
+            {filteredUsers?.map((user) => (
               <Card key={user.id}>
                 <CardContent className="p-4 md:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4">
