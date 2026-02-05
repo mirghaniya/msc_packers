@@ -1,19 +1,19 @@
 project_id = "fjpunfvhezivlhyrnyym"
 
 [functions.send-order-notification]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-order-confirmation]
-verify_jwt = false
+verify_jwt = true
 
 [functions.admin-delete-user]
-verify_jwt = false
+verify_jwt = true
 
 [functions.admin-manage-role]
-verify_jwt = false
+verify_jwt = true
 
 [functions.verify-old-password]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-contact-notification]
 verify_jwt = false

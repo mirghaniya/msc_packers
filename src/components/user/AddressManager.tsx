@@ -108,16 +108,10 @@ export const AddressManager = () => {
   const setDefaultMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!user) throw new Error("Not authenticated");
-      // First, unset all defaults
-      await supabase
-        .from("user_addresses")
-        .update({ is_default: false })
-        .eq("user_id", user.id);
-      // Then set the new default
-      const { error } = await supabase
-        .from("user_addresses")
-        .update({ is_default: true })
-        .eq("id", id);
+      // Use atomic database function to prevent race conditions
+      const { error } = await supabase.rpc("set_default_address", {
+        p_address_id: id,
+      });
       if (error) throw error;
     },
     onSuccess: () => {

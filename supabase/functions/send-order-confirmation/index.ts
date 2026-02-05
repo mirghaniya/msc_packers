@@ -3,7 +3,7 @@ import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface OrderConfirmationRequest {
@@ -31,13 +31,32 @@ Deno.serve(async (req) => {
     
     // Get the authorization header
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
+    if (!authHeader?.startsWith("Bearer ")) {
       console.log("Missing authorization header");
       return new Response(
         JSON.stringify({ error: "Missing authorization header" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Validate JWT and get user
+    const supabaseClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      console.log("Invalid token:", claimsError);
+      return new Response(
+        JSON.stringify({ error: "Invalid authorization token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const authenticatedUserId = claimsData.claims.sub;
+    console.log("Authenticated user:", authenticatedUserId);
 
     // Parse request body
     const { orderId, userEmail, userName }: OrderConfirmationRequest = await req.json();
@@ -63,6 +82,26 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Order not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Verify order ownership - user can only send confirmation for their own orders
+    // OR if the user is an admin (checking admin role)
+    const { data: adminRole } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", authenticatedUserId)
+      .eq("role", "admin")
+      .single();
+
+    const isAdmin = !!adminRole;
+    const isOrderOwner = order.user_id === authenticatedUserId;
+
+    if (!isAdmin && !isOrderOwner) {
+      console.log("Unauthorized: User does not own this order and is not admin");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: You can only request confirmations for your own orders" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 

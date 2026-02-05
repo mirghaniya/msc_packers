@@ -593,6 +593,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_default_address: {
+        Args: { p_address_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user"
