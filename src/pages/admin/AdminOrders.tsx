@@ -123,7 +123,7 @@ const AdminOrders = () => {
         console.error("Failed to add status history:", historyError);
       }
 
-      // When admin confirms payment (Processing), send order confirmation email AND WhatsApp
+      // When admin confirms payment (Processing), send order confirmation email
       if (status === "Processing" && userEmail) {
         try {
           // Send order confirmation email
@@ -133,14 +133,6 @@ const AdminOrders = () => {
           console.log("Order confirmation email sent");
         } catch (emailError) {
           console.error("Failed to send confirmation email:", emailError);
-        }
-
-        // Open WhatsApp to send confirmation to customer (from admin's number 8851882465)
-        if (userPhone) {
-          const customerPhone = userPhone.replace(/\D/g, '').slice(-10);
-          const message = `🎉 *Order Confirmed!*\n\nHello ${userName || "Customer"},\n\nYour payment for Order #${id.slice(0, 8)} has been confirmed!\n\nWe are now processing your order and will notify you once it's shipped.\n\nThank you for shopping with Mirghaniya Super Centre! 🛍️`;
-          const whatsappUrl = `https://wa.me/91${customerPhone}?text=${encodeURIComponent(message)}`;
-          window.open(whatsappUrl, "_blank");
         }
       }
 
@@ -159,7 +151,7 @@ const AdminOrders = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
       const message = variables.status === "Processing" 
-        ? "Payment confirmed! Customer will be notified via email and WhatsApp"
+        ? "Payment confirmed! Customer will be notified via email"
         : "Order status updated, customer notified via email";
       toast({ title: "Status Updated", description: message });
     },
