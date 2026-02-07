@@ -6,9 +6,37 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, FileText } from "lucide-react";
+import { Download, Search, FileText, MessageCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
+
+const WHATSAPP_NUMBER = "918851882465";
+
+const getWhatsAppStatusMessage = (order: any) => {
+  const orderId = order.id.slice(0, 8);
+  const status = order.status || "Pending";
+  const items = order.order_items
+    .map((item: any) => `• ${item.product_name} (x${item.quantity}) - ₹${item.total_price}`)
+    .join("\n");
+
+  const statusMessages: Record<string, string> = {
+    Pending: "Your order is received and is awaiting confirmation.",
+    Processing: "Your payment has been verified and order is being processed.",
+    Shipped: "Your order has been shipped and is on its way!",
+    Delivered: "Your order has been delivered. Thank you for shopping with us!",
+    Cancelled: "Your order has been cancelled. Contact us for any queries.",
+  };
+
+  return `🛍️ *Order Update - Mirghaniya Super Centre*\n\n📦 Order ID: #${orderId}\n📌 Status: *${status}*\n\n${statusMessages[status] || ""}\n\n*Order Items:*\n${items}\n\n💰 *Total: ₹${order.total_amount}*\n\nFor any queries, contact us at +91 88518 82465.\nThank you for choosing Mirghaniya Super Centre!`;
+};
+
+const sendWhatsAppUpdate = (order: any) => {
+  const phone = order.profile?.phone?.replace(/\D/g, "");
+  if (!phone) return null;
+  const formattedPhone = phone.startsWith("91") ? phone : `91${phone}`;
+  const message = getWhatsAppStatusMessage(order);
+  return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+};
 
 const AdminOrders = () => {
   const { toast } = useToast();
@@ -384,6 +412,22 @@ const AdminOrders = () => {
                           <SelectItem value="Cancelled">Cancelled</SelectItem>
                         </SelectContent>
                       </Select>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          const url = sendWhatsAppUpdate(order);
+                          if (url) {
+                            window.open(url, "_blank");
+                          } else {
+                            toast({ title: "No phone number", description: "This customer doesn't have a phone number on file.", variant: "destructive" });
+                          }
+                        }}
+                        title="Send WhatsApp Update"
+                        className="text-green-600 hover:text-green-700 hover:border-green-300"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="outline"
                         size="icon"
