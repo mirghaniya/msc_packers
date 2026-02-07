@@ -100,27 +100,15 @@ const Checkout = () => {
 
       if (orderError) throw orderError;
 
-      // Note: Order confirmation email/WhatsApp is now sent after admin confirms payment
-
       // Clear local cart state
       await clearCart();
 
-      // Get selected address for WhatsApp message
-      const selectedAddress = addresses?.find(a => a.id === selectedAddressId);
-      const addressText = selectedAddress 
-        ? `${selectedAddress.address_line1}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.postal_code}`
-        : "";
-
-      // Handle payment based on method
-      const paymentMethodText = paymentMethod === "upi" ? "UPI" : "Cash on Delivery";
-      
+      // Handle UPI payment redirect if selected
       if (paymentMethod === "upi") {
-        // Redirect to selected UPI app
         const upiId = "8851882465@upi";
         const amount = cartTotal.toFixed(2);
         const note = `Order ${orderId.slice(0, 8)}`;
         
-        // Different deep link formats for different apps
         let upiUrl = "";
         switch (selectedUPIApp) {
           case "gpay":
@@ -138,11 +126,6 @@ const Checkout = () => {
             break;
         }
         window.location.href = upiUrl;
-      } else {
-        // COD - send WhatsApp notification
-        const message = `🛍️ *New Order - COD*\n\nOrder ID: #${orderId.slice(0, 8)}\nPayment: ${paymentMethodText}\nTotal: ₹${cartTotal.toFixed(2)}\n\n📍 Delivery Address:\n${addressText}\n\nThank you for your order!`;
-        const whatsappUrl = `https://wa.me/918851882465?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, "_blank");
       }
 
       toast({
