@@ -128,6 +128,24 @@ const Checkout = () => {
         window.location.href = upiUrl;
       }
 
+      // Send WhatsApp notification to admin
+      const ADMIN_WHATSAPP = "918851882465";
+      const orderItems = items
+        .map((item) => `• ${item.product.name} (x${item.quantity}) - ₹${(item.quantity * item.product.price).toFixed(2)}`)
+        .join("\n");
+      const adminMessage = `🛒 *New Order Received!*\n\n📦 Order ID: #${orderId.slice(0, 8)}\n👤 Customer: ${profile?.full_name || "N/A"}\n📞 Phone: ${profile?.phone || "N/A"}\n💳 Payment: ${paymentMethod === "upi" ? "UPI" : "Cash on Delivery"}\n\n*Items:*\n${orderItems}\n\n💰 *Total: ₹${cartTotal.toFixed(2)}*`;
+      
+      try {
+        const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(adminMessage)}`;
+        const link = document.createElement("a");
+        link.href = whatsappUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.click();
+      } catch (whatsappError) {
+        console.error("WhatsApp notification failed:", whatsappError);
+      }
+
       toast({
         title: "Order Placed Successfully",
         description: "Your order has been received. You'll get a confirmation once payment is verified.",
