@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, FileText, MessageCircle } from "lucide-react";
+import { Download, Search, FileText, MessageCircle, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 
@@ -427,6 +427,35 @@ const AdminOrders = () => {
                         className="text-green-600 hover:text-green-700 hover:border-green-300"
                       >
                         <MessageCircle className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={async () => {
+                          if (!order.profile?.email) {
+                            toast({ title: "No email", description: "This customer doesn't have an email address on file.", variant: "destructive" });
+                            return;
+                          }
+                          try {
+                            const response = await supabase.functions.invoke("send-order-notification", {
+                              body: {
+                                orderId: order.id,
+                                newStatus: order.status || "Pending",
+                                userEmail: order.profile.email,
+                                userName: order.profile.full_name || "Customer",
+                              },
+                            });
+                            if (response.error) throw response.error;
+                            toast({ title: "Email Sent", description: `Status update email sent to ${order.profile.email}` });
+                          } catch (err) {
+                            console.error("Email send error:", err);
+                            toast({ title: "Email Failed", description: "Failed to send status email. Check logs.", variant: "destructive" });
+                          }
+                        }}
+                        title="Send Email Update"
+                        className="text-blue-600 hover:text-blue-700 hover:border-blue-300"
+                      >
+                        <Mail className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
