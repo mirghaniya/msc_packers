@@ -134,7 +134,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Address</h3>
-                        <p className="text-muted-foreground">Usmanpur, Delhi, India - 110053<br />
+                        <p className="text-muted-foreground">Usmanpur, Delhi,<br />
                           India - 110053
                         </p>
                       </div>
