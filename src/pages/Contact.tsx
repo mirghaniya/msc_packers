@@ -9,26 +9,22 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      const { error } = await supabase
-        .from("contact_messages")
-        .insert({
-          name: name.trim(),
-          email: email.trim(),
-          message: message.trim(),
-        });
-
+      const {
+        error
+      } = await supabase.from("contact_messages").insert({
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim()
+      });
       if (error) throw error;
 
       // Send notification to admin
@@ -37,14 +33,13 @@ const Contact = () => {
           body: {
             name: name.trim(),
             email: email.trim(),
-            message: message.trim(),
-          },
+            message: message.trim()
+          }
         });
       } catch (notifError) {
         console.error("Failed to send notification:", notifError);
         // Don't fail the submission if notification fails
       }
-
       toast.success("Message sent! We'll get back to you soon.");
       setName("");
       setEmail("");
@@ -55,9 +50,7 @@ const Contact = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
         <div className="bg-gradient-luxury py-16">
@@ -82,35 +75,15 @@ const Contact = () => {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        placeholder="Your name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                      />
+                      <Input id="name" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} required />
                     </div>
                     <div>
                       <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
+                      <Input id="email" type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                     <div>
                       <Label htmlFor="message">Message</Label>
-                      <Textarea
-                        id="message"
-                        placeholder="How can we help you?"
-                        rows={5}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        required
-                      />
+                      <Textarea id="message" placeholder="How can we help you?" rows={5} value={message} onChange={e => setMessage(e.target.value)} required />
                     </div>
                     <Button type="submit" className="w-full" disabled={isSubmitting}>
                       {isSubmitting ? "Sending..." : "Send Message"}
@@ -161,8 +134,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Address</h3>
-                        <p className="text-muted-foreground">
-                          Usmanpur, Delhi<br />
+                        <p className="text-muted-foreground">Usmanpur, Delhi, India - 110053<br />
                           India - 110053
                         </p>
                       </div>
@@ -175,8 +147,6 @@ const Contact = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
