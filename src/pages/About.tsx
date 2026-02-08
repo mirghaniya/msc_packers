@@ -4,10 +4,8 @@ import aboutJewelry1 from "@/assets/about-jewelry-1.jpg";
 import aboutCraftsmanship from "@/assets/about-craftsmanship.jpg";
 import aboutWarehouse from "@/assets/about-warehouse.jpg";
 import aboutTeam from "@/assets/about-team.jpg";
-
 const About = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}
@@ -16,9 +14,7 @@ const About = () => {
             <h1 className="font-playfair font-bold text-5xl md:text-6xl text-white mb-6">
               About Us
             </h1>
-            <p className="font-inter text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Crafting excellence in jewelry packaging since 2010. We believe every piece of jewelry deserves packaging that matches its beauty.
-            </p>
+            <p className="font-inter text-lg md:text-xl text-white/90 max-w-3xl mx-auto">Crafting excellence in jewelry packaging since 1990. We believe every piece of jewelry deserves packaging that matches its beauty.</p>
           </div>
         </div>
 
@@ -44,13 +40,9 @@ const About = () => {
               </div>
               <div className="order-1 lg:order-2">
                 <div className="relative">
-                  <img 
-                    src={aboutJewelry1} 
-                    alt="Premium jewelry packaging products" 
-                    className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]"
-                  />
+                  <img src={aboutJewelry1} alt="Premium jewelry packaging products" className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]" />
                   <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg hidden md:block">
-                    <p className="font-playfair font-bold text-3xl">15+</p>
+                    <p className="font-playfair font-bold text-3xl">30+</p>
                     <p className="text-sm opacity-90">Years of Excellence</p>
                   </div>
                 </div>
@@ -65,11 +57,7 @@ const About = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="relative">
-                  <img 
-                    src={aboutCraftsmanship} 
-                    alt="Artisan crafting jewelry box" 
-                    className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]"
-                  />
+                  <img src={aboutCraftsmanship} alt="Artisan crafting jewelry box" className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]" />
                   <div className="absolute -bottom-6 -right-6 bg-secondary text-secondary-foreground p-6 rounded-xl shadow-lg hidden md:block">
                     <p className="font-playfair font-bold text-3xl">100%</p>
                     <p className="text-sm opacity-90">Handcrafted Quality</p>
@@ -87,19 +75,12 @@ const About = () => {
                   packaging that truly stands out.
                 </p>
                 <ul className="space-y-4">
-                  {[
-                    "Premium materials sourced from trusted suppliers",
-                    "Handcrafted attention to every detail",
-                    "Quality checks at every production stage",
-                    "Eco-friendly options available"
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
+                  {["Premium materials sourced from trusted suppliers", "Handcrafted attention to every detail", "Quality checks at every production stage", "Eco-friendly options available"].map((item, index) => <li key={index} className="flex items-start gap-3">
                       <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="w-2 h-2 rounded-full bg-primary"></span>
                       </span>
                       <span className="text-muted-foreground">{item}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </div>
             </div>
@@ -130,7 +111,7 @@ const About = () => {
                     <p className="text-sm text-muted-foreground mt-1">Products Delivered</p>
                   </div>
                   <div className="text-center p-6 bg-muted/50 rounded-xl">
-                    <p className="font-playfair font-bold text-3xl text-primary">50+</p>
+                    <p className="font-playfair font-bold text-3xl text-primary">100+</p>
                     <p className="text-sm text-muted-foreground mt-1">Product Varieties</p>
                   </div>
                   <div className="text-center p-6 bg-muted/50 rounded-xl">
@@ -140,11 +121,7 @@ const About = () => {
                 </div>
               </div>
               <div className="order-1 lg:order-2">
-                <img 
-                  src={aboutWarehouse} 
-                  alt="Our warehouse and logistics" 
-                  className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]"
-                />
+                <img src={aboutWarehouse} alt="Our warehouse and logistics" className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]" />
               </div>
             </div>
           </div>
@@ -155,11 +132,7 @@ const About = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <img 
-                  src={aboutTeam} 
-                  alt="Our dedicated team" 
-                  className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]"
-                />
+                <img src={aboutTeam} alt="Our dedicated team" className="rounded-2xl shadow-2xl w-full object-cover aspect-[4/3]" />
               </div>
               <div>
                 <span className="text-primary font-semibold uppercase tracking-wider text-sm">Our Team</span>
@@ -196,16 +169,10 @@ const About = () => {
               Join thousands of satisfied jewelry businesses who trust us for their packaging needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="/products" 
-                className="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-colors"
-              >
+              <a href="/products" className="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-colors">
                 Browse Products
               </a>
-              <a 
-                href="/contact" 
-                className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-              >
+              <a href="/contact" className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
                 Contact Us
               </a>
             </div>
@@ -213,8 +180,6 @@ const About = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
