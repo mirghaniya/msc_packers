@@ -71,14 +71,15 @@ export const HeroCarousel = () => {
   return (
     <section className="relative min-h-[600px] flex items-center overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 z-0 transition-opacity duration-500"
-        style={{
-          backgroundImage: `url(${currentSlide.image_url})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+      <div className="absolute inset-0 z-0 transition-opacity duration-500">
+        <img
+          src={currentSlide.image_url}
+          alt=""
+          fetchPriority="high"
+          width={1920}
+          height={600}
+          className="w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
       </div>
 
