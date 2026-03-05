@@ -1,10 +1,17 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// HTML-escape user inputs to prevent injection
+const escapeHtml = (s: string): string =>
+  s.replace(/&/g, "&amp;")
+   .replace(/</g, "&lt;")
+   .replace(/>/g, "&gt;")
+   .replace(/"/g, "&quot;")
+   .replace(/'/g, "&#39;");
 
 interface ContactNotificationRequest {
   name: string;
@@ -13,18 +20,27 @@ interface ContactNotificationRequest {
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    
-    // Parse request body
-    const { name, email, message }: ContactNotificationRequest = await req.json();
+    // Validate the request has the Supabase apikey header (proves it came through our client)
+    const apiKey = req.headers.get("apikey");
+    const expectedAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!apiKey || apiKey !== expectedAnonKey) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-    // Validate input
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+    const body = await req.json();
+    const { name, email, message } = body as ContactNotificationRequest;
+
+    // Validate required fields
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -32,7 +48,40 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Admin email - you can change this to your admin email
+    // Input length validation
+    if (typeof name !== "string" || name.length > 100) {
+      return new Response(
+        JSON.stringify({ error: "Name must be 100 characters or less" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (typeof email !== "string" || email.length > 255) {
+      return new Response(
+        JSON.stringify({ error: "Email must be 255 characters or less" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (typeof message !== "string" || message.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: "Message must be 2000 characters or less" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Escape all user inputs for safe HTML interpolation
+    const safeName = escapeHtml(name.trim());
+    const safeEmail = escapeHtml(email.trim());
+    const safeMessage = escapeHtml(message.trim());
+
     const adminEmail = "mirghaniyasupercentre@gmail.com";
 
     const emailHtml = `
@@ -53,17 +102,17 @@ Deno.serve(async (req) => {
             <h2 style="color: #4B164C; margin-top: 0;">Customer Details</h2>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-              <p style="margin: 5px 0;"><strong>Name:</strong> ${name}</p>
-              <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #4B164C;">${email}</a></p>
+              <p style="margin: 5px 0;"><strong>Name:</strong> ${safeName}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #4B164C;">${safeEmail}</a></p>
             </div>
             
             <h3 style="color: #4B164C; border-bottom: 2px solid #DD88CF; padding-bottom: 10px;">Message</h3>
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #DD88CF;">
-              <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+              <p style="margin: 0; white-space: pre-wrap;">${safeMessage}</p>
             </div>
             
             <div style="margin-top: 30px; text-align: center;">
-              <a href="mailto:${email}?subject=Re: Your inquiry at Mirghaniya Super Centre" 
+              <a href="mailto:${safeEmail}?subject=Re: Your inquiry at Mirghaniya Super Centre" 
                  style="background: #4B164C; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; display: inline-block;">
                 Reply to Customer
               </a>
@@ -71,44 +120,35 @@ Deno.serve(async (req) => {
           </div>
           
           <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-            <p>© ${new Date().getFullYear()} Mirghaniya Super Centre. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} Mirghaniya Super Centre. All rights reserved.</p>
           </div>
         </div>
       </body>
       </html>
     `;
 
-    // Send email using Resend if API key is available
     let emailSent = false;
-    console.log("Checking RESEND_API_KEY:", resendApiKey ? "configured" : "not configured");
     
     if (resendApiKey) {
       try {
-        console.log("Initializing Resend with API key");
         const resend = new Resend(resendApiKey);
         
-        console.log("Sending notification email to admin:", adminEmail);
         const emailResponse = await resend.emails.send({
           from: "Mirghaniya Super Centre <onboarding@resend.dev>",
           to: [adminEmail],
-          subject: `New Contact Message from ${name}`,
+          subject: `New Contact Message from ${safeName}`,
           html: emailHtml,
-          replyTo: email,
+          replyTo: email.trim(),
         });
 
-        console.log("Resend response:", JSON.stringify(emailResponse));
-        
         if (emailResponse.error) {
           console.error("Resend email error:", JSON.stringify(emailResponse.error));
         } else {
           emailSent = true;
-          console.log("Notification email sent successfully, ID:", emailResponse.data?.id);
         }
       } catch (emailErr) {
         console.error("Email sending error:", emailErr);
       }
-    } else {
-      console.log("RESEND_API_KEY not configured, skipping email");
     }
 
     return new Response(
