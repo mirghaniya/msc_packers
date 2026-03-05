@@ -117,19 +117,18 @@ const AdminOrders = () => {
   };
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ id, status, userEmail, userName, userPhone }: { 
+    mutationFn: async ({ id, status, userEmail, userName, userPhone, userId }: { 
       id: string; 
       status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
       userEmail?: string;
       userName?: string;
       userPhone?: string;
+      userId?: string;
     }) => {
-      // Update order status
       const { error } = await supabase
         .from("orders")
         .update({ 
           status,
-          // Set estimated delivery for Processing/Shipped
           ...(status === "Processing" || status === "Shipped" 
             ? { estimated_delivery_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() }
             : {}
@@ -138,42 +137,29 @@ const AdminOrders = () => {
         .eq("id", id);
       if (error) throw error;
 
-      // Add to status history
       const { error: historyError } = await supabase
         .from("order_status_history")
-        .insert({
-          order_id: id,
-          status,
-          notes: `Status updated to ${status}`,
-        });
-      
-      if (historyError) {
-        console.error("Failed to add status history:", historyError);
-      }
+        .insert({ order_id: id, status, notes: `Status updated to ${status}` });
+      if (historyError) console.error("Failed to add status history:", historyError);
 
-      // When admin confirms payment (Processing), send order confirmation email
-      if (status === "Processing" && userEmail) {
+      // When admin confirms payment, send confirmation email
+      if (status === "Processing") {
         try {
-          // Send order confirmation email
           await supabase.functions.invoke("send-order-confirmation", {
-            body: { orderId: id, userEmail, userName: userName || "Customer" },
+            body: { orderId: id, userEmail: userEmail || undefined, userName: userName || "Customer", userId },
           });
-          console.log("Order confirmation email sent");
         } catch (emailError) {
           console.error("Failed to send confirmation email:", emailError);
         }
       }
 
-      // Send notification email for all status updates
-      if (userEmail) {
-        try {
-          const response = await supabase.functions.invoke("send-order-notification", {
-            body: { orderId: id, newStatus: status, userEmail, userName: userName || "Customer" },
-          });
-          console.log("Notification response:", response);
-        } catch (notifError) {
-          console.error("Failed to send notification:", notifError);
-        }
+      // Send notification for all status updates
+      try {
+        await supabase.functions.invoke("send-order-notification", {
+          body: { orderId: id, newStatus: status, userEmail: userEmail || undefined, userName: userName || "Customer", userId },
+        });
+      } catch (notifError) {
+        console.error("Failed to send notification:", notifError);
       }
     },
     onSuccess: (_, variables) => {
@@ -397,7 +383,8 @@ const AdminOrders = () => {
                             status,
                             userEmail: order.profile?.email,
                             userName: order.profile?.full_name,
-                            userPhone: order.profile?.phone
+                            userPhone: order.profile?.phone,
+                            userId: order.user_id
                           })
                         }
                       >
@@ -432,17 +419,14 @@ const AdminOrders = () => {
                         variant="outline"
                         size="icon"
                         onClick={async () => {
-                          if (!order.profile?.email) {
-                            toast({ title: "No email", description: "This customer doesn't have an email address on file.", variant: "destructive" });
-                            return;
-                          }
                           try {
                             const response = await supabase.functions.invoke("send-order-notification", {
                               body: {
                                 orderId: order.id,
                                 newStatus: order.status || "Pending",
-                                userEmail: order.profile.email,
-                                userName: order.profile.full_name || "Customer",
+                                userEmail: order.profile?.email || undefined,
+                                userName: order.profile?.full_name || "Customer",
+                                userId: order.user_id,
                               },
                             });
                             if (response.error) throw response.error;
