@@ -68,16 +68,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    const { name, email, message } = body as ContactNotificationRequest;
-
-    // Validate required fields
-    if (!name || !email || !message) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
 
     // Input length validation
     if (typeof name !== "string" || name.length > 100) {
