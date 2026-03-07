@@ -68,6 +68,20 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Also enforce a global rate limit: max 20 contact messages total per hour
+    const { count: globalCount, error: globalCountError } = await supabaseAdmin
+      .from("contact_messages")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", oneHourAgo);
+
+    if (!globalCountError && globalCount !== null && globalCount >= 20) {
+      return new Response(
+        JSON.stringify({ error: "Too many messages. Please try again later." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
     // Input length validation
     if (typeof name !== "string" || name.length > 100) {
