@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
@@ -87,7 +88,7 @@ export const FeaturedProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden aspect-square">
                   <img
-                    src={product.image_url}
+                    src={getOptimizedImageUrl(product.image_url, { width: 500, height: 500 })}
                     alt={product.name}
                     width={400}
                     height={400}
