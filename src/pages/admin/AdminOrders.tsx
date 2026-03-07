@@ -430,7 +430,8 @@ const AdminOrders = () => {
                               },
                             });
                             if (response.error) throw response.error;
-                            toast({ title: "Email Sent", description: `Status update email sent to ${order.profile.email}` });
+                            const resData = response.data;
+                            toast({ title: "Email Sent", description: resData?.message || `Status update email sent to ${order.profile?.email || order.profile?.full_name || 'customer'}` });
                           } catch (err) {
                             console.error("Email send error:", err);
                             toast({ title: "Email Failed", description: "Failed to send status email. Check logs.", variant: "destructive" });
