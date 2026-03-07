@@ -36,9 +36,39 @@ Deno.serve(async (req) => {
       );
     }
 
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    // Rate limiting: max 5 contact messages per email per hour
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
 
     const body = await req.json();
+    const { name, email, message } = body as ContactNotificationRequest;
+
+    // Validate required fields early so we can use email for rate limit check
+    if (!name || !email || !message) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check rate limit: count recent messages from this email
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { count, error: countError } = await supabaseAdmin
+      .from("contact_messages")
+      .select("id", { count: "exact", head: true })
+      .eq("email", email.trim())
+      .gte("created_at", oneHourAgo);
+
+    if (!countError && count !== null && count >= 5) {
+      return new Response(
+        JSON.stringify({ error: "Too many messages. Please try again later." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
     const { name, email, message } = body as ContactNotificationRequest;
 
     // Validate required fields
