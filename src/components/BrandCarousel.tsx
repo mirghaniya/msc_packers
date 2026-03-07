@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 export const BrandCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(5);
@@ -61,7 +62,7 @@ export const BrandCarousel = () => {
             width: `${100 / visibleCount}%`
           }}>
                 <div className="flex items-center justify-center h-24 sm:h-28 md:h-32">
-                  <img src={brand.logo_url} alt={brand.name} width={200} height={112} loading="lazy" className="max-h-20 sm:max-h-24 md:max-h-28 max-w-full grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
+                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 300, height: 200 })} alt={brand.name} width={200} height={112} loading="lazy" className="max-h-20 sm:max-h-24 md:max-h-28 max-w-full grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
                 </div>
               </div>)}
           </div>
