@@ -7,14 +7,16 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-[600px] flex items-center overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+      <div className="absolute inset-0 z-0">
+        <img
+          src={heroImage}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+          className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
       </div>
 
