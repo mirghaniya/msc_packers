@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { SuggestedProducts } from "@/components/SuggestedProducts";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { ProductReviews } from "@/components/ProductReviews";
 
 const ProductDetail = () => {
@@ -133,7 +134,7 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
                 <img
-                  src={allImages[currentImageIndex]?.image_url || "/placeholder.svg"}
+                  src={getOptimizedImageUrl(allImages[currentImageIndex]?.image_url, { width: 800, height: 800 })}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -186,7 +187,7 @@ const ProductDetail = () => {
                       }`}
                     >
                       <img
-                        src={img.image_url || "/placeholder.svg"}
+                        src={getOptimizedImageUrl(img.image_url, { width: 150, height: 150 })}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
@@ -256,7 +257,7 @@ const ProductDetail = () => {
                       <CardContent className="p-0">
                         <div className="relative overflow-hidden aspect-square">
                           <img
-                            src={relatedProduct.image_url || "/placeholder.svg"}
+                            src={getOptimizedImageUrl(relatedProduct.image_url, { width: 400, height: 400 })}
                             alt={relatedProduct.name}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                           />

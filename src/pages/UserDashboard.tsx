@@ -13,6 +13,7 @@ import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { PasswordChange } from "@/components/user/PasswordChange";
 import { AddressManager } from "@/components/user/AddressManager";
 import { OrderTimeline } from "@/components/OrderTimeline";
@@ -395,7 +396,7 @@ const UserDashboard = () => {
                       <CardContent className="p-0">
                         <div className="relative aspect-square">
                           <img
-                            src={favorite.products?.image_url || "/placeholder.svg"}
+                            src={getOptimizedImageUrl(favorite.products?.image_url, { width: 400, height: 400 })}
                             alt={favorite.products?.name}
                             className="w-full h-full object-cover"
                           />

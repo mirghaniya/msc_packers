@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
@@ -169,7 +170,7 @@ const Products = () => {
                       <CardContent className="p-0">
                         <div className="relative overflow-hidden aspect-square">
                           <img
-                            src={product.image_url || "/placeholder.svg"}
+                            src={getOptimizedImageUrl(product.image_url, { width: 500, height: 500 })}
                             alt={product.name}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                           />

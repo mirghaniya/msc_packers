@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, cartTotal } = useCart();
@@ -58,7 +59,7 @@ const Cart = () => {
                     <CardContent className="p-6">
                       <div className="flex gap-4">
                         <img
-                          src={item.product.image_url || "/placeholder.svg"}
+                          src={getOptimizedImageUrl(item.product.image_url, { width: 200, height: 200 })}
                           alt={item.product.name}
                           className="w-24 h-24 object-cover rounded"
                         />
