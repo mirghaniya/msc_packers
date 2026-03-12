@@ -134,7 +134,7 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
                 <img
-                  src={allImages[currentImageIndex]?.image_url || "/placeholder.svg"}
+                  src={getOptimizedImageUrl(allImages[currentImageIndex]?.image_url, { width: 800, height: 800 })}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
