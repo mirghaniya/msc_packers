@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
