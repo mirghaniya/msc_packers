@@ -59,7 +59,7 @@ const Cart = () => {
                     <CardContent className="p-6">
                       <div className="flex gap-4">
                         <img
-                          src={item.product.image_url || "/placeholder.svg"}
+                          src={getOptimizedImageUrl(item.product.image_url, { width: 200, height: 200 })}
                           alt={item.product.name}
                           className="w-24 h-24 object-cover rounded"
                         />

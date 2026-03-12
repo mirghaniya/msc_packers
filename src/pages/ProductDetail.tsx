@@ -257,7 +257,7 @@ const ProductDetail = () => {
                       <CardContent className="p-0">
                         <div className="relative overflow-hidden aspect-square">
                           <img
-                            src={relatedProduct.image_url || "/placeholder.svg"}
+                            src={getOptimizedImageUrl(relatedProduct.image_url, { width: 400, height: 400 })}
                             alt={relatedProduct.name}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                           />
