@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useState } from "react";
 import { SuggestedProducts } from "@/components/SuggestedProducts";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { ProductReviews } from "@/components/ProductReviews";
 
 const ProductDetail = () => {
