@@ -187,7 +187,7 @@ const ProductDetail = () => {
                       }`}
                     >
                       <img
-                        src={img.image_url || "/placeholder.svg"}
+                        src={getOptimizedImageUrl(img.image_url, { width: 150, height: 150 })}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
