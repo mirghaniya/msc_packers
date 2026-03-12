@@ -13,6 +13,7 @@ import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { User, MapPin, Heart, ShoppingBag, Trash2, ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { PasswordChange } from "@/components/user/PasswordChange";
 import { AddressManager } from "@/components/user/AddressManager";
 import { OrderTimeline } from "@/components/OrderTimeline";
