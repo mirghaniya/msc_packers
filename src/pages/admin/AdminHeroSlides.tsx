@@ -29,7 +29,7 @@ const AdminHeroSlides = () => {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
-  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url">("upload");
+  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url" | "webp">("upload");
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
