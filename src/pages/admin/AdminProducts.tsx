@@ -273,16 +273,20 @@ const AdminProducts = () => {
               </div>
               <div>
                 <Label>Product Image</Label>
-                <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url")} className="mt-2">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="upload">Upload Image</TabsTrigger>
-                    <TabsTrigger value="url">Image URL</TabsTrigger>
+                <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="upload">Upload</TabsTrigger>
+                    <TabsTrigger value="webp" className="text-green-600">WebP Convert</TabsTrigger>
+                    <TabsTrigger value="url">URL</TabsTrigger>
                   </TabsList>
                   <TabsContent value="upload" className="pt-4">
                     <ImageUpload
                       onUpload={handleImageUpload}
                       currentImageUrl={formData.image_url}
                     />
+                  </TabsContent>
+                  <TabsContent value="webp" className="pt-4">
+                    <WebPConverter onConvertedUpload={handleImageUpload} />
                   </TabsContent>
                   <TabsContent value="url" className="pt-4">
                     <Input
