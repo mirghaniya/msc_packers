@@ -2,7 +2,18 @@ import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, Download, RefreshCw, Check, Image as ImageIcon } from "lucide-react";
+import { RefreshCw, Check, Image as ImageIcon, X, Plus } from "lucide-react";
+
+interface FileItem {
+  id: string;
+  file: File;
+  sourcePreview: string;
+  convertedBlob: Blob | null;
+  convertedPreview: string | null;
+  originalSize: number;
+  convertedSize: number;
+  status: "pending" | "converting" | "converted" | "uploading" | "uploaded" | "error";
+}
 
 interface WebPConverterProps {
   onConvertedUpload: (url: string) => void;
@@ -17,141 +28,148 @@ export const WebPConverter = ({
 }: WebPConverterProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [sourceFile, setSourceFile] = useState<File | null>(null);
-  const [sourcePreview, setSourcePreview] = useState<string | null>(null);
-  const [convertedBlob, setConvertedBlob] = useState<Blob | null>(null);
-  const [convertedPreview, setConvertedPreview] = useState<string | null>(null);
-  const [isConverting, setIsConverting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [quality, setQuality] = useState(80);
-  const [originalSize, setOriginalSize] = useState(0);
-  const [convertedSize, setConvertedSize] = useState(0);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFilesSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    if (!selectedFiles || selectedFiles.length === 0) return;
 
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-    if (!validTypes.includes(file.type)) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a JPG, JPEG, or PNG image",
-        variant: "destructive",
+    const newFiles: FileItem[] = [];
+
+    Array.from(selectedFiles).forEach((file) => {
+      if (!validTypes.includes(file.type)) {
+        toast({ title: `Skipped: ${file.name}`, description: "Only JPG/PNG allowed", variant: "destructive" });
+        return;
+      }
+      if (file.size > 20 * 1024 * 1024) {
+        toast({ title: `Skipped: ${file.name}`, description: "Max 20MB", variant: "destructive" });
+        return;
+      }
+
+      const preview = URL.createObjectURL(file);
+      newFiles.push({
+        id: `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+        file,
+        sourcePreview: preview,
+        convertedBlob: null,
+        convertedPreview: null,
+        originalSize: file.size,
+        convertedSize: 0,
+        status: "pending",
       });
-      return;
-    }
+    });
 
-    if (file.size > 20 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Max 20MB allowed",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setSourceFile(file);
-    setOriginalSize(file.size);
-    setConvertedBlob(null);
-    setConvertedPreview(null);
-    setConvertedSize(0);
-
-    const reader = new FileReader();
-    reader.onload = () => setSourcePreview(reader.result as string);
-    reader.readAsDataURL(file);
+    setFiles((prev) => [...prev, ...newFiles]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }, [toast]);
 
-  const convertToWebP = useCallback(async () => {
-    if (!sourceFile) return;
+  const convertFile = async (item: FileItem, q: number): Promise<FileItem> => {
+    const img = new Image();
+    const loadPromise = new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject(new Error("Failed to load"));
+    });
+    img.src = URL.createObjectURL(item.file);
+    await loadPromise;
 
-    setIsConverting(true);
-    try {
-      const img = new Image();
-      const loadPromise = new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error("Failed to load image"));
-      });
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
 
-      img.src = URL.createObjectURL(sourceFile);
-      await loadPromise;
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Conversion failed"))),
+        "image/webp",
+        q / 100
+      );
+    });
 
-      const canvas = document.createElement("canvas");
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+    URL.revokeObjectURL(img.src);
 
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("Canvas not supported");
-      ctx.drawImage(img, 0, 0);
+    return {
+      ...item,
+      convertedBlob: blob,
+      convertedPreview: URL.createObjectURL(blob),
+      convertedSize: blob.size,
+      status: "converted",
+    };
+  };
 
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-          (b) => (b ? resolve(b) : reject(new Error("Conversion failed"))),
-          "image/webp",
-          quality / 100
-        );
-      });
+  const convertAll = useCallback(async () => {
+    setIsProcessing(true);
+    const pending = files.filter((f) => f.status === "pending");
 
-      setConvertedBlob(blob);
-      setConvertedSize(blob.size);
-      setConvertedPreview(URL.createObjectURL(blob));
-
-      URL.revokeObjectURL(img.src);
-
-      toast({ title: "Converted to WebP successfully!" });
-    } catch (error) {
-      toast({
-        title: "Conversion failed",
-        description: (error as Error).message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsConverting(false);
+    for (const item of pending) {
+      setFiles((prev) => prev.map((f) => (f.id === item.id ? { ...f, status: "converting" } : f)));
+      try {
+        const converted = await convertFile(item, quality);
+        setFiles((prev) => prev.map((f) => (f.id === item.id ? converted : f)));
+      } catch {
+        setFiles((prev) => prev.map((f) => (f.id === item.id ? { ...f, status: "error" } : f)));
+      }
     }
-  }, [sourceFile, quality, toast]);
 
-  const uploadWebP = useCallback(async () => {
-    if (!convertedBlob) return;
+    setIsProcessing(false);
+    toast({ title: `${pending.length} image(s) converted!` });
+  }, [files, quality, toast]);
 
-    setIsUploading(true);
-    try {
-      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.webp`;
+  const uploadAll = useCallback(async () => {
+    setIsProcessing(true);
+    const converted = files.filter((f) => f.status === "converted" && f.convertedBlob);
+    let uploaded = 0;
 
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, convertedBlob, {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: "image/webp",
-        });
+    for (const item of converted) {
+      setFiles((prev) => prev.map((f) => (f.id === item.id ? { ...f, status: "uploading" } : f)));
+      try {
+        const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.webp`;
+        const { data, error } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, item.convertedBlob!, { cacheControl: "3600", upsert: false, contentType: "image/webp" });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(data.path);
+        const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(data.path);
+        onConvertedUpload(publicUrl);
 
-      onConvertedUpload(publicUrl);
-
-      toast({ title: "WebP image uploaded successfully!" });
-
-      // Reset
-      setSourceFile(null);
-      setSourcePreview(null);
-      setConvertedBlob(null);
-      setConvertedPreview(null);
-      setOriginalSize(0);
-      setConvertedSize(0);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (error) {
-      toast({
-        title: "Upload failed",
-        description: (error as Error).message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
+        setFiles((prev) => prev.map((f) => (f.id === item.id ? { ...f, status: "uploaded" } : f)));
+        uploaded++;
+      } catch {
+        setFiles((prev) => prev.map((f) => (f.id === item.id ? { ...f, status: "error" } : f)));
+      }
     }
-  }, [convertedBlob, bucket, folder, onConvertedUpload, toast]);
+
+    setIsProcessing(false);
+    toast({ title: `${uploaded} WebP image(s) uploaded!` });
+
+    // Clear uploaded files after a short delay
+    setTimeout(() => {
+      setFiles((prev) => prev.filter((f) => f.status !== "uploaded"));
+    }, 1500);
+  }, [files, bucket, folder, onConvertedUpload, toast]);
+
+  const removeFile = useCallback((id: string) => {
+    setFiles((prev) => {
+      const item = prev.find((f) => f.id === id);
+      if (item) {
+        URL.revokeObjectURL(item.sourcePreview);
+        if (item.convertedPreview) URL.revokeObjectURL(item.convertedPreview);
+      }
+      return prev.filter((f) => f.id !== id);
+    });
+  }, []);
+
+  const clearAll = useCallback(() => {
+    files.forEach((f) => {
+      URL.revokeObjectURL(f.sourcePreview);
+      if (f.convertedPreview) URL.revokeObjectURL(f.convertedPreview);
+    });
+    setFiles([]);
+  }, [files]);
 
   const formatSize = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -160,65 +178,106 @@ export const WebPConverter = ({
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   };
 
-  const savings = originalSize > 0 && convertedSize > 0
-    ? Math.round((1 - convertedSize / originalSize) * 100)
+  const hasPending = files.some((f) => f.status === "pending");
+  const hasConverted = files.some((f) => f.status === "converted");
+  const totalOriginal = files.reduce((s, f) => s + f.originalSize, 0);
+  const totalConverted = files.reduce((s, f) => s + f.convertedSize, 0);
+  const totalSavings = totalOriginal > 0 && totalConverted > 0
+    ? Math.round((1 - totalConverted / totalOriginal) * 100)
     : 0;
 
   return (
     <div className="space-y-4 rounded-lg border border-dashed p-4 bg-muted/30">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <RefreshCw className="h-4 w-4 text-primary" />
-        Convert to WebP & Upload
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <RefreshCw className="h-4 w-4 text-primary" />
+          Batch Convert to WebP & Upload
+        </div>
+        {files.length > 0 && (
+          <Button type="button" variant="ghost" size="sm" onClick={clearAll} className="h-6 text-xs">
+            Clear All
+          </Button>
+        )}
       </div>
 
       <input
         ref={fileInputRef}
         type="file"
         accept="image/jpeg,image/jpg,image/png"
-        onChange={handleFileSelect}
+        multiple
+        onChange={handleFilesSelect}
         className="hidden"
       />
 
-      {!sourceFile ? (
+      {files.length === 0 ? (
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           className="w-full h-28 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
         >
           <ImageIcon className="h-8 w-8" />
-          <span className="text-xs">Select JPG/PNG to convert</span>
+          <span className="text-xs">Select multiple JPG/PNG images to convert</span>
         </button>
       ) : (
         <div className="space-y-3">
-          {/* Preview row */}
-          <div className="flex gap-3 items-start">
-            {sourcePreview && (
-              <div className="text-center">
-                <img src={sourcePreview} alt="Original" className="w-20 h-20 object-cover rounded border" />
-                <p className="text-[10px] text-muted-foreground mt-1">
-                  Original ({formatSize(originalSize)})
-                </p>
+          {/* File grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-48 overflow-y-auto">
+            {files.map((item) => (
+              <div key={item.id} className="relative group">
+                <img
+                  src={item.convertedPreview || item.sourcePreview}
+                  alt={item.file.name}
+                  className={`w-full aspect-square object-cover rounded border ${
+                    item.status === "uploaded" ? "ring-2 ring-green-500" :
+                    item.status === "error" ? "ring-2 ring-destructive" :
+                    item.status === "converting" || item.status === "uploading" ? "opacity-60" : ""
+                  }`}
+                />
+                {/* Status badge */}
+                <span className={`absolute bottom-0.5 left-0.5 text-[8px] px-1 rounded font-medium ${
+                  item.status === "pending" ? "bg-muted text-muted-foreground" :
+                  item.status === "converting" ? "bg-primary/80 text-primary-foreground" :
+                  item.status === "converted" ? "bg-accent text-accent-foreground" :
+                  item.status === "uploading" ? "bg-primary/80 text-primary-foreground" :
+                  item.status === "uploaded" ? "bg-green-600 text-white" :
+                  "bg-destructive text-destructive-foreground"
+                }`}>
+                  {item.status === "pending" && formatSize(item.originalSize)}
+                  {item.status === "converting" && "Converting..."}
+                  {item.status === "converted" && `${formatSize(item.convertedSize)}`}
+                  {item.status === "uploading" && "Uploading..."}
+                  {item.status === "uploaded" && "✓ Done"}
+                  {item.status === "error" && "Error"}
+                </span>
+                {/* Remove button */}
+                <button
+                  type="button"
+                  onClick={() => removeFile(item.id)}
+                  className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full h-4 w-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-2.5 w-2.5" />
+                </button>
               </div>
-            )}
-            {convertedPreview && (
-              <>
-                <div className="flex items-center self-center text-muted-foreground">→</div>
-                <div className="text-center">
-                  <img src={convertedPreview} alt="WebP" className="w-20 h-20 object-cover rounded border" />
-                  <p className="text-[10px] text-muted-foreground mt-1">
-                    WebP ({formatSize(convertedSize)})
-                  </p>
-                </div>
-                {savings > 0 && (
-                  <div className="self-center">
-                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                      -{savings}% smaller
-                    </span>
-                  </div>
-                )}
-              </>
-            )}
+            ))}
+
+            {/* Add more */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full aspect-square border-2 border-dashed rounded flex flex-col items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+            >
+              <Plus className="h-5 w-5" />
+              <span className="text-[9px]">Add</span>
+            </button>
           </div>
+
+          {/* Summary */}
+          {totalConverted > 0 && totalSavings > 0 && (
+            <div className="text-xs text-muted-foreground flex items-center gap-2">
+              <span>{formatSize(totalOriginal)} → {formatSize(totalConverted)}</span>
+              <span className="font-semibold text-green-600">-{totalSavings}% total</span>
+            </div>
+          )}
 
           {/* Quality slider */}
           <div className="flex items-center gap-3">
@@ -234,41 +293,23 @@ export const WebPConverter = ({
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSourceFile(null);
-                setSourcePreview(null);
-                setConvertedBlob(null);
-                setConvertedPreview(null);
-                if (fileInputRef.current) fileInputRef.current.value = "";
-              }}
-            >
-              Change
-            </Button>
-            {!convertedBlob ? (
-              <Button
-                type="button"
-                size="sm"
-                onClick={convertToWebP}
-                disabled={isConverting}
-              >
-                <RefreshCw className={`h-4 w-4 mr-1 ${isConverting ? "animate-spin" : ""}`} />
-                {isConverting ? "Converting..." : "Convert to WebP"}
+          <div className="flex gap-2 flex-wrap">
+            {hasPending && (
+              <Button type="button" size="sm" onClick={convertAll} disabled={isProcessing}>
+                <RefreshCw className={`h-4 w-4 mr-1 ${isProcessing ? "animate-spin" : ""}`} />
+                Convert All ({files.filter((f) => f.status === "pending").length})
               </Button>
-            ) : (
+            )}
+            {hasConverted && (
               <Button
                 type="button"
                 size="sm"
-                onClick={uploadWebP}
-                disabled={isUploading}
-                className="bg-green-600 hover:bg-green-700"
+                onClick={uploadAll}
+                disabled={isProcessing}
+                className="bg-green-600 hover:bg-green-700 text-white"
               >
                 <Check className="h-4 w-4 mr-1" />
-                {isUploading ? "Uploading..." : "Upload WebP"}
+                Upload All WebP ({files.filter((f) => f.status === "converted").length})
               </Button>
             )}
           </div>
@@ -276,7 +317,7 @@ export const WebPConverter = ({
       )}
 
       <p className="text-[10px] text-muted-foreground">
-        Convert JPG/PNG → WebP for 30-80% smaller file sizes. Better performance & SEO.
+        Select multiple JPG/PNG images → Convert all to WebP → Upload all at once. 30-80% smaller files.
       </p>
     </div>
   );
