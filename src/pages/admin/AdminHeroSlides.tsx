@@ -223,10 +223,11 @@ const AdminHeroSlides = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label>Hero Image *</Label>
-                  <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url")} className="mt-2">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="upload">Upload Image</TabsTrigger>
-                      <TabsTrigger value="url">Image URL</TabsTrigger>
+                  <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="upload">Upload</TabsTrigger>
+                      <TabsTrigger value="webp" className="text-green-600">WebP Convert</TabsTrigger>
+                      <TabsTrigger value="url">URL</TabsTrigger>
                     </TabsList>
                     <TabsContent value="upload" className="pt-4">
                       <div className="space-y-3">
@@ -273,6 +274,12 @@ const AdminHeroSlides = () => {
                           {isUploading ? "Uploading..." : "Upload Image"}
                         </Button>
                       </div>
+                    </TabsContent>
+                    <TabsContent value="webp" className="pt-4">
+                      <WebPConverter
+                        onConvertedUpload={(url) => setFormData({ ...formData, image_url: url })}
+                        folder="hero"
+                      />
                     </TabsContent>
                     <TabsContent value="url" className="pt-4">
                       <Input

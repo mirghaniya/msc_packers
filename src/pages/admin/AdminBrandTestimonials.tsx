@@ -174,15 +174,22 @@ const AdminBrandTestimonials = () => {
 
               <div>
                 <Label>Brand Logo</Label>
-                <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url")} className="mt-2">
-                  <TabsList className="grid w-full grid-cols-2">
+                <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
+                  <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="upload">Upload</TabsTrigger>
+                    <TabsTrigger value="webp" className="text-green-600">WebP Convert</TabsTrigger>
                     <TabsTrigger value="url">URL</TabsTrigger>
                   </TabsList>
                   <TabsContent value="upload" className="pt-4">
                     <ImageUpload
                       onUpload={(url) => handleFieldChange("logo_url", url)}
                       currentImageUrl={formData.logo_url}
+                      folder="brands"
+                    />
+                  </TabsContent>
+                  <TabsContent value="webp" className="pt-4">
+                    <WebPConverter
+                      onConvertedUpload={(url) => handleFieldChange("logo_url", url)}
                       folder="brands"
                     />
                   </TabsContent>
