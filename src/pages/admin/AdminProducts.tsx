@@ -60,7 +60,7 @@ const AdminProducts = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url">("upload");
+  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url" | "webp">("upload");
   const [formData, setFormData] = useState<ProductFormData>(initialFormData);
   const [dialogOpen, setDialogOpen] = useState(false);
 
