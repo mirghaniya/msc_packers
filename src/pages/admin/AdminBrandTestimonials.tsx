@@ -34,7 +34,7 @@ const AdminBrandTestimonials = () => {
   const [editingBrand, setEditingBrand] = useState<any>(null);
   const [formData, setFormData] = useState<BrandFormData>(initialFormData);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url">("upload");
+  const [imageInputMethod, setImageInputMethod] = useState<"upload" | "url" | "webp">("upload");
 
   const { data: brands, isLoading } = useQuery({
     queryKey: ["admin-brand-testimonials"],
