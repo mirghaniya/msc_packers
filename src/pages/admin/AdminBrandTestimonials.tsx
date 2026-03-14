@@ -12,6 +12,7 @@ import { Pencil, Trash2, Plus, Building2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WebPConverter } from "@/components/WebPConverter";
 
 interface BrandFormData {
   name: string;
