@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef } from "react";
 import { Plus, Pencil, Trash2, Image, Upload, X } from "lucide-react";
+import { WebPConverter } from "@/components/WebPConverter";
 
 interface HeroSlide {
   id: string;
