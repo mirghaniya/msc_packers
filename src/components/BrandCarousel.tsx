@@ -62,7 +62,7 @@ export const BrandCarousel = () => {
             width: `${100 / visibleCount}%`
           }}>
                 <div className="flex items-center justify-center h-36 sm:h-40 md:h-48">
-                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 400, height: 350, quality: 75 })} alt={brand.name} width={250} height={200} loading="lazy" className="max-h-32 sm:max-h-36 md:max-h-44 max-w-full grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
+                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 320, quality: 70 })} alt={brand.name} width={220} height={140} loading="lazy" className="max-h-24 sm:max-h-28 md:max-h-32 w-auto max-w-[85%] grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
                 </div>
               </div>)}
           </div>
