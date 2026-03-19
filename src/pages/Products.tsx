@@ -161,7 +161,7 @@ const Products = () => {
                   <p className="font-inter text-muted-foreground">Loading products...</p>
                 </div>
               ) : filteredProducts && filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                   {filteredProducts.map((product) => (
                     <Card
                       key={product.id}
