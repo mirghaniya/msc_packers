@@ -69,8 +69,8 @@ export const BrandCarousel = () => {
         </div>
 
         {/* Dots */}
-        <div className="flex justify-center mt-6 space-x-2">
-          {brands.map((_, index) => <button key={index} onClick={() => setCurrentIndex(index)} className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex % brands.length ? "bg-primary w-6" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"}`} aria-label={`Go to slide ${index + 1}`} />)}
+        <div className="flex justify-center mt-6 space-x-1">
+          {brands.map((_, index) => <button key={index} onClick={() => setCurrentIndex(index)} className={`w-2 h-2 p-2 box-content rounded-full transition-all duration-300 bg-clip-content ${index === currentIndex % brands.length ? "bg-primary w-6" : "bg-muted-foreground/30 hover:bg-muted-foreground/50"}`} aria-label={`Go to slide ${index + 1}`} />)}
         </div>
       </div>
     </section>;

@@ -96,8 +96,8 @@ export const TestimonialSlider = () => {
           </div>
 
           {/* Dots Navigation */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {testimonials.map((_, index) => <button key={index} onClick={() => goToSlide(index)} className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-primary/50"}`} aria-label={`Go to testimonial ${index + 1}`} />)}
+          <div className="flex justify-center mt-8 space-x-1">
+            {testimonials.map((_, index) => <button key={index} onClick={() => goToSlide(index)} className={`w-2 h-2 p-2 box-content rounded-full transition-all duration-300 bg-clip-content ${index === currentIndex ? "bg-primary w-8" : "bg-muted hover:bg-primary/50"}`} aria-label={`Go to testimonial ${index + 1}`} />)}
           </div>
         </div>
       </div>
