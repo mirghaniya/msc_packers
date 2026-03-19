@@ -58,11 +58,11 @@ export const BrandCarousel = () => {
           transform: `translateX(-${currentIndex * 100 / visibleCount}%)`
         }}>
             {/* Duplicate for infinite scroll effect */}
-            {[...brands, ...brands].map((brand, index) => <div key={`${brand.id}-${index}`} className="flex-shrink-0 px-3 sm:px-4 md:px-8" style={{
+            {[...brands, ...brands].map((brand, index) => <div key={`${brand.id}-${index}`} className="flex-shrink-0 box-border px-3 sm:px-4 md:px-8" style={{
             width: `${100 / visibleCount}%`
           }}>
                 <div className="flex items-center justify-center h-36 sm:h-40 md:h-48">
-                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 320, quality: 70 })} alt={brand.name} width={220} height={140} loading="lazy" className="max-h-24 sm:max-h-28 md:max-h-32 w-auto max-w-[85%] grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
+                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 320, quality: 70 })} alt={brand.name} width={220} height={140} loading="lazy" className="max-h-24 sm:max-h-28 md:max-h-32 w-auto max-w-[75%] grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
                 </div>
               </div>)}
           </div>
