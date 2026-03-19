@@ -49,8 +49,8 @@ export const Navbar = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <Link to="/cart">
-              <Button variant="ghost" size="icon" className="relative">
+            <Link to="/cart" aria-label="Shopping cart">
+              <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart">
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
@@ -70,7 +70,7 @@ export const Navbar = () => {
                   </Link>
                 )}
                 <Link to="/dashboard">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" aria-label="User dashboard">
                     <User className="h-5 w-5" />
                   </Button>
                 </Link>

@@ -103,6 +103,7 @@ export const FeaturedProducts = () => {
                     className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
                     onClick={() => toggleFavorite(product.id)}
                     disabled={isFavoritePending}
+                    aria-label={isFavorite(product.id) ? `Remove ${product.name} from favorites` : `Add ${product.name} to favorites`}
                   >
                     <Heart
                       className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${

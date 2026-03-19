@@ -85,12 +85,12 @@ export const TestimonialSlider = () => {
 
           {/* Navigation Buttons */}
           <div className="absolute top-1/2 -translate-y-1/2 left-0 -ml-4 md:-ml-16">
-            <Button variant="outline" size="icon" onClick={prevSlide} className="rounded-full bg-card shadow-soft hover:shadow-elegant transition-all">
+            <Button variant="outline" size="icon" onClick={prevSlide} className="rounded-full bg-card shadow-soft hover:shadow-elegant transition-all" aria-label="Previous testimonial">
               <ChevronLeft className="h-6 w-6" />
             </Button>
           </div>
           <div className="absolute top-1/2 -translate-y-1/2 right-0 -mr-4 md:-mr-16">
-            <Button variant="outline" size="icon" onClick={nextSlide} className="rounded-full bg-card shadow-soft hover:shadow-elegant transition-all">
+            <Button variant="outline" size="icon" onClick={nextSlide} className="rounded-full bg-card shadow-soft hover:shadow-elegant transition-all" aria-label="Next testimonial">
               <ChevronRight className="h-6 w-6" />
             </Button>
           </div>
