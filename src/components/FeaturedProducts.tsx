@@ -114,7 +114,7 @@ export const FeaturedProducts = () => {
                   </Button>
                 </div>
                 <div className="p-3 md:p-6">
-                  <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1 md:mb-2">
+                  <p className="text-xs font-inter uppercase tracking-wide text-muted-foreground mb-1 md:mb-2">
                     {product.category}
                   </p>
                   <Link to={`/product/${product.id}`}>
