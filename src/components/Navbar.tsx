@@ -28,7 +28,7 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 md:space-x-3 group">
-            <img src={logo} alt="MIRGHANIYA SUPER CENTRE" width={48} height={48} className="h-10 w-10 md:h-12 md:w-12 object-contain transition-transform group-hover:scale-105" />
+            <img src={optimizedLogo} alt="MIRGHANIYA SUPER CENTRE" width={48} height={48} className="h-10 w-10 md:h-12 md:w-12 object-contain transition-transform group-hover:scale-105" />
             <span className="font-playfair font-bold text-sm md:text-xl" style={{ color: '#4B164C' }}>
               Mirghaniya Super Centre
             </span>
