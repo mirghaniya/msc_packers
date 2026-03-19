@@ -88,7 +88,7 @@ export const FeaturedProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden aspect-square">
                   <img
-                    src={getOptimizedImageUrl(product.image_url, { width: 500, height: 500 })}
+                    src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320 })}
                     alt={product.name}
                     width={400}
                     height={400}
