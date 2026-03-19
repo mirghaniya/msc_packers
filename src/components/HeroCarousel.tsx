@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import heroImage from "@/assets/hero-bg.jpg";
+const heroImage = "/images/hero-bg.jpg";
 import { useState, useEffect } from "react";
 
 interface HeroSlide {
