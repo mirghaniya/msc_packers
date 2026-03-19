@@ -26,8 +26,10 @@ export const BrandCarousel = () => {
     const updateVisibleCount = () => {
       if (window.innerWidth < 640) {
         setVisibleCount(brands ? Math.min(brands.length, 2) : 2);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCount(brands ? Math.min(brands.length, 3) : 3);
       } else {
-        setVisibleCount(brands ? Math.min(brands.length, 5) : 5);
+        setVisibleCount(brands ? Math.min(brands.length, 4) : 4);
       }
     };
     updateVisibleCount();
