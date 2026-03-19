@@ -2,7 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, Menu, X, Shield } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import logo from "@/assets/logo.png";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
+
+const LOGO_STORAGE_URL = "https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/object/public/product-images/logo/logo.png";
+const optimizedLogo = getOptimizedImageUrl(LOGO_STORAGE_URL, { width: 96, height: 96 });
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
