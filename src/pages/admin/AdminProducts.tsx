@@ -273,6 +273,7 @@ const AdminProducts = () => {
               </div>
               <div>
                 <Label>Product Image</Label>
+                <p className="text-xs text-muted-foreground mt-1">Recommended: 800 × 800 px (square). Formats: JPG, PNG, WebP. Max 5MB.</p>
                 <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
                   <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="upload">Upload</TabsTrigger>
@@ -313,8 +314,8 @@ const AdminProducts = () => {
                     <Images className="h-4 w-4" />
                     Gallery Images (for carousel)
                   </Label>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    Add multiple images for the product carousel on the detail page
+                   <p className="text-xs text-muted-foreground mb-2">
+                    Add multiple images for the product carousel. Recommended: 800 × 800 px (square). Max 5MB each.
                   </p>
                   <MultiImageUpload
                     productId={editingProduct.id}
