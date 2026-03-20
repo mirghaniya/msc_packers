@@ -63,8 +63,8 @@ export const BrandCarousel = () => {
             {[...brands, ...brands].map((brand, index) => <div key={`${brand.id}-${index}`} className="flex-shrink-0 box-border px-3 sm:px-4 md:px-8" style={{
             width: `${100 / visibleCount}%`
           }}>
-                <div className="flex items-center justify-center h-36 sm:h-40 md:h-48">
-                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 320, quality: 70 })} alt={brand.name} width={220} height={160} loading="lazy" className="max-h-24 sm:max-h-28 md:max-h-32 w-auto max-w-[75%] grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
+                <div className="flex items-center justify-center h-28 sm:h-36 md:h-44 lg:h-48">
+                  <img src={getOptimizedImageUrl(brand.logo_url, { width: 400, quality: 75 })} alt={brand.name} width={240} height={170} loading="lazy" className="max-h-20 sm:max-h-26 md:max-h-34 lg:max-h-40 w-auto max-w-[80%] sm:max-w-[78%] md:max-w-[82%] lg:max-w-[85%] grayscale hover:grayscale-0 transition-all shadow-none object-contain" />
                 </div>
               </div>)}
           </div>
