@@ -39,7 +39,7 @@ export const BrandCarousel = () => {
   useEffect(() => {
     if (!brands || brands.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % brands.length);
+      setCurrentIndex((prev) => (prev + 1) % brands.length);
     }, 5000);
     return () => clearInterval(interval);
   }, [brands]);
