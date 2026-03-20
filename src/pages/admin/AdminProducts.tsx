@@ -314,8 +314,8 @@ const AdminProducts = () => {
                     <Images className="h-4 w-4" />
                     Gallery Images (for carousel)
                   </Label>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    Add multiple images for the product carousel on the detail page
+                   <p className="text-xs text-muted-foreground mb-2">
+                    Add multiple images for the product carousel. Recommended: 800 × 800 px (square). Max 5MB each.
                   </p>
                   <MultiImageUpload
                     productId={editingProduct.id}

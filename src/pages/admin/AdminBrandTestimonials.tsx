@@ -174,6 +174,7 @@ const AdminBrandTestimonials = () => {
 
               <div>
                 <Label>Brand Logo</Label>
+                <p className="text-xs text-muted-foreground mt-1">Recommended: 400 × 300 px. Use transparent PNG/WebP for best results. Max 5MB.</p>
                 <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
                   <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="upload">Upload</TabsTrigger>
