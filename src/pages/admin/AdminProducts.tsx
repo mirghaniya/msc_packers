@@ -273,6 +273,7 @@ const AdminProducts = () => {
               </div>
               <div>
                 <Label>Product Image</Label>
+                <p className="text-xs text-muted-foreground mt-1">Recommended: 800 × 800 px (square). Formats: JPG, PNG, WebP. Max 5MB.</p>
                 <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
                   <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="upload">Upload</TabsTrigger>
