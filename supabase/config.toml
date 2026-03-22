@@ -1,5 +1,9 @@
 project_id = "fjpunfvhezivlhyrnyym"
 
+[auth]
+site_url = "https://mirghaniya.vercel.app"
+additional_redirect_urls = ["https://mirghaniyasupercentre.lovable.app", "https://mirghaniya.vercel.app"]
+
 [functions.send-order-notification]
 verify_jwt = false
 
