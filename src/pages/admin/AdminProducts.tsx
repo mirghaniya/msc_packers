@@ -175,7 +175,7 @@ const AdminProducts = () => {
       price: product.price.toString(),
       category: product.category,
       image_url: product.image_url || "",
-      stock_quantity: product.stock_quantity?.toString() || "0",
+      is_out_of_stock: (product.stock_quantity !== null && product.stock_quantity <= 0),
       is_featured: product.is_featured || false,
     });
     setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
