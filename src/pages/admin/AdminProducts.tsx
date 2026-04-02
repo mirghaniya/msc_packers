@@ -160,9 +160,9 @@ const AdminProducts = () => {
     const { is_out_of_stock, ...submitData } = data;
 
     if (editingProduct) {
-      updateMutation.mutate({ id: editingProduct.id, data });
+      updateMutation.mutate({ id: editingProduct.id, data: submitData });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(submitData);
     }
   };
 
