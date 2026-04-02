@@ -36,13 +36,24 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
+      const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
 
-      if (error) {
-        toast.error(error.message || "Failed to sign in with Google");
+      if (result.redirected) {
+        // Browser will redirect to Google - just return
+        return;
       }
+
+      if (result.error) {
+        toast.error(result.error.message || "Failed to sign in with Google");
+        setIsGoogleLoading(false);
+        return;
+      }
+
+      // Tokens received and session set - user is authenticated
+      toast.success("Welcome!");
+      navigate("/");
     } catch (error: any) {
       toast.error(error.message || "Failed to sign in with Google");
     } finally {

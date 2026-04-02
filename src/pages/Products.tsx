@@ -21,7 +21,6 @@ const Products = () => {
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
-  // Fetch categories from database
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
@@ -30,7 +29,6 @@ const Products = () => {
         .select("*")
         .eq("is_active", true)
         .order("display_order", { ascending: true });
-
       if (error) throw error;
       return data;
     },
@@ -40,33 +38,27 @@ const Products = () => {
     queryKey: ["products", category],
     queryFn: async () => {
       let query = supabase.from("products").select("*");
-      
       if (category !== "all") {
         query = query.eq("category", category as any);
       }
-      
       const { data, error } = await query;
       if (error) throw error;
       return data;
     },
   });
 
-  // Filter products based on search query
   const filteredProducts = useMemo(() => {
     if (!products) return [];
-    
     return products.filter((product) => {
-      // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           product.name.toLowerCase().includes(query) ||
           product.description?.toLowerCase().includes(query) ||
           product.sr_number.toLowerCase().includes(query) ||
           product.category.toLowerCase().includes(query);
         if (!matchesSearch) return false;
       }
-
       return true;
     });
   }, [products, searchQuery]);
@@ -98,7 +90,6 @@ const Products = () => {
           </SelectContent>
         </Select>
       </div>
-
       {category !== "all" && (
         <Button variant="outline" onClick={clearFilters} className="w-full">
           Clear Filter
@@ -106,6 +97,8 @@ const Products = () => {
       )}
     </div>
   );
+
+  const isDisplayStand = (cat: string) => cat === "Display Stands";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -124,7 +117,6 @@ const Products = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Desktop Sidebar Filters */}
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="sticky top-4 bg-card rounded-lg border p-6">
                 <h2 className="font-playfair font-semibold text-lg mb-4">Filters</h2>
@@ -132,12 +124,9 @@ const Products = () => {
               </div>
             </aside>
 
-            {/* Main Content */}
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <ProductSearch onSearch={setSearchQuery} />
-                
-                {/* Mobile Filter Button */}
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="outline" className="lg:hidden">
@@ -168,64 +157,67 @@ const Products = () => {
                       className="group overflow-hidden hover:shadow-elegant transition-all duration-300"
                     >
                       <CardContent className="p-0">
-                        <div className="relative overflow-hidden aspect-square">
-                          <img
-                            src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320 })}
-                            alt={product.name}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          />
-                          {/* Stock Badge */}
-                          {product.stock_quantity !== null && product.stock_quantity <= 0 && (
-                            <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground text-xs px-2 py-1 rounded">
-                              Out of Stock
-                            </div>
-                          )}
-                          {/* Favorite Heart Button */}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
-                            onClick={() => toggleFavorite(product.id)}
-                            disabled={isFavoritePending}
-                          >
-                            <Heart
-                              className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${
-                                isFavorite(product.id)
-                                  ? "fill-red-500 text-red-500"
-                                  : "text-muted-foreground hover:text-red-500"
-                              }`}
+                        <Link to={`/product/${product.id}`}>
+                          <div className="relative overflow-hidden aspect-square">
+                            <img
+                              src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320 })}
+                              alt={product.name}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                             />
-                          </Button>
-                        </div>
+                            {product.stock_quantity !== null && product.stock_quantity <= 0 && (
+                              <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground text-xs px-2 py-1 rounded">
+                                Out of Stock
+                              </div>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleFavorite(product.id);
+                              }}
+                              disabled={isFavoritePending}
+                            >
+                              <Heart
+                                className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${
+                                  isFavorite(product.id)
+                                    ? "fill-red-500 text-red-500"
+                                    : "text-muted-foreground hover:text-red-500"
+                                }`}
+                              />
+                            </Button>
+                          </div>
+                        </Link>
                         <div className="p-3 md:p-6">
                           <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1 md:mb-2">
                             {product.category}
                           </p>
                           <Link to={`/product/${product.id}`}>
-                            <h3 className="font-playfair font-semibold text-sm md:text-xl text-foreground mb-1 md:mb-2 hover:text-primary transition-colors line-clamp-2">
+                            <h3 className="font-playfair font-bold text-[20px] md:text-xl text-foreground mb-1 md:mb-2 hover:text-primary transition-colors line-clamp-2">
                               {product.name}
                             </h3>
                           </Link>
-                          <p className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-4 line-clamp-2 hidden md:block">
-                            {product.description}
-                          </p>
                           <div className="flex items-center justify-between mb-2 md:mb-3">
                             <span className="font-inter font-bold text-lg md:text-2xl text-primary">
                               ₹{product.price}
                             </span>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <Button 
-                              size="sm" 
-                              variant="default"
-                              className="w-full text-xs md:text-sm h-8 md:h-9"
-                              onClick={() => addToCart(product.id)}
-                              disabled={isAddingToCart || (product.stock_quantity !== null && product.stock_quantity <= 0)}
-                            >
-                              <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                              <span className="hidden sm:inline">Add to Cart</span>
-                              <span className="sm:hidden">Add</span>
-                            </Button>
+                            {!isDisplayStand(product.category) && (
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="w-full text-xs md:text-sm h-8 md:h-9"
+                                onClick={() => addToCart(product.id)}
+                                disabled={isAddingToCart || (product.stock_quantity !== null && product.stock_quantity <= 0)}
+                              >
+                                <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                                <span className="hidden sm:inline">Add to Cart</span>
+                                <span className="sm:hidden">Add</span>
+                              </Button>
+                            )}
                             <a
                               href={getEnquiryUrl(product.name)}
                               target="_blank"
