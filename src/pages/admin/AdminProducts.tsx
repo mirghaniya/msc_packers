@@ -155,8 +155,9 @@ const AdminProducts = () => {
     const data = {
       ...formData,
       price: parseFloat(formData.price),
-      stock_quantity: parseInt(formData.stock_quantity),
+      stock_quantity: formData.is_out_of_stock ? 0 : 1,
     };
+    const { is_out_of_stock, ...submitData } = data;
 
     if (editingProduct) {
       updateMutation.mutate({ id: editingProduct.id, data });
