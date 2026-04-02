@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -41,7 +42,7 @@ interface ProductFormData {
   price: string;
   category: string;
   image_url: string;
-  stock_quantity: string;
+  is_out_of_stock: boolean;
   is_featured: boolean;
 }
 
@@ -52,7 +53,7 @@ const initialFormData: ProductFormData = {
   price: "",
   category: "Bags",
   image_url: "",
-  stock_quantity: "0",
+  is_out_of_stock: false,
   is_featured: false,
 };
 
@@ -154,13 +155,14 @@ const AdminProducts = () => {
     const data = {
       ...formData,
       price: parseFloat(formData.price),
-      stock_quantity: parseInt(formData.stock_quantity),
+      stock_quantity: formData.is_out_of_stock ? 0 : 1,
     };
+    const { is_out_of_stock, ...submitData } = data;
 
     if (editingProduct) {
-      updateMutation.mutate({ id: editingProduct.id, data });
+      updateMutation.mutate({ id: editingProduct.id, data: submitData });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(submitData);
     }
   };
 
@@ -173,7 +175,7 @@ const AdminProducts = () => {
       price: product.price.toString(),
       category: product.category,
       image_url: product.image_url || "",
-      stock_quantity: product.stock_quantity?.toString() || "0",
+      is_out_of_stock: (product.stock_quantity !== null && product.stock_quantity <= 0),
       is_featured: product.is_featured || false,
     });
     setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
@@ -247,12 +249,12 @@ const AdminProducts = () => {
                     required
                   />
                 </div>
-                <div>
-                  <Label>Stock Quantity</Label>
-                  <Input
-                    type="number"
-                    value={formData.stock_quantity}
-                    onChange={(e) => handleFieldChange("stock_quantity", e.target.value)}
+                <div className="flex items-center justify-between pt-6">
+                  <Label htmlFor="out-of-stock-toggle">Out of Stock</Label>
+                  <Switch
+                    id="out-of-stock-toggle"
+                    checked={formData.is_out_of_stock}
+                    onCheckedChange={(checked) => handleFieldChange("is_out_of_stock", checked)}
                   />
                 </div>
               </div>
