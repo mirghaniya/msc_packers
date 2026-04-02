@@ -249,12 +249,12 @@ const AdminProducts = () => {
                     required
                   />
                 </div>
-                <div>
-                  <Label>Stock Quantity</Label>
-                  <Input
-                    type="number"
-                    value={formData.stock_quantity}
-                    onChange={(e) => handleFieldChange("stock_quantity", e.target.value)}
+                <div className="flex items-center justify-between pt-6">
+                  <Label htmlFor="out-of-stock-toggle">Out of Stock</Label>
+                  <Switch
+                    id="out-of-stock-toggle"
+                    checked={formData.is_out_of_stock}
+                    onCheckedChange={(checked) => handleFieldChange("is_out_of_stock", checked)}
                   />
                 </div>
               </div>
