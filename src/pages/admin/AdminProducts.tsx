@@ -42,7 +42,7 @@ interface ProductFormData {
   price: string;
   category: string;
   image_url: string;
-  stock_quantity: string;
+  is_out_of_stock: boolean;
   is_featured: boolean;
 }
 
@@ -53,7 +53,7 @@ const initialFormData: ProductFormData = {
   price: "",
   category: "Bags",
   image_url: "",
-  stock_quantity: "0",
+  is_out_of_stock: false,
   is_featured: false,
 };
 
