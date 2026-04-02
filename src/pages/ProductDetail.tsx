@@ -214,7 +214,7 @@ const ProductDetail = () => {
             {/* Product Info */}
             <div>
               <p className="text-sm font-inter uppercase tracking-wide text-secondary mb-2">{product.category}</p>
-              <h1 className="font-playfair font-bold text-4xl text-foreground mb-2">{product.name}</h1>
+              <h1 className="font-playfair font-bold text-[24px] lg:text-4xl text-foreground mb-2">{product.name}</h1>
               <p className="text-sm text-muted-foreground mb-4">SR No: {product.sr_number}</p>
               <p className="font-inter font-bold text-3xl text-primary mb-6">₹{product.price}</p>
 
