@@ -117,8 +117,10 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Account created successfully! Welcome!");
-      navigate("/");
+      // Show OTP verification screen
+      setPendingEmail(signupEmail);
+      setShowOtpVerification(true);
+      toast.success("Verification code sent to your email!");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     } finally {
