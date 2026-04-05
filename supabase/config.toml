@@ -4,6 +4,10 @@ project_id = "fjpunfvhezivlhyrnyym"
 site_url = "https://mirghaniya.vercel.app"
 additional_redirect_urls = ["https://mirghaniyasupercentre.lovable.app", "https://mirghaniya.vercel.app"]
 
+[auth.password]
+min_length = 8
+leaked_password_protection = "no_protection"
+
 [functions.send-order-notification]
 verify_jwt = false
 
