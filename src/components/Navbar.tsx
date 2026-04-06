@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
 
 const LOGO_STORAGE_URL = "https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/object/public/product-images/logo/logo.png";
-const optimizedLogo = getOptimizedImageUrl(LOGO_STORAGE_URL, { width: 96, height: 96 });
+const optimizedLogo = getOptimizedImageUrl(LOGO_STORAGE_URL, { width: 48, height: 48, quality: 60 });
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";

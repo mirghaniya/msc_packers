@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/imageUtils";
 const heroImage = "/images/hero-bg.jpg";
 import { useState, useEffect } from "react";
 
@@ -73,7 +74,7 @@ export const HeroCarousel = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0 transition-opacity duration-500">
         <img
-          src={currentSlide.image_url}
+          src={currentSlide.id === "default" ? currentSlide.image_url : getOptimizedImageUrl(currentSlide.image_url, { width: 1920, quality: 60 })}
           alt=""
           fetchPriority="high"
           width={1920}
