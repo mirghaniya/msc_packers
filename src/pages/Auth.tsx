@@ -26,9 +26,8 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
 
-  // OTP Verification
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
-  const [otpValue, setOtpValue] = useState("");
+  // Email verification
+  const [showEmailSent, setShowEmailSent] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
