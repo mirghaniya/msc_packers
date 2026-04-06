@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { lazy, Suspense } from "react";
-import Index from "./pages/Index";
+const Index = lazy(() => import("./pages/Index"));
 
 const Auth = lazy(() => import("./pages/Auth"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
