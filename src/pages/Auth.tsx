@@ -143,56 +143,35 @@ const Auth = () => {
     }
   };
 
-  if (showOtpVerification) {
+  if (showEmailSent) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1 flex items-center justify-center py-12 px-4 bg-accent">
           <Card className="w-full max-w-md shadow-elegant">
             <CardHeader>
-              <CardTitle className="font-playfair text-3xl text-center">Verify Email</CardTitle>
+              <CardTitle className="font-playfair text-3xl text-center">Check Your Email</CardTitle>
               <CardDescription className="text-center">
-                Enter the 6-digit code sent to<br />
+                We've sent a verification link to<br />
                 <span className="font-medium text-foreground">{pendingEmail}</span>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex justify-center">
-                <InputOTP
-                  maxLength={6}
-                  value={otpValue}
-                  onChange={setOtpValue}
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </div>
-
-              <Button
-                className="w-full"
-                onClick={handleVerifyOtp}
-                disabled={isLoading || otpValue.length !== 6}
-              >
-                {isLoading ? "Verifying..." : "Verify Email"}
-              </Button>
+              <p className="text-center text-muted-foreground text-sm">
+                Click the verification button in the email to activate your account. If you don't see it, check your spam folder.
+              </p>
 
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  Didn't receive the code?
+                  Didn't receive the email?
                 </p>
                 <Button
                   variant="link"
-                  onClick={handleResendOtp}
+                  onClick={handleResendVerification}
                   disabled={isLoading}
                   className="p-0 h-auto"
                 >
-                  Resend Code
+                  Resend Verification Email
                 </Button>
               </div>
 
@@ -200,8 +179,7 @@ const Auth = () => {
                 variant="ghost"
                 className="w-full"
                 onClick={() => {
-                  setShowOtpVerification(false);
-                  setOtpValue("");
+                  setShowEmailSent(false);
                 }}
               >
                 Back to Sign Up
