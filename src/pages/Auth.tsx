@@ -105,7 +105,7 @@ const Auth = () => {
         email: signupEmail,
         password: signupPassword,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: "https://mirghaniya.vercel.app/",
           data: {
             full_name: fullName,
             phone: signupPhone,
@@ -115,10 +115,10 @@ const Auth = () => {
 
       if (error) throw error;
 
-      // Show OTP verification screen
+      // Show email verification sent screen
       setPendingEmail(signupEmail);
-      setShowOtpVerification(true);
-      toast.success("Verification code sent to your email!");
+      setShowEmailSent(true);
+      toast.success("Verification link sent to your email!");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     } finally {
