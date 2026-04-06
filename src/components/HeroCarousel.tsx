@@ -74,7 +74,7 @@ export const HeroCarousel = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0 transition-opacity duration-500">
         <img
-          src={currentSlide.image_url}
+          src={currentSlide.id === "default" ? currentSlide.image_url : getOptimizedImageUrl(currentSlide.image_url, { width: 1920, quality: 60 })}
           alt=""
           fetchPriority="high"
           width={1920}
