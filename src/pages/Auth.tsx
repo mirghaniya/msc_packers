@@ -126,33 +126,7 @@ const Auth = () => {
     }
   };
 
-  const handleVerifyOtp = async () => {
-    if (otpValue.length !== 6) {
-      toast.error("Please enter a valid 6-digit code");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase.auth.verifyOtp({
-        email: pendingEmail,
-        token: otpValue,
-        type: "signup",
-      });
-
-      if (error) throw error;
-
-      toast.success("Email verified successfully!");
-      navigate("/");
-    } catch (error: any) {
-      toast.error(error.message || "Invalid verification code");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
+  const handleResendVerification = async () => {
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.resend({
@@ -161,9 +135,9 @@ const Auth = () => {
       });
 
       if (error) throw error;
-      toast.success("New verification code sent!");
+      toast.success("New verification link sent!");
     } catch (error: any) {
-      toast.error(error.message || "Failed to resend code");
+      toast.error(error.message || "Failed to resend verification email");
     } finally {
       setIsLoading(false);
     }
