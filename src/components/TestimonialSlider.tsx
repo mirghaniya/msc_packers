@@ -19,7 +19,7 @@ const testimonials = [{
   rating: 5
 }, {
   id: 4,
-  name: "David Thompson",
+  name: "Shubh Laxmi",
   content: "Professional quality at competitive prices. We've been ordering from them for years.",
   rating: 5
 }, {
