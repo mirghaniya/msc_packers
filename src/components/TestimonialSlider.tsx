@@ -24,7 +24,7 @@ const testimonials = [{
   rating: 5
 }, {
   id: 5,
-  name: "Lisa Anderson",
+  name: "Geetanjali Gold",
   content: "The gift boxes are absolutely stunning. Our customers love the premium feel.",
   rating: 5
 }, {
