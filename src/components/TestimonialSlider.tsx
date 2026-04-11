@@ -14,7 +14,7 @@ const testimonials = [{
   rating: 5
 }, {
   id: 3,
-  name: "Emily Rodriguez",
+  name: "Bangard Jewellers",
   content: "Perfect packaging solutions for our boutique. The attention to detail is remarkable.",
   rating: 5
 }, {
