@@ -223,7 +223,7 @@ const AdminHeroSlides = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label>Hero Image *</Label>
-                  <p className="text-xs text-muted-foreground mt-1">Recommended: 1920 × 600 px (wide banner). Formats: JPG, PNG, WebP. Max 5MB.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Recommended: 1920 × 600 px (wide banner). Served at 640/1024/1920px depending on device. Use WebP for fastest loading. Max 5MB.</p>
                   <Tabs value={imageInputMethod} onValueChange={(v) => setImageInputMethod(v as "upload" | "url" | "webp")} className="mt-2">
                     <TabsList className="grid w-full grid-cols-3">
                       <TabsTrigger value="upload">Upload</TabsTrigger>
