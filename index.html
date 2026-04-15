@@ -168,44 +168,38 @@
     <meta name="usp" content="35+ Years Experience, 500+ Product Varieties, Pan-India Delivery, Wholesale Pricing, Custom Branding, Bulk Orders" />
     <meta name="why.choose.us" content="Largest Collection, Best Wholesale Prices, Quality Guaranteed, Fast Shipping, Custom Solutions" />
 
-    <!-- Preconnect -->
+    <!-- Preconnect (must be first network hints) -->
+    <link rel="preconnect" href="https://fjpunfvhezivlhyrnyym.supabase.co" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fjpunfvhezivlhyrnyym.supabase.co" crossorigin>
-    <link rel="preconnect" href="https://fjpunfvhezivlhyrnyym.supabase.co">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fjpunfvhezivlhyrnyym.supabase.co">
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
-
-    <!-- Preload LCP hero image & logo -->
-    <link rel="preload" as="image" href="/images/hero-bg.jpg" fetchpriority="high">
-    <link rel="preload" as="fetch" href="https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/hero_slides?select=*&is_active=eq.true&order=display_order.asc" crossorigin>
-    <link rel="preload" as="image" href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/logo/logo.png?width=96&height=96&quality=75">
-
-    <!-- Early hero slide image discovery script -->
+    <!-- Early hero slide image discovery (runs before main JS bundle) -->
     <script>
       (function(){
+        var base='https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/';
         var api='https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1';
         var k='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcHVuZnZoZXppdmxoeXJueXltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MjU0NDIsImV4cCI6MjA3NTAwMTQ0Mn0.ERqF-h_6UBMErHlBVTH6rgtsxStXqbHwaFDw7P0JECw';
-        fetch(api,{headers:{'apikey':k,'Authorization':'Bearer '+k}})
+        window.__heroP=fetch(api,{headers:{'apikey':k,'Authorization':'Bearer '+k}})
         .then(function(r){return r.json()})
         .then(function(d){
           if(d&&d[0]&&d[0].image_url){
             var u=d[0].image_url;
-            var base='https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/';
-            var src=base+u+'?width=768&quality=50';
+            var src=base+u+'?width=1280&quality=55';
             var l=document.createElement('link');
             l.rel='preload';l.as='image';l.href=src;l.fetchPriority='high';
-            l.imageSrcset=base+u+'?width=480&quality=45 480w,'+src+' 768w,'+base+u+'?width=1280&quality=55 1280w,'+base+u+'?width=1920&quality=60 1920w';
+            l.imageSrcset=base+u+'?width=480&quality=45 480w,'+base+u+'?width=768&quality=50 768w,'+src+' 1280w,'+base+u+'?width=1920&quality=60 1920w';
             l.imageSizes='100vw';
             document.head.appendChild(l);
+            return d;
           }
-        }).catch(function(){});
+          return d;
+        }).catch(function(){return null;});
       })();
     </script>
+
+    <!-- Fonts (non-blocking) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 
     <!-- Inline critical CSS for faster FCP -->
     <style>
@@ -213,24 +207,14 @@
       html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
       body{margin:0;line-height:inherit;background-color:hsl(0 0% 96%);color:hsl(0 0% 0%);font-family:'Inter',sans-serif}
       #root{min-height:100vh;display:flex;flex-direction:column}
-      .min-h-screen{min-height:100vh}
-      .flex{display:flex}
-      .flex-col{flex-direction:column}
-      .flex-1{flex:1 1 0%}
-      .items-center{align-items:center}
-      .justify-center{justify-content:center}
-      .justify-between{justify-content:space-between}
-      .sticky{position:sticky}
-      .top-0{top:0}
-      .z-50{z-index:50}
-      .h-20{height:5rem}
-      .border-b{border-bottom-width:1px}
-      .px-4{padding-left:1rem;padding-right:1rem}
-      .animate-spin{animation:spin 1s linear infinite}
-      @keyframes spin{to{transform:rotate(360deg)}}
-      .rounded-full{border-radius:9999px}
-      .h-8{height:2rem}.w-8{width:2rem}
-      .border-b-2{border-bottom-width:2px}
+      .min-h-screen{min-height:100vh}.flex{display:flex}.flex-col{flex-direction:column}.flex-1{flex:1 1 0%}
+      .items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}
+      .sticky{position:sticky}.top-0{top:0}.z-50{z-index:50}.h-20{height:5rem}
+      .border-b{border-bottom-width:1px}.px-4{padding-left:1rem;padding-right:1rem}
+      .animate-spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+      .rounded-full{border-radius:9999px}.h-8{height:2rem}.w-8{width:2rem}.border-b-2{border-bottom-width:2px}
+      .relative{position:relative}.overflow-hidden{overflow:hidden}.absolute{position:absolute}.inset-0{inset:0}
+      .w-full{width:100%}.h-full{height:100%}.object-cover{object-fit:cover}
     </style>
 
     <!-- Favicons -->
