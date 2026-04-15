@@ -1,10 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
+
+const getVisibleCount = (brandsLength: number | undefined) => {
+  if (typeof window === 'undefined') return 4;
+  const mq1024 = window.matchMedia('(min-width: 1024px)');
+  const mq640 = window.matchMedia('(min-width: 640px)');
+  const max = brandsLength || 4;
+  if (mq1024.matches) return Math.min(max, 4);
+  if (mq640.matches) return Math.min(max, 3);
+  return Math.min(max, 2);
+};
+
 export const BrandCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [visibleCount, setVisibleCount] = useState(4);
   const {
     data: brands
   } = useQuery({
@@ -21,20 +32,18 @@ export const BrandCarousel = () => {
     }
   });
 
-  // Handle responsive visible count
+  // Handle responsive visible count using matchMedia (avoids forced reflow)
   useEffect(() => {
-    const updateVisibleCount = () => {
-      if (window.innerWidth < 640) {
-        setVisibleCount(brands ? Math.min(brands.length, 2) : 2);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(brands ? Math.min(brands.length, 3) : 3);
-      } else {
-        setVisibleCount(brands ? Math.min(brands.length, 4) : 4);
-      }
+    const update = () => setVisibleCount(getVisibleCount(brands?.length));
+    update();
+    const mq1024 = window.matchMedia('(min-width: 1024px)');
+    const mq640 = window.matchMedia('(min-width: 640px)');
+    mq1024.addEventListener('change', update);
+    mq640.addEventListener('change', update);
+    return () => {
+      mq1024.removeEventListener('change', update);
+      mq640.removeEventListener('change', update);
     };
-    updateVisibleCount();
-    window.addEventListener('resize', updateVisibleCount);
-    return () => window.removeEventListener('resize', updateVisibleCount);
   }, [brands]);
   useEffect(() => {
     if (!brands || brands.length <= 1) return;
