@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { lazy, Suspense } from "react";
-const Index = lazy(() => import("./pages/Index"));
+import Index from "./pages/Index";
 
 const Auth = lazy(() => import("./pages/Auth"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -29,7 +29,15 @@ const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
 const AdminBrandTestimonials = lazy(() => import("./pages/admin/AdminBrandTestimonials"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
