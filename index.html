@@ -184,12 +184,14 @@
         .then(function(d){
           if(d&&d[0]&&d[0].image_url){
             var u=d[0].image_url;
-            var src=base+u+'?width=1280&quality=55';
+            var isMobile=window.innerWidth<768;
+            var src=isMobile?(base+u+'?width=640&quality=40'):(base+u+'?width=1280&quality=50');
             var l=document.createElement('link');
             l.rel='preload';l.as='image';l.href=src;l.fetchPriority='high';
-            l.imageSrcset=base+u+'?width=480&quality=45 480w,'+base+u+'?width=768&quality=50 768w,'+src+' 1280w,'+base+u+'?width=1920&quality=60 1920w';
+            l.imageSrcset=base+u+'?width=480&quality=40 480w,'+base+u+'?width=768&quality=45 768w,'+base+u+'?width=1280&quality=50 1280w,'+base+u+'?width=1920&quality=55 1920w';
             l.imageSizes='100vw';
             document.head.appendChild(l);
+            window.__heroImg=src;
             return d;
           }
           return d;
