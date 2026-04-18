@@ -28,10 +28,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
     queryKey: ["product-reviews", productId],
     queryFn: async () => {
       const { data, error } = await (supabase as any)
-        .from("public_product_reviews")
-        .select("id, product_id, rating, title, content, is_verified_purchase, created_at")
-        .eq("product_id", productId)
-        .order("created_at", { ascending: false });
+        .rpc("get_public_product_reviews", { p_product_id: productId });
 
       if (error) throw error;
       return data;
