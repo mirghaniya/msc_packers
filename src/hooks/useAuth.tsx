@@ -1,54 +1,69 @@
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Module-level shared state — prevents each useAuth() instance from creating
+// its own listener and firing duplicate queries on page load.
+let sharedSession: Session | null = null;
+let sharedUser: User | null = null;
+let initialized = false;
+const listeners = new Set<() => void>();
+const notify = () => listeners.forEach((l) => l());
+
+const initAuth = (queryClient: ReturnType<typeof useQueryClient>) => {
+  if (initialized) return;
+  initialized = true;
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    sharedSession = session;
+    sharedUser = session?.user ?? null;
+    notify();
+    // Invalidate role cache on auth change
+    queryClient.invalidateQueries({ queryKey: ["user-role"] });
+  });
+
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    sharedSession = session;
+    sharedUser = session?.user ?? null;
+    notify();
+  });
+};
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          setTimeout(() => {
-            checkAdminRole(session.user.id);
-          }, 0);
-        } else {
-          setIsAdmin(false);
-        }
-      }
-    );
+    initAuth(queryClient);
+    const listener = () => setTick((t) => t + 1);
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }, [queryClient]);
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        checkAdminRole(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
+  // Single shared role query (deduped across all useAuth callers)
+  const { data: isAdmin = false, isLoading: roleLoading } = useQuery({
+    queryKey: ["user-role", sharedUser?.id],
+    queryFn: async () => {
+      if (!sharedUser) return false;
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", sharedUser.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    },
+    enabled: !!sharedUser,
+    staleTime: 5 * 60 * 1000,
+  });
 
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const checkAdminRole = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .single();
-
-    setIsAdmin(!!data);
-    setLoading(false);
+  return {
+    user: sharedUser,
+    session: sharedSession,
+    isAdmin,
+    loading: !initialized || roleLoading,
   };
-
-  return { user, session, isAdmin, loading };
 };
