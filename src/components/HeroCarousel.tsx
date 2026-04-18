@@ -30,16 +30,8 @@ export const HeroCarousel = () => {
 
   const { data: slides } = useQuery({
     queryKey: ["hero-slides"],
+    staleTime: 5 * 60 * 1000,
     queryFn: async () => {
-      // Reuse early-fetched data from index.html if available
-      if ((window as any).__heroP) {
-        try {
-          const earlyData = await (window as any).__heroP;
-          if (earlyData && earlyData.length > 0) {
-            // Early fetch only got image_url, still need full data
-          }
-        } catch {}
-      }
       const { data, error } = await supabase
         .from("hero_slides")
         .select("*")
