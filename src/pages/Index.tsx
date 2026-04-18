@@ -2,8 +2,8 @@ import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { HeroCarousel } from "@/components/HeroCarousel";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 
-const FeaturedProducts = lazy(() => import("@/components/FeaturedProducts").then(m => ({ default: m.FeaturedProducts })));
 const PromotionalBanner = lazy(() => import("@/components/PromotionalBanner").then(m => ({ default: m.PromotionalBanner })));
 const BrandCarousel = lazy(() => import("@/components/BrandCarousel").then(m => ({ default: m.BrandCarousel })));
 const TestimonialSlider = lazy(() => import("@/components/TestimonialSlider").then(m => ({ default: m.TestimonialSlider })));
@@ -42,9 +42,7 @@ const Index = () => {
       <Navbar />
       <main className="flex-1">
         <HeroCarousel />
-        <Suspense fallback={<div className="min-h-[400px]" />}>
-          <FeaturedProducts />
-        </Suspense>
+        <FeaturedProducts />
         <LazySection minHeight="200px">
           <Suspense fallback={<div className="min-h-[200px]" />}>
             <PromotionalBanner />
