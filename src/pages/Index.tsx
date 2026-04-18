@@ -42,9 +42,7 @@ const Index = () => {
       <Navbar />
       <main className="flex-1">
         <HeroCarousel />
-        <Suspense fallback={<div className="min-h-[400px]" />}>
-          <FeaturedProducts />
-        </Suspense>
+        <FeaturedProducts />
         <LazySection minHeight="200px">
           <Suspense fallback={<div className="min-h-[200px]" />}>
             <PromotionalBanner />
