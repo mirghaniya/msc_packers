@@ -73,6 +73,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
         canReview: orderItems && orderItems.length > 0 && !existingReview,
         orderId: orderItems?.[0]?.order_id || null,
         alreadyReviewed: !!existingReview,
+        ownReviewId: existingReview?.id || null,
       };
     },
     enabled: !!user,
@@ -277,7 +278,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
                       </p>
                     </div>
                   </div>
-                  {user?.id === review.user_id && (
+                  {user && canReview?.ownReviewId === review.id && (
                     <Button
                       variant="ghost"
                       size="icon"
