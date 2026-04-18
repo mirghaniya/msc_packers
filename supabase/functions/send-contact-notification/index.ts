@@ -112,6 +112,18 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Persist message to database (service role bypasses RLS so direct client inserts can stay blocked)
+    const { error: insertError } = await supabaseAdmin
+      .from("contact_messages")
+      .insert({ name: name.trim(), email: email.trim(), message: message.trim() });
+    if (insertError) {
+      console.error("contact_messages insert error:", insertError);
+      return new Response(
+        JSON.stringify({ error: "Failed to save message" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Escape all user inputs for safe HTML interpolation
     const safeName = escapeHtml(name.trim());
     const safeEmail = escapeHtml(email.trim());

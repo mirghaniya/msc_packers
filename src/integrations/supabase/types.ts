@@ -582,7 +582,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_product_reviews: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_verified_purchase: boolean | null
+          product_id: string | null
+          rating: number | null
+          title: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_verified_purchase?: boolean | null
+          product_id?: string | null
+          rating?: number | null
+          title?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_verified_purchase?: boolean | null
+          product_id?: string | null
+          rating?: number | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       create_validated_order: { Args: { p_cart_items: Json }; Returns: string }
