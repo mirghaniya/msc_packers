@@ -623,6 +623,18 @@ export type Database = {
     }
     Functions: {
       create_validated_order: { Args: { p_cart_items: Json }; Returns: string }
+      get_public_product_reviews: {
+        Args: { p_product_id: string }
+        Returns: {
+          content: string
+          created_at: string
+          id: string
+          is_verified_purchase: boolean
+          product_id: string
+          rating: number
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
