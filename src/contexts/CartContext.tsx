@@ -60,10 +60,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchCart();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      fetchCart();
+    // Only fetch cart on auth state changes (skip initial guest visit
+    // — fetchCart will be called when SIGNED_IN fires).
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) fetchCart();
+      else setItems([]);
     });
 
     return () => subscription.unsubscribe();
