@@ -183,14 +183,14 @@
       fetchpriority="high"
     />
 
-    <!-- Background hero slide refresh (non-blocking) -->
+    <!-- Background data prefetch (non-blocking) - kicks off API calls before JS parses -->
     <script>
       (function(){
-        var api='https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1';
+        var base='https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/';
         var k='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcHVuZnZoZXppdmxoeXJueXltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MjU0NDIsImV4cCI6MjA3NTAwMTQ0Mn0.ERqF-h_6UBMErHlBVTH6rgtsxStXqbHwaFDw7P0JECw';
-        window.__heroP=fetch(api,{headers:{'apikey':k,'Authorization':'Bearer '+k}})
-        .then(function(r){return r.json()})
-        .catch(function(){return null;});
+        var h={headers:{'apikey':k,'Authorization':'Bearer '+k}};
+        window.__heroP=fetch(base+'hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1',h).then(function(r){return r.json()}).catch(function(){return null;});
+        window.__featuredP=fetch(base+'products?select=*&is_featured=eq.true&limit=4',h).then(function(r){return r.json()}).catch(function(){return null;});
       })();
     </script>
 
