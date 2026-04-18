@@ -32,6 +32,15 @@ export const HeroCarousel = () => {
     queryKey: ["hero-slides"],
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
+      // Reuse in-flight prefetch from index.html if available
+      const prefetched = (window as any).__heroP as Promise<any> | undefined;
+      if (prefetched) {
+        try {
+          const data = await prefetched;
+          (window as any).__heroP = undefined;
+          if (Array.isArray(data) && data.length > 0) return data;
+        } catch {}
+      }
       const { data, error } = await supabase
         .from("hero_slides")
         .select("*")
