@@ -75,8 +75,8 @@ export const HeroCarousel = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0 transition-opacity duration-500">
         <img
-          src={currentSlide.id === "default" ? currentSlide.image_url : getOptimizedImageUrl(currentSlide.image_url, { width: 768, quality: 50 })}
-          srcSet={currentSlide.id === "default" ? undefined : `${getOptimizedImageUrl(currentSlide.image_url, { width: 480, quality: 45 })} 480w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 768, quality: 50 })} 768w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1280, quality: 55 })} 1280w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1920, quality: 60 })} 1920w`}
+          src={currentSlide.id === "default" ? currentSlide.image_url : getOptimizedImageUrl(currentSlide.image_url, { width: 1280, quality: 50 })}
+          srcSet={currentSlide.id === "default" ? undefined : `${getOptimizedImageUrl(currentSlide.image_url, { width: 480, quality: 40 })} 480w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 768, quality: 45 })} 768w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1280, quality: 50 })} 1280w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1920, quality: 55 })} 1920w`}
           sizes="100vw"
           alt={currentSlide.title || "Hero banner"}
           fetchPriority="high"
