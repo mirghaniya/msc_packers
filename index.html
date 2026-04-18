@@ -173,29 +173,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Early hero slide image discovery (runs before main JS bundle) -->
+    <!-- Static LCP hero image preload (discoverable immediately, no waterfall) -->
+    <link
+      rel="preload"
+      as="image"
+      href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1280&quality=50"
+      imagesrcset="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=480&quality=40 480w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=45 768w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1280&quality=50 1280w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1920&quality=55 1920w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+
+    <!-- Background hero slide refresh (non-blocking) -->
     <script>
       (function(){
-        var base='https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/';
         var api='https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1';
         var k='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcHVuZnZoZXppdmxoeXJueXltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MjU0NDIsImV4cCI6MjA3NTAwMTQ0Mn0.ERqF-h_6UBMErHlBVTH6rgtsxStXqbHwaFDw7P0JECw';
         window.__heroP=fetch(api,{headers:{'apikey':k,'Authorization':'Bearer '+k}})
         .then(function(r){return r.json()})
-        .then(function(d){
-          if(d&&d[0]&&d[0].image_url){
-            var u=d[0].image_url;
-            var isMobile=window.innerWidth<768;
-            var src=isMobile?(base+u+'?width=640&quality=40'):(base+u+'?width=1280&quality=50');
-            var l=document.createElement('link');
-            l.rel='preload';l.as='image';l.href=src;l.fetchPriority='high';
-            l.imageSrcset=base+u+'?width=480&quality=40 480w,'+base+u+'?width=768&quality=45 768w,'+base+u+'?width=1280&quality=50 1280w,'+base+u+'?width=1920&quality=55 1920w';
-            l.imageSizes='100vw';
-            document.head.appendChild(l);
-            window.__heroImg=src;
-            return d;
-          }
-          return d;
-        }).catch(function(){return null;});
+        .catch(function(){return null;});
       })();
     </script>
 
