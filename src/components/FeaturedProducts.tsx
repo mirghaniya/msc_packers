@@ -139,22 +139,24 @@ export const FeaturedProducts = () => {
                     </span>
                   </div>
                   <div className="flex gap-1 md:gap-2">
-                    <Button
-                      size="sm"
-                      variant="default"
-                      className="flex-1 group/btn text-xs md:text-sm h-8 md:h-9"
-                      onClick={() => addToCart(product.id)}
-                      disabled={isAddingToCart}
-                    >
-                      <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 group-hover/btn:rotate-12 transition-transform" />
-                      <span className="hidden sm:inline">Add to Cart</span>
-                      <span className="sm:hidden">Add</span>
-                    </Button>
+                    {product.category !== "Display Stands" && (
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="flex-1 group/btn text-xs md:text-sm h-8 md:h-9"
+                        onClick={() => addToCart(product.id)}
+                        disabled={isAddingToCart}
+                      >
+                        <ShoppingCart className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 group-hover/btn:rotate-12 transition-transform" />
+                        <span className="hidden sm:inline">Add to Cart</span>
+                        <span className="sm:hidden">Add</span>
+                      </Button>
+                    )}
                     <a
                       href={getEnquiryUrl(product.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
+                      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3 ${product.category === "Display Stands" ? "flex-1" : ""}`}
                     >
                       Enquiry
                     </a>
