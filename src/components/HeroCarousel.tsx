@@ -89,6 +89,7 @@ export const HeroCarousel = () => {
           sizes="100vw"
           alt={currentSlide.title || "Hero banner"}
           fetchPriority="high"
+          loading="eager"
           decoding="async"
           width={1440}
           height={600}
