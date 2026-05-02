@@ -98,11 +98,14 @@ export const FeaturedProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden aspect-square">
                   <img
-                    src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320 })}
+                    src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320, quality: 60 })}
+                    srcSet={`${getOptimizedImageUrl(product.image_url, { width: 240, height: 240, quality: 55 })} 240w, ${getOptimizedImageUrl(product.image_url, { width: 320, height: 320, quality: 60 })} 320w, ${getOptimizedImageUrl(product.image_url, { width: 480, height: 480, quality: 65 })} 480w`}
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     alt={product.name}
                     width={400}
                     height={400}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
