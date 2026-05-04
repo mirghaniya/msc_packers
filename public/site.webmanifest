@@ -1,0 +1,17 @@
+{
+  "name": "MIRGHANIYA SUPER CENTRE",
+  "short_name": "Mirghaniya",
+  "description": "Premium jewellery packaging boxes, display stands and gift items in Delhi, India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#4B164C",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
