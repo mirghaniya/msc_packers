@@ -59,7 +59,11 @@ const Index = () => {
           </Suspense>
         </LazySection>
       </main>
-      <Footer />
+      <LazySection minHeight="200px">
+        <Suspense fallback={<div className="min-h-[200px]" />}>
+          <Footer />
+        </Suspense>
+      </LazySection>
     </div>
   );
 };
