@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 
+const Footer = lazy(() => import("@/components/Footer").then(m => ({ default: m.Footer })));
 const PromotionalBanner = lazy(() => import("@/components/PromotionalBanner").then(m => ({ default: m.PromotionalBanner })));
 const BrandCarousel = lazy(() => import("@/components/BrandCarousel").then(m => ({ default: m.BrandCarousel })));
 const TestimonialSlider = lazy(() => import("@/components/TestimonialSlider").then(m => ({ default: m.TestimonialSlider })));
@@ -59,7 +59,11 @@ const Index = () => {
           </Suspense>
         </LazySection>
       </main>
-      <Footer />
+      <LazySection minHeight="200px">
+        <Suspense fallback={<div className="min-h-[200px]" />}>
+          <Footer />
+        </Suspense>
+      </LazySection>
     </div>
   );
 };
