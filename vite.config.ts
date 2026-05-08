@@ -19,5 +19,27 @@ export default defineConfig(({ mode }) => ({
     target: "es2020",
     cssCodeSplit: true,
     minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          // Keep react + react-dom + scheduler + jsx-runtime together to avoid init-order issues
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("/scheduler/") ||
+            id.includes("/react/jsx-runtime") ||
+            id.includes("/react/jsx-dev-runtime")
+          ) {
+            return "react-vendor";
+          }
+          if (id.includes("@radix-ui")) return "radix-vendor";
+          if (id.includes("@supabase")) return "supabase-vendor";
+          if (id.includes("@tanstack")) return "query-vendor";
+          if (id.includes("react-router")) return "router-vendor";
+          if (id.includes("lucide-react")) return "icons-vendor";
+        },
+      },
+    },
   },
 }));
