@@ -173,13 +173,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Static LCP hero image preload (responsive: matches HeroCarousel srcset exactly) -->
+    <!-- Mobile-first LCP hero preload (small, aggressively compressed) -->
     <link
       rel="preload"
       as="image"
-      href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=35"
-      imagesrcset="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=480&quality=30 480w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=35 768w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1024&quality=40 1024w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1440&quality=45 1440w"
+      href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=480&quality=30"
+      media="(max-width: 640px)"
+      fetchpriority="high"
+    />
+    <!-- Tablet/desktop LCP hero preload (responsive: matches HeroCarousel srcset) -->
+    <link
+      rel="preload"
+      as="image"
+      href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1024&quality=40"
+      imagesrcset="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=35 768w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1024&quality=40 1024w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1440&quality=45 1440w"
       imagesizes="100vw"
+      media="(min-width: 641px)"
       fetchpriority="high"
     />
 
