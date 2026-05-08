@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Eye, EyeOff, Lock } from "lucide-react";
+import { validatePassword } from "@/lib/passwordValidation";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -41,8 +42,9 @@ const ResetPassword = () => {
       return;
     }
 
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    const pwdError = validatePassword(password);
+    if (pwdError) {
+      toast.error(pwdError);
       return;
     }
 

@@ -79,16 +79,13 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
   // Submit review mutation
   const submitReviewMutation = useMutation({
     mutationFn: async () => {
-      if (!user || !canReview?.orderId) throw new Error("Cannot submit review");
+      if (!user) throw new Error("Cannot submit review");
 
-      const { error } = await supabase.from("product_reviews").insert({
-        product_id: productId,
-        user_id: user.id,
-        order_id: canReview.orderId,
-        rating,
-        title: title.trim() || null,
-        content: content.trim() || null,
-        is_verified_purchase: true,
+      const { error } = await (supabase as any).rpc("submit_product_review", {
+        p_product_id: productId,
+        p_rating: rating,
+        p_title: title.trim() || null,
+        p_content: content.trim() || null,
       });
 
       if (error) throw error;

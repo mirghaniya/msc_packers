@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
+import { validatePassword } from "@/lib/passwordValidation";
 
 const Auth = () => {
   const navigate = useNavigate();

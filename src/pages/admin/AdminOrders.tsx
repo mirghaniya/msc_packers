@@ -182,6 +182,14 @@ const AdminOrders = () => {
     return colors[status] || "bg-gray-500";
   };
 
+  const escHtml = (s: any) =>
+    String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
   const downloadInvoice = (order: any) => {
     const orderDate = new Date(order.created_at).toLocaleDateString('en-IN', {
       day: '2-digit',
@@ -251,9 +259,9 @@ const AdminOrders = () => {
           <div class="billing-info">
             <div>
               <h3>Bill To</h3>
-              <p><strong>${order.profile?.full_name || 'Customer'}</strong></p>
-              ${order.profile?.phone ? `<p>Phone: ${order.profile.phone}</p>` : ''}
-              ${order.profile?.email ? `<p>Email: ${order.profile.email}</p>` : ''}
+              <p><strong>${escHtml(order.profile?.full_name || 'Customer')}</strong></p>
+              ${order.profile?.phone ? `<p>Phone: ${escHtml(order.profile.phone)}</p>` : ''}
+              ${order.profile?.email ? `<p>Email: ${escHtml(order.profile.email)}</p>` : ''}
             </div>
           </div>
           
@@ -270,11 +278,11 @@ const AdminOrders = () => {
             <tbody>
               ${order.order_items.map((item: any) => `
                 <tr>
-                  <td>${item.product_sr_number}</td>
-                  <td>${item.product_name}</td>
-                  <td class="text-center">${item.quantity}</td>
-                  <td class="text-right">₹${item.unit_price.toLocaleString('en-IN')}</td>
-                  <td class="text-right">₹${item.total_price.toLocaleString('en-IN')}</td>
+                  <td>${escHtml(item.product_sr_number)}</td>
+                  <td>${escHtml(item.product_name)}</td>
+                  <td class="text-center">${Number(item.quantity) || 0}</td>
+                  <td class="text-right">₹${Number(item.unit_price).toLocaleString('en-IN')}</td>
+                  <td class="text-right">₹${Number(item.total_price).toLocaleString('en-IN')}</td>
                 </tr>
               `).join('')}
             </tbody>
