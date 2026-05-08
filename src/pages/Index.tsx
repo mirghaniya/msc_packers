@@ -30,7 +30,13 @@ const LazySection = ({ children, minHeight = "200px" }: { children: React.ReactN
   }, []);
 
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{
+        contentVisibility: visible ? "visible" : "auto",
+        containIntrinsicSize: `1px ${minHeight}`,
+      } as React.CSSProperties}
+    >
       {visible ? children : <div style={{ minHeight }} />}
     </div>
   );
