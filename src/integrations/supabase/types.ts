@@ -646,6 +646,15 @@ export type Database = {
         Args: { p_address_id: string }
         Returns: undefined
       }
+      submit_product_review: {
+        Args: {
+          p_content?: string
+          p_product_id: string
+          p_rating: number
+          p_title?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "user"

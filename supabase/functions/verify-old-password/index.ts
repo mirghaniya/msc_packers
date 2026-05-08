@@ -49,9 +49,18 @@ Deno.serve(async (req) => {
       );
     }
 
-    if (newPassword.length < 6) {
+    // Enforce same complexity as signup
+    const pwdError = (() => {
+      if (newPassword.length < 8) return "Password must be at least 8 characters";
+      if (!/[A-Z]/.test(newPassword)) return "Password must contain at least one uppercase letter (A-Z)";
+      if (!/[a-z]/.test(newPassword)) return "Password must contain at least one lowercase letter (a-z)";
+      if (!/[0-9]/.test(newPassword)) return "Password must contain at least one number (0-9)";
+      if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(newPassword)) return "Password must contain at least one special character";
+      return null;
+    })();
+    if (pwdError) {
       return new Response(
-        JSON.stringify({ error: "New password must be at least 6 characters" }),
+        JSON.stringify({ error: pwdError }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
