@@ -85,7 +85,7 @@ export const HeroCarousel = () => {
       <div className="absolute inset-0 z-0 transition-opacity duration-500">
         <img
           src={currentSlide.id === "default" ? currentSlide.image_url : getOptimizedImageUrl(currentSlide.image_url, { width: 1024, quality: 40 })}
-          srcSet={currentSlide.id === "default" ? undefined : `${getOptimizedImageUrl(currentSlide.image_url, { width: 480, quality: 30 })} 480w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 768, quality: 35 })} 768w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1024, quality: 40 })} 1024w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1440, quality: 45 })} 1440w`}
+          srcSet={currentSlide.id === "default" ? undefined : `${getOptimizedImageUrl(currentSlide.image_url, { width: 480, quality: 25 })} 480w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 768, quality: 30 })} 768w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1024, quality: 40 })} 1024w, ${getOptimizedImageUrl(currentSlide.image_url, { width: 1440, quality: 45 })} 1440w`}
           sizes="100vw"
           alt={currentSlide.title || "Hero banner"}
           fetchPriority="high"
