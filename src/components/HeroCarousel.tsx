@@ -91,7 +91,7 @@ export const HeroCarousel = () => {
           fetchPriority="high"
           loading="eager"
           decoding="async"
-          width={1440}
+          width={768}
           height={600}
           className="w-full h-full object-cover"
         />
