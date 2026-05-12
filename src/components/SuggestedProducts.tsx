@@ -77,7 +77,7 @@ export const SuggestedProducts = ({ currentProductId, category }: SuggestedProdu
               <Card className="group overflow-hidden hover:shadow-elegant transition-all duration-300 h-full">
                 <CardContent className="p-0">
                   <div className="relative overflow-hidden aspect-square">
-                    <img src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320 })} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                    <img src={getOptimizedImageUrl(product.image_url, { width: 280, height: 280, quality: 55 })} srcSet={`${getOptimizedImageUrl(product.image_url, { width: 200, height: 200, quality: 50 })} 200w, ${getOptimizedImageUrl(product.image_url, { width: 280, height: 280, quality: 55 })} 280w`} sizes="(max-width: 640px) 45vw, 240px" alt={product.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <div className="p-4">
                     <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1">{product.category}</p>
