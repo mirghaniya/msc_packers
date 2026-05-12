@@ -173,15 +173,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Static LCP hero image preload (responsive: matches HeroCarousel srcset exactly) -->
-    <link
-      rel="preload"
-      as="image"
-      href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=30"
-      imagesrcset="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=480&quality=25 480w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=768&quality=30 768w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1024&quality=40 1024w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1774264589514-80tfpa.webp?width=1440&quality=45 1440w"
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
+    <!-- Dynamic LCP hero image preload — injected as soon as hero_slides fetch resolves
+         so the real (DB-driven) hero image becomes discoverable from HTML. -->
+
 
     <!-- Background data prefetch (non-blocking) - kicks off API calls before JS parses -->
     <script>
@@ -189,7 +183,20 @@
         var base='https://fjpunfvhezivlhyrnyym.supabase.co/rest/v1/';
         var k='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqcHVuZnZoZXppdmxoeXJueXltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MjU0NDIsImV4cCI6MjA3NTAwMTQ0Mn0.ERqF-h_6UBMErHlBVTH6rgtsxStXqbHwaFDw7P0JECw';
         var h={headers:{'apikey':k,'Authorization':'Bearer '+k}};
-        window.__heroP=fetch(base+'hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1',h).then(function(r){return r.json()}).catch(function(){return null;});
+        window.__heroP=fetch(base+'hero_slides?select=image_url&is_active=eq.true&order=display_order.asc&limit=1',h).then(function(r){return r.json()}).then(function(d){
+          try{
+            var url=d&&d[0]&&d[0].image_url;
+            if(!url) return d;
+            var render=url.replace('/storage/v1/object/public/','/storage/v1/render/image/public/');
+            var mk=function(w,q){return render+(render.indexOf('?')>-1?'&':'?')+'width='+w+'&quality='+q;};
+            var l=document.createElement('link');
+            l.rel='preload';l.as='image';l.href=mk(768,30);
+            l.setAttribute('imagesrcset',mk(480,25)+' 480w, '+mk(768,30)+' 768w, '+mk(1024,40)+' 1024w, '+mk(1440,45)+' 1440w');
+            l.setAttribute('imagesizes','100vw');l.setAttribute('fetchpriority','high');
+            document.head.appendChild(l);
+          }catch(e){}
+          return d;
+        }).catch(function(){return null;});
         window.__featuredP=fetch(base+'products?select=*&is_featured=eq.true&limit=4',h).then(function(r){return r.json()}).catch(function(){return null;});
       })();
     </script>
