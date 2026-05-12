@@ -98,9 +98,9 @@ export const FeaturedProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden aspect-square">
                   <img
-                    src={getOptimizedImageUrl(product.image_url, { width: 320, height: 320, quality: 60 })}
-                    srcSet={`${getOptimizedImageUrl(product.image_url, { width: 240, height: 240, quality: 55 })} 240w, ${getOptimizedImageUrl(product.image_url, { width: 320, height: 320, quality: 60 })} 320w, ${getOptimizedImageUrl(product.image_url, { width: 480, height: 480, quality: 65 })} 480w`}
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    src={getOptimizedImageUrl(product.image_url, { width: 280, height: 280, quality: 55 })}
+                    srcSet={`${getOptimizedImageUrl(product.image_url, { width: 200, height: 200, quality: 50 })} 200w, ${getOptimizedImageUrl(product.image_url, { width: 280, height: 280, quality: 55 })} 280w, ${getOptimizedImageUrl(product.image_url, { width: 400, height: 400, quality: 60 })} 400w`}
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 240px"
                     alt={product.name}
                     width={400}
                     height={400}
