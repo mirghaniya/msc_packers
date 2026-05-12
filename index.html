@@ -173,8 +173,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Dynamic LCP hero image preload — injected as soon as hero_slides fetch resolves
-         so the real (DB-driven) hero image becomes discoverable from HTML. -->
+    <!-- Static LCP hero image preload — discoverable in initial HTML for fastest LCP.
+         Mirrors the currently-active hero; JS fallback below preloads if admins swap it. -->
+    <link rel="preload" as="image" fetchpriority="high"
+          href="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1778265367604-afof6q.jpg?width=768&quality=30"
+          imagesrcset="https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1778265367604-afof6q.jpg?width=480&quality=25 480w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1778265367604-afof6q.jpg?width=768&quality=30 768w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1778265367604-afof6q.jpg?width=1024&quality=40 1024w, https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/render/image/public/product-images/hero/1778265367604-afof6q.jpg?width=1440&quality=45 1440w"
+          imagesizes="100vw">
 
 
     <!-- Background data prefetch (non-blocking) - kicks off API calls before JS parses -->
