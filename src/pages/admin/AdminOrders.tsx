@@ -92,6 +92,13 @@ const AdminOrders = () => {
       return;
     }
 
+    // Prevent CSV formula injection and properly escape cell values
+    const sanitizeCsvCell = (val: any) => {
+      let s = val == null ? "" : String(val);
+      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+      return `"${s.replace(/"/g, '""')}"`;
+    };
+
     const headers = ["Order ID", "Date", "Customer Name", "Phone", "Email", "Status", "Items", "Total Amount"];
     const rows = orders.map((order) => [
       order.id.slice(0, 8),
@@ -104,7 +111,7 @@ const AdminOrders = () => {
       order.total_amount
     ]);
 
-    const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const csvContent = [headers, ...rows].map(row => row.map(sanitizeCsvCell).join(",")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
