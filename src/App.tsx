@@ -2,12 +2,29 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Index from "./pages/Index";
 
 const Toaster = lazy(() => import("@/components/ui/toaster").then(m => ({ default: m.Toaster })));
 const Sonner = lazy(() => import("@/components/ui/sonner").then(m => ({ default: m.Toaster })));
 const FloatingWhatsApp = lazy(() => import("@/components/FloatingWhatsApp").then(m => ({ default: m.FloatingWhatsApp })));
+
+// Defer non-critical UI (toasts, floating WA) until the browser is idle so they
+// don't compete with hero rendering for main-thread time on first paint.
+function useIdleMount(): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const w = window as any;
+    const cb = () => setReady(true);
+    if (typeof w.requestIdleCallback === "function") {
+      const id = w.requestIdleCallback(cb, { timeout: 2500 });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const t = window.setTimeout(cb, 1500);
+    return () => window.clearTimeout(t);
+  }, []);
+  return ready;
+}
 
 const Auth = lazy(() => import("./pages/Auth"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -40,12 +57,22 @@ const queryClient = new QueryClient({
   },
 });
 
+const DeferredChrome = () => {
+  const ready = useIdleMount();
+  if (!ready) return null;
+  return (
+    <>
+      <Suspense fallback={null}><Toaster /></Suspense>
+      <Suspense fallback={null}><Sonner /></Suspense>
+      <Suspense fallback={null}><FloatingWhatsApp /></Suspense>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
       <TooltipProvider>
-        <Suspense fallback={null}><Toaster /></Suspense>
-        <Suspense fallback={null}><Sonner /></Suspense>
         <BrowserRouter>
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
           <Routes>
@@ -73,7 +100,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
-          <Suspense fallback={null}><FloatingWhatsApp /></Suspense>
+          <DeferredChrome />
         </BrowserRouter>
       </TooltipProvider>
     </CartProvider>
