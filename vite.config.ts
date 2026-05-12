@@ -40,6 +40,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  esbuild: {
+    legalComments: "none",
+  },
   build: {
     target: "es2020",
     cssCodeSplit: true,
