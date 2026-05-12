@@ -69,12 +69,13 @@ Deno.serve(async (req) => {
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Resolve email
-    let resolvedEmail = userEmail;
-    let resolvedName = userName || "Valued Customer";
+    // Resolve email — only admins may override recipient via body params
+    const isAdmin = !!adminRole;
+    let resolvedEmail = isAdmin ? userEmail : undefined;
+    let resolvedName = (isAdmin && userName) ? userName : "Valued Customer";
 
     if (!resolvedEmail) {
-      const targetUserId = userId || order.user_id;
+      const targetUserId = isAdmin ? (userId || order.user_id) : order.user_id;
       const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(targetUserId);
       if (authUser?.user?.email) resolvedEmail = authUser.user.email;
       if (!resolvedName || resolvedName === "Valued Customer") {
