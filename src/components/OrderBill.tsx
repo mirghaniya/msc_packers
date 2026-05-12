@@ -98,16 +98,16 @@ export const OrderBill = ({ order, customerName, customerPhone, customerEmail }:
               <h2>INVOICE</h2>
               <p><strong>Order ID:</strong> #${order.id.slice(0, 8)}</p>
               <p><strong>Date:</strong> ${orderDate}</p>
-              <p><strong>Status:</strong> <span class="status-badge ${order.status === 'Delivered' ? 'status-delivered' : 'status-other'}">${order.status}</span></p>
+              <p><strong>Status:</strong> <span class="status-badge ${order.status === 'Delivered' ? 'status-delivered' : 'status-other'}">${escHtml(order.status)}</span></p>
             </div>
           </div>
           
           <div class="billing-info">
             <div>
               <h3>Bill To</h3>
-              <p><strong>${customerName || 'Customer'}</strong></p>
-              ${customerPhone ? `<p>Phone: ${customerPhone}</p>` : ''}
-              ${customerEmail ? `<p>Email: ${customerEmail}</p>` : ''}
+              <p><strong>${escHtml(customerName || 'Customer')}</strong></p>
+              ${customerPhone ? `<p>Phone: ${escHtml(customerPhone)}</p>` : ''}
+              ${customerEmail ? `<p>Email: ${escHtml(customerEmail)}</p>` : ''}
             </div>
           </div>
           
@@ -124,8 +124,8 @@ export const OrderBill = ({ order, customerName, customerPhone, customerEmail }:
             <tbody>
               ${order.order_items.map(item => `
                 <tr>
-                  <td>${item.product_sr_number}</td>
-                  <td>${item.product_name}</td>
+                  <td>${escHtml(item.product_sr_number)}</td>
+                  <td>${escHtml(item.product_name)}</td>
                   <td class="text-center">${item.quantity}</td>
                   <td class="text-right">₹${item.unit_price.toLocaleString('en-IN')}</td>
                   <td class="text-right">₹${item.total_price.toLocaleString('en-IN')}</td>
