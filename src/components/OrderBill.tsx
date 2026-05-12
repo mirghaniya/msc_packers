@@ -44,7 +44,8 @@ export const OrderBill = ({ order, customerName, customerPhone, customerEmail }:
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Invoice - Order #${order.id.slice(0, 8)}</title>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https://fjpunfvhezivlhyrnyym.supabase.co data:; style-src 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none';">
+        <title>Invoice - Order #${escHtml(order.id.slice(0, 8))}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; }
