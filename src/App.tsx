@@ -57,12 +57,22 @@ const queryClient = new QueryClient({
   },
 });
 
+const DeferredChrome = () => {
+  const ready = useIdleMount();
+  if (!ready) return null;
+  return (
+    <>
+      <Suspense fallback={null}><Toaster /></Suspense>
+      <Suspense fallback={null}><Sonner /></Suspense>
+      <Suspense fallback={null}><FloatingWhatsApp /></Suspense>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
       <TooltipProvider>
-        <Suspense fallback={null}><Toaster /></Suspense>
-        <Suspense fallback={null}><Sonner /></Suspense>
         <BrowserRouter>
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
           <Routes>
@@ -90,7 +100,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
-          <Suspense fallback={null}><FloatingWhatsApp /></Suspense>
+          <DeferredChrome />
         </BrowserRouter>
       </TooltipProvider>
     </CartProvider>
