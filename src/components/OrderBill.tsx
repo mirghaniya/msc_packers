@@ -24,6 +24,14 @@ interface OrderBillProps {
 }
 
 export const OrderBill = ({ order, customerName, customerPhone, customerEmail }: OrderBillProps) => {
+  const escHtml = (val: any) =>
+    String(val ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
   const generateBillHTML = () => {
     const orderDate = new Date(order.created_at).toLocaleDateString('en-IN', {
       day: '2-digit',
