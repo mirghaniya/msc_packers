@@ -9,7 +9,13 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useSeo } from "@/lib/useSeo";
 const Contact = () => {
+  useSeo({
+    title: "Contact Mirghaniya Super Centre — Delhi Jewellery Packaging",
+    description: "Get in touch for wholesale jewellery packaging quotes, custom branding and Pan-India delivery. Call +91-88518-82465 or message us online.",
+    path: "/contact",
+  });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");

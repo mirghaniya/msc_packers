@@ -14,8 +14,14 @@ import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useSeo } from "@/lib/useSeo";
 
 const Products = () => {
+  useSeo({
+    title: "Shop Jewellery Packaging & Display Stands | Mirghaniya",
+    description: "Browse 100+ wholesale jewellery boxes, display stands, trays and pouches. Filter by category and order online with Pan-India delivery.",
+    path: "/products",
+  });
   const [category, setCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const { addToCart, isLoading: isAddingToCart } = useCart();
