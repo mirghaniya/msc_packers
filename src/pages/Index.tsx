@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
+import { useSeo } from "@/lib/useSeo";
 
 const Footer = lazy(() => import("@/components/Footer").then(m => ({ default: m.Footer })));
 const PromotionalBanner = lazy(() => import("@/components/PromotionalBanner").then(m => ({ default: m.PromotionalBanner })));
@@ -43,6 +44,12 @@ const LazySection = ({ children, minHeight = "200px" }: { children: React.ReactN
 };
 
 const Index = () => {
+  useSeo({
+    title: "Jewellery Packaging & Display Stands — Mirghaniya, Delhi",
+    description: "Wholesale jewellery boxes, display stands, trays & pouches from Delhi since 1990. 100+ varieties with Pan-India delivery.",
+    path: "/",
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
