@@ -1,17 +1,34 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useEffect } from "react";
+import { useSeo } from "@/lib/useSeo";
 import aboutJewelry1 from "@/assets/about-jewelry-1.jpg";
 import aboutCraftsmanship from "@/assets/about-craftsmanship.jpg";
 import aboutWarehouse from "@/assets/about-warehouse.jpg";
 import aboutTeam from "@/assets/about-team.jpg";
 
+const ABOUT_FAQS = [
+  { q: "What types of jewellery packaging does Mirghaniya Super Centre offer?", a: "We offer a complete range including ring boxes, earring boxes, necklace boxes, pendant boxes, bangle boxes, watch boxes, bracelet boxes, gift boxes, velvet pouches, satin pouches, display trays, T-bar stands, bust stands, necklace stands, earring trees, rotating display stands, and much more — over 100 product varieties in total." },
+  { q: "Do you offer custom branding and logo printing on jewellery boxes?", a: "Yes! We provide custom logo printing, gold/silver foil embossing, custom colour options, and bespoke packaging designs tailored to your jewellery brand. Minimum order quantities apply for custom orders." },
+  { q: "Do you deliver jewellery packaging across India?", a: "Absolutely. We ship to all major cities and towns across India via reliable courier services. Whether you're in Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Jaipur, Surat, or any other city — we deliver to your doorstep." },
+  { q: "What are your minimum order quantities for wholesale jewellery packaging?", a: "Minimum order quantities vary by product. For standard jewellery boxes, we accept orders from as low as 50 pieces. For custom printed or branded packaging, minimum quantities may be higher. Contact us for specific product MOQs." },
+  { q: "Where is Mirghaniya Super Centre located?", a: "Our showroom and warehouse is located in Usmanpur, Delhi - 110053, India. You can visit us Monday through Saturday, 10 AM to 8 PM, or order online for convenient delivery anywhere in India." }
+];
+
 const About = () => {
-  useEffect(() => {
-    document.title = "About Mirghaniya Super Centre | Leading Jewellery Packaging Supplier in Delhi Since 1990";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute("content", "Learn about Mirghaniya Super Centre – Delhi's premier wholesale jewellery packaging supplier since 1990. 500+ happy clients, 1M+ products delivered, 100+ varieties of jewellery boxes, display stands, trays & pouches with Pan-India shipping.");
-  }, []);
+  useSeo({
+    title: "About Mirghaniya Super Centre — Delhi Jewellery Packaging",
+    description: "Delhi's wholesale jewellery packaging supplier since 1990. 500+ clients, 100+ box, stand, tray & pouch varieties with Pan-India delivery.",
+    path: "/about",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: ABOUT_FAQS.map(({ q, a }) => ({
+        "@type": "Question",
+        name: q,
+        acceptedAnswer: { "@type": "Answer", text: a }
+      }))
+    }
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
