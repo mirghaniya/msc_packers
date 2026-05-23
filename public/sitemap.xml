@@ -30,4 +30,27 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://mirghaniyasupercentre.lovable.app/checkout</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://mirghaniyasupercentre.lovable.app/forgot-password</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mirghaniyasupercentre.lovable.app/reset-password</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mirghaniyasupercentre.lovable.app/dashboard</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <!-- Per-product URLs are served dynamically from the sitemap edge function:
+       https://fjpunfvhezivlhyrnyym.supabase.co/functions/v1/sitemap
+       Submit that URL as an additional sitemap in Google Search Console. -->
 </urlset>

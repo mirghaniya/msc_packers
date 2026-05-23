@@ -1,0 +1,14 @@
+# Mirghaniya Super Centre
+
+> Delhi-based wholesale supplier of jewellery packaging — boxes, display stands, trays, pouches and gift items — serving jewellers across India since 1990.
+
+## Pages
+
+- [Home](/): Overview, featured products, brand testimonials.
+- [Products](/products): Searchable catalogue of 100+ jewellery packaging varieties.
+- [About](/about): Company story, craftsmanship, FAQs.
+- [Contact](/contact): Phone, email, address and contact form.
+
+## Optional
+
+- [Cart](/cart): Customer cart.
