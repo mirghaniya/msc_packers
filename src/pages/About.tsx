@@ -239,28 +239,7 @@ const About = () => {
               Frequently Asked Questions
             </h2>
             <div className="space-y-6">
-              {[
-                {
-                  q: "What types of jewellery packaging does Mirghaniya Super Centre offer?",
-                  a: "We offer a complete range including ring boxes, earring boxes, necklace boxes, pendant boxes, bangle boxes, watch boxes, bracelet boxes, gift boxes, velvet pouches, satin pouches, display trays, T-bar stands, bust stands, necklace stands, earring trees, rotating display stands, and much more — over 100 product varieties in total."
-                },
-                {
-                  q: "Do you offer custom branding and logo printing on jewellery boxes?",
-                  a: "Yes! We provide custom logo printing, gold/silver foil embossing, custom colour options, and bespoke packaging designs tailored to your jewellery brand. Minimum order quantities apply for custom orders."
-                },
-                {
-                  q: "Do you deliver jewellery packaging across India?",
-                  a: "Absolutely. We ship to all major cities and towns across India via reliable courier services. Whether you're in Delhi, Mumbai, Kolkata, Chennai, Bangalore, Hyderabad, Jaipur, Surat, or any other city — we deliver to your doorstep."
-                },
-                {
-                  q: "What are your minimum order quantities for wholesale jewellery packaging?",
-                  a: "Minimum order quantities vary by product. For standard jewellery boxes, we accept orders from as low as 50 pieces. For custom printed or branded packaging, minimum quantities may be higher. Contact us for specific product MOQs."
-                },
-                {
-                  q: "Where is Mirghaniya Super Centre located?",
-                  a: "Our showroom and warehouse is located in Usmanpur, Delhi - 110053, India. You can visit us Monday through Saturday, 10 AM to 8 PM, or order online for convenient delivery anywhere in India."
-                }
-              ].map((faq, i) => (
+              {ABOUT_FAQS.map((faq, i) => (
                 <div key={i} className="bg-muted/30 p-6 rounded-xl">
                   <h3 className="font-semibold text-lg text-foreground mb-2">{faq.q}</h3>
                   <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
