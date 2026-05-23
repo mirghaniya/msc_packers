@@ -12,6 +12,7 @@ import { useState, useEffect, useCallback } from "react";
 import { SuggestedProducts } from "@/components/SuggestedProducts";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { ProductReviews } from "@/components/ProductReviews";
+import { useSeo, SITE } from "@/lib/useSeo";
 
 const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimit?: number }) => {
   const [expanded, setExpanded] = useState(false);
@@ -91,6 +92,38 @@ const ProductDetail = () => {
     : [];
 
   const isDisplayStand = product?.category === "Display Stands";
+
+  const productImageUrl = product?.image_url
+    ? getOptimizedImageUrl(product.image_url, { width: 1200, height: 1200 })
+    : undefined;
+
+  useSeo({
+    title: product ? `${product.name} — Mirghaniya Super Centre` : "Product — Mirghaniya Super Centre",
+    description: product
+      ? (product.description?.slice(0, 155) || `Buy ${product.name} (${product.category}) wholesale from Mirghaniya Super Centre, Delhi.`)
+      : "Premium jewellery packaging from Mirghaniya Super Centre.",
+    path: id ? `/product/${id}` : undefined,
+    image: productImageUrl,
+    jsonLd: product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          description: product.description || `${product.name} from Mirghaniya Super Centre`,
+          sku: product.sr_number || product.id,
+          category: product.category,
+          image: productImageUrl ? [productImageUrl] : undefined,
+          brand: { "@type": "Brand", name: "Mirghaniya Super Centre" },
+          offers: {
+            "@type": "Offer",
+            price: String(product.price ?? ""),
+            priceCurrency: "INR",
+            availability: "https://schema.org/InStock",
+            url: `${SITE}/product/${id}`,
+          },
+        }
+      : undefined,
+  });
 
   const getEnquiryUrl = (productName: string) => {
     const message = encodeURIComponent(`Hi, I would like to enquire about: ${productName}`);
