@@ -97,11 +97,17 @@ const ProductDetail = () => {
     ? getOptimizedImageUrl(product.image_url, { width: 1200, height: 1200 })
     : undefined;
 
+  const buildDescription = () => {
+    if (!product) return "Premium wholesale jewellery packaging and display stands from Mirghaniya Super Centre, Delhi.";
+    const base = (product.description || "").trim();
+    const fallback = `Buy ${product.name} (${product.category}) wholesale from Mirghaniya Super Centre, Delhi. Premium jewellery packaging with Pan-India delivery.`;
+    const candidate = base.length >= 50 ? base : `${base ? base + ". " : ""}${fallback}`;
+    return candidate.slice(0, 158);
+  };
+
   useSeo({
     title: product ? `${product.name} — Mirghaniya Super Centre` : "Product — Mirghaniya Super Centre",
-    description: product
-      ? (product.description?.slice(0, 155) || `Buy ${product.name} (${product.category}) wholesale from Mirghaniya Super Centre, Delhi.`)
-      : "Premium jewellery packaging from Mirghaniya Super Centre.",
+    description: buildDescription(),
     path: id ? `/product/${id}` : undefined,
     image: productImageUrl,
     jsonLd: product
@@ -210,10 +216,10 @@ const ProductDetail = () => {
                 />
                 {allImages.length > 1 && (
                   <>
-                    <Button variant="ghost" size="icon" className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" onClick={prevImage}>
+                    <Button variant="ghost" size="icon" aria-label="Previous image" className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" onClick={prevImage}>
                       <ChevronLeft className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" onClick={nextImage}>
+                    <Button variant="ghost" size="icon" aria-label="Next image" className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" onClick={nextImage}>
                       <ChevronRight className="h-5 w-5" />
                     </Button>
                   </>
@@ -221,6 +227,7 @@ const ProductDetail = () => {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label={isFavorite(product.id) ? `Remove ${product.name} from favorites` : `Add ${product.name} to favorites`}
                   className="absolute top-4 right-4 bg-white/80 hover:bg-white shadow-md"
                   onClick={() => toggleFavorite(product.id)}
                   disabled={isFavoritePending}
@@ -235,6 +242,8 @@ const ProductDetail = () => {
                     <button
                       key={img.id}
                       onClick={() => setCurrentImageIndex(index)}
+                      aria-label={`Show image ${index + 1} of ${product.name}`}
+                      aria-current={index === currentImageIndex}
                       className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-colors ${index === currentImageIndex ? "border-primary" : "border-transparent"}`}
                     >
                       <img src={getOptimizedImageUrl(img.image_url, { width: 150, height: 150 })} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
@@ -253,7 +262,7 @@ const ProductDetail = () => {
 
               {product.description && (
                 <div className="mb-8">
-                  <h3 className="font-playfair font-semibold text-lg mb-2">Description</h3>
+                  <h2 className="font-playfair font-semibold text-lg mb-2">Description</h2>
                   <TruncatedDescription text={product.description} />
                 </div>
               )}
@@ -284,10 +293,10 @@ const ProductDetail = () => {
               <div className="relative">
                 {relatedProducts.length > 2 && (
                   <>
-                    <Button variant="ghost" size="icon" className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-md" onClick={prevRelatedSlide}>
+                    <Button variant="ghost" size="icon" aria-label="Previous related product" className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-md" onClick={prevRelatedSlide}>
                       <ChevronLeft className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-md" onClick={nextRelatedSlide}>
+                    <Button variant="ghost" size="icon" aria-label="Next related product" className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow-md" onClick={nextRelatedSlide}>
                       <ChevronRight className="h-5 w-5" />
                     </Button>
                   </>
