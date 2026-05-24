@@ -209,7 +209,8 @@ const AdminOrders = () => {
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Invoice - Order #${order.id.slice(0, 8)}</title>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https://fjpunfvhezivlhyrnyym.supabase.co data:; style-src 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none';">
+        <title>Invoice - Order #${escHtml(order.id.slice(0, 8))}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; }
@@ -259,7 +260,7 @@ const AdminOrders = () => {
               <h2>INVOICE</h2>
               <p><strong>Order ID:</strong> #${order.id.slice(0, 8)}</p>
               <p><strong>Date:</strong> ${orderDate}</p>
-              <p><strong>Status:</strong> <span class="status-badge ${order.status === 'Delivered' ? 'status-delivered' : 'status-other'}">${order.status}</span></p>
+              <p><strong>Status:</strong> <span class="status-badge ${order.status === 'Delivered' ? 'status-delivered' : 'status-other'}">${escHtml(order.status)}</span></p>
             </div>
           </div>
           
