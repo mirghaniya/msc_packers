@@ -9,8 +9,14 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ArrowLeft, Mail } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 const ForgotPassword = () => {
+  useSeo({
+    title: "Reset Your Password | Mirghaniya Super Centre",
+    description: "Forgot your password? Enter your email to receive a secure password reset link for your Mirghaniya Super Centre account.",
+    path: "/forgot-password",
+  });
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -39,6 +45,7 @@ const ForgotPassword = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 flex items-center justify-center py-12 px-4 bg-accent">
+        <h1 className="sr-only">Reset your Mirghaniya Super Centre account password</h1>
         <Card className="w-full max-w-md shadow-elegant">
           <CardHeader>
             <CardTitle className="font-playfair text-3xl text-center">

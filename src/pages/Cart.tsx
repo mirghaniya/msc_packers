@@ -7,11 +7,19 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
+import { useSeo } from "@/lib/useSeo";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, cartTotal } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  useSeo({
+    title: "Your Shopping Cart | Mirghaniya Super Centre",
+    description: "Review the jewellery packaging items in your cart and proceed to secure checkout with Pan-India delivery from Mirghaniya Super Centre, Delhi.",
+    path: "/cart",
+  });
+
 
   if (!user) {
     return (
@@ -78,6 +86,7 @@ const Cart = () => {
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={`Remove ${item.product.name} from cart`}
                             onClick={() => removeFromCart(item.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -86,15 +95,17 @@ const Cart = () => {
                             <Button
                               variant="outline"
                               size="icon"
+                              aria-label={`Decrease quantity of ${item.product.name}`}
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
                             >
                               <Minus className="h-4 w-4" />
                             </Button>
-                            <span className="w-8 text-center">{item.quantity}</span>
+                            <span className="w-8 text-center" aria-live="polite">{item.quantity}</span>
                             <Button
                               variant="outline"
                               size="icon"
+                              aria-label={`Increase quantity of ${item.product.name}`}
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             >
                               <Plus className="h-4 w-4" />
@@ -110,9 +121,9 @@ const Cart = () => {
               <div>
                 <Card>
                   <CardContent className="p-6">
-                    <h3 className="font-playfair font-semibold text-xl mb-4">
+                    <h2 className="font-playfair font-semibold text-xl mb-4">
                       Order Summary
-                    </h3>
+                    </h2>
                     <div className="space-y-2 mb-6">
                       <div className="flex justify-between">
                         <span>Subtotal</span>

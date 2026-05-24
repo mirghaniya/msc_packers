@@ -113,7 +113,7 @@ const Products = () => {
         <div className="bg-gradient-luxury py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="font-playfair font-bold text-5xl text-white mb-4">
-              Our Collection
+              Jewellery Packaging & Display Stand Collection
             </h1>
             <p className="font-inter text-lg text-white/90 max-w-2xl mx-auto">
               Browse our exquisite selection of jewelry packaging and display solutions
@@ -182,6 +182,7 @@ const Products = () => {
                             <Button
                               variant="ghost"
                               size="icon"
+                              aria-label={isFavorite(product.id) ? `Remove ${product.name} from favorites` : `Add ${product.name} to favorites`}
                               className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:h-10 md:w-10"
                               onClick={(e) => {
                                 e.preventDefault();
