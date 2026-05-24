@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
         : today;
       return `
   <url>
-    <loc>${baseUrl}/products/${product.id}</loc>
+    <loc>${baseUrl}/product/${product.id}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
