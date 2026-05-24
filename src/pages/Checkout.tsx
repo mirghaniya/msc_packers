@@ -18,11 +18,17 @@ import upiBhimLogo from "@/assets/upi-bhim.png";
 import upiPhonepeLogo from "@/assets/upi-phonepe.png";
 import upiPaytmLogo from "@/assets/upi-paytm.png";
 import upiGpayLogo from "@/assets/upi-gpay.png";
+import { useSeo } from "@/lib/useSeo";
 
 type PaymentMethod = "upi" | "cod";
 type UPIApp = "bhim" | "phonepe" | "paytm" | "gpay";
 
 const Checkout = () => {
+  useSeo({
+    title: "Secure Checkout — UPI & COD | Mirghaniya Super Centre",
+    description: "Complete your order with UPI apps (GPay, PhonePe, Paytm, BHIM) or Cash on Delivery. Free Pan-India shipping on jewellery packaging orders.",
+    path: "/checkout",
+  });
   const { items, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();

@@ -19,8 +19,14 @@ import { AddressManager } from "@/components/user/AddressManager";
 import { OrderTimeline } from "@/components/OrderTimeline";
 import { OrderBill } from "@/components/OrderBill";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useSeo } from "@/lib/useSeo";
 
 const UserDashboard = () => {
+  useSeo({
+    title: "My Account & Orders | Mirghaniya Super Centre",
+    description: "Manage your Mirghaniya Super Centre profile, saved addresses, favourite products and track your jewellery packaging orders in one place.",
+    path: "/dashboard",
+  });
   const { user, loading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();

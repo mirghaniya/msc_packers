@@ -12,8 +12,14 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { validatePassword } from "@/lib/passwordValidation";
+import { useSeo } from "@/lib/useSeo";
 
 const Auth = () => {
+  useSeo({
+    title: "Sign In or Create an Account | Mirghaniya Super Centre",
+    description: "Sign in to your Mirghaniya Super Centre account or create a new one to shop premium jewellery packaging, save favourites and track orders.",
+    path: "/auth",
+  });
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -189,6 +195,7 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 flex items-center justify-center py-12 px-4 bg-accent">
+        <h1 className="sr-only">Sign in or create your Mirghaniya Super Centre account</h1>
         <Card className="w-full max-w-md shadow-elegant">
           <CardHeader>
             <CardTitle className="font-playfair text-3xl text-center">Welcome</CardTitle>
