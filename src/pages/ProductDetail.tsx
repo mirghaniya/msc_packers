@@ -114,7 +114,7 @@ const ProductDetail = () => {
     extraMeta: product
       ? [
           { property: "product:brand", content: "Mirghaniya Super Centre" },
-          { property: "product:availability", content: product.is_out_of_stock ? "out of stock" : "in stock" },
+          { property: "product:availability", content: (product.stock_quantity ?? 1) > 0 ? "in stock" : "out of stock" },
           { property: "product:condition", content: "new" },
           { property: "product:price:amount", content: String(product.price ?? "") },
           { property: "product:price:currency", content: "INR" },
