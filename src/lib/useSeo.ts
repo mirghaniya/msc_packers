@@ -7,6 +7,8 @@ type SeoOptions = {
   description: string;
   path?: string; // defaults to current location
   image?: string;
+  ogType?: string; // e.g. "website" (default) or "product"
+  extraMeta?: Array<{ name?: string; property?: string; content: string }>;
   jsonLd?: Record<string, any> | Record<string, any>[];
 };
 
