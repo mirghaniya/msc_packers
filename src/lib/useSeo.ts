@@ -36,7 +36,7 @@ function upsertLink(rel: string, href: string) {
 
 const JSONLD_ID = "seo-route-jsonld";
 
-export function useSeo({ title, description, path, image, jsonLd }: SeoOptions) {
+export function useSeo({ title, description, path, image, ogType, extraMeta, jsonLd }: SeoOptions) {
   useEffect(() => {
     const url = SITE_URL + (path ?? window.location.pathname);
 
@@ -44,6 +44,7 @@ export function useSeo({ title, description, path, image, jsonLd }: SeoOptions) 
     upsertMeta('meta[name="description"]', { name: "description", content: description });
     upsertLink("canonical", url);
 
+    upsertMeta('meta[property="og:type"]', { property: "og:type", content: ogType || "website" });
     upsertMeta('meta[property="og:title"]', { property: "og:title", content: title });
     upsertMeta('meta[property="og:description"]', { property: "og:description", content: description });
     upsertMeta('meta[property="og:url"]', { property: "og:url", content: url });
@@ -53,6 +54,18 @@ export function useSeo({ title, description, path, image, jsonLd }: SeoOptions) 
       upsertMeta('meta[property="og:image"]', { property: "og:image", content: image });
       upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: image });
     }
+
+    // Route-specific extra meta tags — tracked so we can clean them up on unmount
+    const addedExtras: HTMLMetaElement[] = [];
+    (extraMeta || []).forEach((m) => {
+      const el = document.createElement("meta");
+      if (m.name) el.setAttribute("name", m.name);
+      if (m.property) el.setAttribute("property", m.property);
+      el.setAttribute("content", m.content);
+      el.setAttribute("data-seo", "route-meta");
+      document.head.appendChild(el);
+      addedExtras.push(el);
+    });
 
     // Remove previous route-specific JSON-LD
     document.querySelectorAll(`script[data-seo="${JSONLD_ID}"]`).forEach((n) => n.remove());
@@ -69,8 +82,9 @@ export function useSeo({ title, description, path, image, jsonLd }: SeoOptions) 
 
     return () => {
       document.querySelectorAll(`script[data-seo="${JSONLD_ID}"]`).forEach((n) => n.remove());
+      addedExtras.forEach((el) => el.remove());
     };
-  }, [title, description, path, image, JSON.stringify(jsonLd)]);
+  }, [title, description, path, image, ogType, JSON.stringify(extraMeta), JSON.stringify(jsonLd)]);
 }
 
 export const SITE = SITE_URL;
