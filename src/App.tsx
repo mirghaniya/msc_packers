@@ -32,6 +32,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Products = lazy(() => import("./pages/Products"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const About = lazy(() => import("./pages/About"));
+const CustomJewelleryPackagingGuide = lazy(() => import("./pages/CustomJewelleryPackagingGuide"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -83,6 +84,7 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/about" element={<About />} />
+            <Route path="/guides/custom-jewellery-packaging" element={<CustomJewelleryPackagingGuide />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
