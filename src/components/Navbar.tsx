@@ -129,6 +129,13 @@ export const Navbar = () => {
               About
             </Link>
             <Link
+              to="/guides/custom-jewellery-packaging"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Guide
+            </Link>
+            <Link
               to="/contact"
               className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
               onClick={() => setMobileMenuOpen(false)}
