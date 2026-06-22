@@ -98,7 +98,7 @@ export function useSeo({ title, description, path, image, imageAlt, imageWidth, 
       document.querySelectorAll(`script[data-seo="${JSONLD_ID}"]`).forEach((n) => n.remove());
       addedExtras.forEach((el) => el.remove());
     };
-  }, [title, description, path, image, ogType, JSON.stringify(extraMeta), JSON.stringify(jsonLd)]);
+  }, [title, description, path, image, imageAlt, imageWidth, imageHeight, ogType, twitterCard, JSON.stringify(extraMeta), JSON.stringify(jsonLd)]);
 }
 
 export const SITE = SITE_URL;

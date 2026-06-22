@@ -26,10 +26,26 @@ const FAQS = [
 
 const CustomJewelleryPackagingGuide = () => {
   useSeo({
-    title: "Custom Jewellery Packaging for Startups — Delhi Manufacturer | Mirghaniya Super Centre",
+    title: "Custom Jewellery Packaging Guide for Startups | Delhi Manufacturer",
     description: "Learn how to package jewellery for sale with custom boxes, velvet pouches & logo embossing. Delhi manufacturer offering Pan-India delivery. MOQs from 50 pieces.",
     path: "/guides/custom-jewellery-packaging",
     image: "https://mirghaniyasupercentre.lovable.app" + guideHero,
+    imageAlt: "Custom jewellery packaging boxes and pouches with logo embossing for Indian startups",
+    imageWidth: 1024,
+    imageHeight: 1024,
+    ogType: "article",
+    extraMeta: [
+      { property: "og:locale", content: "en_IN" },
+      { property: "og:site_name", content: "Mirghaniya Super Centre" },
+      { property: "article:section", content: "Jewellery Packaging" },
+      { property: "article:tag", content: "custom jewellery boxes" },
+      { property: "article:tag", content: "jewellery packaging" },
+      { property: "article:tag", content: "logo embossing" },
+      { property: "article:tag", content: "velvet boxes" },
+      { property: "article:tag", content: "rigid boxes" },
+      { property: "article:tag", content: "Delhi manufacturer" },
+      { name: "keywords", content: "custom jewellery boxes, how to package jewellery for sale, jewellery packaging startup, logo embossing boxes, velvet jewellery box Delhi, rigid box manufacturer India, Pan-India delivery" },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Article",
