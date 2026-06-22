@@ -45,6 +45,9 @@ export const Navbar = () => {
             <Link to="/about" className="text-foreground hover:text-primary transition-colors font-inter">
               About
             </Link>
+            <Link to="/guides/custom-jewellery-packaging" className="text-foreground hover:text-primary transition-colors font-inter">
+              Guide
+            </Link>
             <Link to="/contact" className="text-foreground hover:text-primary transition-colors font-inter">
               Contact
             </Link>
@@ -124,6 +127,13 @@ export const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               About
+            </Link>
+            <Link
+              to="/guides/custom-jewellery-packaging"
+              className="block py-2 text-foreground hover:text-primary transition-colors font-inter"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Guide
             </Link>
             <Link
               to="/contact"
