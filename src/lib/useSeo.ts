@@ -7,7 +7,11 @@ type SeoOptions = {
   description: string;
   path?: string; // defaults to current location
   image?: string;
+  imageAlt?: string;
+  imageWidth?: string | number;
+  imageHeight?: string | number;
   ogType?: string; // e.g. "website" (default) or "product"
+  twitterCard?: string; // e.g. "summary_large_image" (default) or "summary"
   extraMeta?: Array<{ name?: string; property?: string; content: string }>;
   jsonLd?: Record<string, any> | Record<string, any>[];
 };
@@ -36,7 +40,7 @@ function upsertLink(rel: string, href: string) {
 
 const JSONLD_ID = "seo-route-jsonld";
 
-export function useSeo({ title, description, path, image, ogType, extraMeta, jsonLd }: SeoOptions) {
+export function useSeo({ title, description, path, image, imageAlt, imageWidth, imageHeight, ogType, twitterCard, extraMeta, jsonLd }: SeoOptions) {
   useEffect(() => {
     const url = SITE_URL + (path ?? window.location.pathname);
 
@@ -48,11 +52,21 @@ export function useSeo({ title, description, path, image, ogType, extraMeta, jso
     upsertMeta('meta[property="og:title"]', { property: "og:title", content: title });
     upsertMeta('meta[property="og:description"]', { property: "og:description", content: description });
     upsertMeta('meta[property="og:url"]', { property: "og:url", content: url });
+    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: twitterCard || "summary_large_image" });
     upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: title });
     upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: description });
     if (image) {
       upsertMeta('meta[property="og:image"]', { property: "og:image", content: image });
       upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: image });
+    }
+    if (imageAlt) {
+      upsertMeta('meta[property="og:image:alt"]', { property: "og:image:alt", content: imageAlt });
+    }
+    if (imageWidth) {
+      upsertMeta('meta[property="og:image:width"]', { property: "og:image:width", content: String(imageWidth) });
+    }
+    if (imageHeight) {
+      upsertMeta('meta[property="og:image:height"]', { property: "og:image:height", content: String(imageHeight) });
     }
 
     // Route-specific extra meta tags — tracked so we can clean them up on unmount
