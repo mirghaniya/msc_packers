@@ -8,7 +8,7 @@ import guideHero from "@/assets/guide-packaging-hero.jpg";
 const FAQS = [
   {
     q: "What is the minimum order quantity for custom jewellery boxes?",
-    a: "For standard custom jewellery boxes with logo printing, our MOQ starts at 100 pieces. For premium rigid boxes with foil embossing, the minimum is typically 200 pieces. Velvet pouches and satin bags can be customised from as low as 50 pieces. Contact us for exact quotes based on your design."
+    a: "Our minimum order quantity (MOQ) for all products is 100 pieces. This applies to custom jewellery boxes, velvet pouches, satin bags, and premium rigid boxes alike. Contact us for exact quotes based on your design and quantity."
   },
   {
     q: "How long does it take to manufacture custom jewellery packaging?",
