@@ -9,7 +9,7 @@ const testimonials = [{
   rating: 5
 }, {
   id: 2,
-  name: "Michael Chen",
+  name: "INDRA Jewellers",
   content: "Outstanding service and beautiful products. These display stands have transformed our showroom.",
   rating: 5
 }, {
