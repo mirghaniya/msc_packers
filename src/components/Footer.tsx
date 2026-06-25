@@ -52,7 +52,10 @@ export const Footer = () => {
             <ul className="space-y-2 font-inter">
               <li className="flex items-start space-x-2 text-sm">
                 <Phone className="h-4 w-4 mt-0.5" />
-                <span className="whitespace-pre-line">{"+91 88518 82465\u00a0\n+91 93139 31002"}</span>
+                <span className="flex flex-col">
+                  <a href="tel:+918851882465" className="hover:text-secondary transition-colors">+91 88518 82465</a>
+                  <a href="tel:+919313931002" className="hover:text-secondary transition-colors">+91 93139 31002</a>
+                </span>
               </li>
               <li className="flex items-center space-x-2 text-sm">
                 <Mail className="h-4 w-4" />
