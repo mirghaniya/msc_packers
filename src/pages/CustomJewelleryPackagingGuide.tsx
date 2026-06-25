@@ -338,9 +338,9 @@ const CustomJewelleryPackagingGuide = () => {
             <div className="bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 rounded-xl p-6 md:p-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
-                  { product: "Velvet Ring Boxes", moq: "50 pcs", price: "₹45–₹120 each" },
-                  { product: "Velvet Earring Boxes", moq: "50 pcs", price: "₹35–₹90 each" },
-                  { product: "Rigid Necklace Boxes", moq: "200 pcs", price: "₹120–₹300 each" },
+                  { product: "Velvet Ring Boxes", moq: "100 pcs", price: "₹45–₹120 each" },
+                  { product: "Velvet Earring Boxes", moq: "100 pcs", price: "₹35–₹90 each" },
+                  { product: "Rigid Necklace Boxes", moq: "100 pcs", price: "₹120–₹300 each" },
                   { product: "Velvet Drawstring Pouches", moq: "100 pcs", price: "₹15–₹40 each" },
                   { product: "Satin Pouches (Custom Logo)", moq: "100 pcs", price: "₹20–₹50 each" },
                   { product: "Premium Gift Box Sets", moq: "100 pcs", price: "₹180–₹450 each" }
