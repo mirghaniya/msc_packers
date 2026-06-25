@@ -50,9 +50,9 @@ export const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-playfair font-semibold text-lg">Contact Us</h4>
             <ul className="space-y-2 font-inter">
-              <li className="flex items-center space-x-2 text-sm">
-                <Phone className="h-4 w-4" />
-                <span>+91 88518 82465 / +91 93139 31002</span>
+              <li className="flex items-start space-x-2 text-sm">
+                <Phone className="h-4 w-4 mt-0.5" />
+                <span className="whitespace-pre-line">{"+91 88518 82465\u00a0\n+91 93139 31002"}</span>
               </li>
               <li className="flex items-center space-x-2 text-sm">
                 <Mail className="h-4 w-4" />
