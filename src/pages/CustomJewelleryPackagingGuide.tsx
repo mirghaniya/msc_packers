@@ -182,7 +182,7 @@ const CustomJewelleryPackagingGuide = () => {
                         "Best for: Rings, earrings, pendants, small necklaces",
                         "Price range: Budget-friendly to mid-range",
                         "Customisation: Logo printing, foil stamping, ribbon closures",
-                        "MOQ: 50 pieces for standard sizes"
+                        "MOQ: 100 pieces for standard sizes"
                       ].map((point, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                           <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
