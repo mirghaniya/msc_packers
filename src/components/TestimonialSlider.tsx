@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 const testimonials = [{
   id: 1,
-  name: "Sarah Johnson",
+  name: "Bhandari Traders",
   content: "The quality of these jewelry packages exceeded my expectations. My customers are always impressed!",
   rating: 5
 }, {
