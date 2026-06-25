@@ -46,6 +46,7 @@ const AdminHeroSlides = lazy(() => import("./pages/admin/AdminHeroSlides"));
 const AdminFeaturedProducts = lazy(() => import("./pages/admin/AdminFeaturedProducts"));
 const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
 const AdminBrandTestimonials = lazy(() => import("./pages/admin/AdminBrandTestimonials"));
+const AdminTestimonials = lazy(() => import("./pages/admin/AdminTestimonials"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -98,6 +99,7 @@ const App = () => (
             <Route path="/admin/featured" element={<AdminFeaturedProducts />} />
             <Route path="/admin/messages" element={<AdminMessages />} />
             <Route path="/admin/brand-testimonials" element={<AdminBrandTestimonials />} />
+            <Route path="/admin/testimonials" element={<AdminTestimonials />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
