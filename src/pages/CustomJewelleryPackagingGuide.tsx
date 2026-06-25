@@ -210,7 +210,7 @@ const CustomJewelleryPackagingGuide = () => {
                         "Best for: Premium necklaces, watch sets, bridal jewellery, gift boxes",
                         "Price range: Mid-range to premium",
                         "Customisation: Full-colour printing, foil embossing, magnetic closures, ribbon pulls",
-                        "MOQ: 200 pieces for custom designs"
+                        "MOQ: 100 pieces for custom designs"
                       ].map((point, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                           <CheckCircle className="h-4 w-4 text-secondary flex-shrink-0 mt-0.5" />
