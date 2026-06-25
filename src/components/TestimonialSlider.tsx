@@ -29,7 +29,7 @@ const testimonials = [{
   rating: 5
 }, {
   id: 6,
-  name: "James Wilson",
+  name: "Narayani Ghane",
   content: "Exceptional craftsmanship and elegant designs. Highly recommended for any jewelry business.",
   rating: 5
 }];
