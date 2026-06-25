@@ -101,6 +101,7 @@ const Contact = () => {
                       <div>
                         <h3 className="font-playfair font-semibold text-lg mb-1">Phone</h3>
                         <p className="text-muted-foreground">+91 88518 82465</p>
+                        <p className="text-muted-foreground">+91 93139 31002</p>
                       </div>
                     </div>
                   </CardContent>

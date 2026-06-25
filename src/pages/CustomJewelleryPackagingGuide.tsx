@@ -8,7 +8,7 @@ import guideHero from "@/assets/guide-packaging-hero.jpg";
 const FAQS = [
   {
     q: "What is the minimum order quantity for custom jewellery boxes?",
-    a: "For standard custom jewellery boxes with logo printing, our MOQ starts at 100 pieces. For premium rigid boxes with foil embossing, the minimum is typically 200 pieces. Velvet pouches and satin bags can be customised from as low as 50 pieces. Contact us for exact quotes based on your design."
+    a: "Our minimum order quantity (MOQ) for all products is 100 pieces. This applies to custom jewellery boxes, velvet pouches, satin bags, and premium rigid boxes alike. Contact us for exact quotes based on your design and quantity."
   },
   {
     q: "How long does it take to manufacture custom jewellery packaging?",
@@ -27,7 +27,7 @@ const FAQS = [
 const CustomJewelleryPackagingGuide = () => {
   useSeo({
     title: "Custom Jewellery Packaging Guide for Startups | Delhi Manufacturer",
-    description: "Learn how to package jewellery for sale with custom boxes, velvet pouches & logo embossing. Delhi manufacturer offering Pan-India delivery. MOQs from 50 pieces.",
+    description: "Learn how to package jewellery for sale with custom boxes, velvet pouches & logo embossing. Delhi manufacturer offering Pan-India delivery. MOQ from 100 pieces.",
     path: "/guides/custom-jewellery-packaging",
     image: "https://mirghaniyasupercentre.lovable.app" + guideHero,
     imageAlt: "Custom jewellery packaging boxes and pouches with logo embossing for Indian startups",
@@ -182,7 +182,7 @@ const CustomJewelleryPackagingGuide = () => {
                         "Best for: Rings, earrings, pendants, small necklaces",
                         "Price range: Budget-friendly to mid-range",
                         "Customisation: Logo printing, foil stamping, ribbon closures",
-                        "MOQ: 50 pieces for standard sizes"
+                        "MOQ: 100 pieces for standard sizes"
                       ].map((point, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                           <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
@@ -210,7 +210,7 @@ const CustomJewelleryPackagingGuide = () => {
                         "Best for: Premium necklaces, watch sets, bridal jewellery, gift boxes",
                         "Price range: Mid-range to premium",
                         "Customisation: Full-colour printing, foil embossing, magnetic closures, ribbon pulls",
-                        "MOQ: 200 pieces for custom designs"
+                        "MOQ: 100 pieces for custom designs"
                       ].map((point, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                           <CheckCircle className="h-4 w-4 text-secondary flex-shrink-0 mt-0.5" />
@@ -338,9 +338,9 @@ const CustomJewelleryPackagingGuide = () => {
             <div className="bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 rounded-xl p-6 md:p-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
-                  { product: "Velvet Ring Boxes", moq: "50 pcs", price: "₹45–₹120 each" },
-                  { product: "Velvet Earring Boxes", moq: "50 pcs", price: "₹35–₹90 each" },
-                  { product: "Rigid Necklace Boxes", moq: "200 pcs", price: "₹120–₹300 each" },
+                  { product: "Velvet Ring Boxes", moq: "100 pcs", price: "₹45–₹120 each" },
+                  { product: "Velvet Earring Boxes", moq: "100 pcs", price: "₹35–₹90 each" },
+                  { product: "Rigid Necklace Boxes", moq: "100 pcs", price: "₹120–₹300 each" },
                   { product: "Velvet Drawstring Pouches", moq: "100 pcs", price: "₹15–₹40 each" },
                   { product: "Satin Pouches (Custom Logo)", moq: "100 pcs", price: "₹20–₹50 each" },
                   { product: "Premium Gift Box Sets", moq: "100 pcs", price: "₹180–₹450 each" }
