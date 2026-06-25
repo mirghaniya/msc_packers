@@ -1,48 +1,55 @@
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-const testimonials = [{
-  id: 1,
-  name: "Bhandari Traders",
-  content: "The quality of these jewelry packages exceeded my expectations. My customers are always impressed!",
-  rating: 5
-}, {
-  id: 2,
-  name: "INDRA Jewellers",
-  content: "Outstanding service and beautiful products. These display stands have transformed our showroom.",
-  rating: 5
-}, {
-  id: 3,
-  name: "Bangard Jewellers",
-  content: "Perfect packaging solutions for our boutique. The attention to detail is remarkable.",
-  rating: 5
-}, {
-  id: 4,
-  name: "Shubh Laxmi",
-  content: "Professional quality at competitive prices. We've been ordering from them for years.",
-  rating: 5
-}, {
-  id: 5,
-  name: "Geetanjali Gold",
-  content: "The gift boxes are absolutely stunning. Our customers love the premium feel.",
-  rating: 5
-}, {
-  id: 6,
-  name: "Narayani Ghane",
-  content: "Exceptional craftsmanship and elegant designs. Highly recommended for any jewelry business.",
-  rating: 5
-}];
+
+type Testimonial = {
+  id: string;
+  customer_name: string;
+  content: string;
+  rating: number;
+};
+
+const fallbackTestimonials: Testimonial[] = [
+  { id: "f1", customer_name: "Bhandari Traders", content: "The quality of these jewelry packages exceeded my expectations. My customers are always impressed!", rating: 5 },
+  { id: "f2", customer_name: "INDRA Jewellers", content: "Outstanding service and beautiful products. These display stands have transformed our showroom.", rating: 5 },
+  { id: "f3", customer_name: "Bangard Jewellers", content: "Perfect packaging solutions for our boutique. The attention to detail is remarkable.", rating: 5 },
+  { id: "f4", customer_name: "Shubh Laxmi", content: "Professional quality at competitive prices. We've been ordering from them for years.", rating: 5 },
+  { id: "f5", customer_name: "Geetanjali Gold", content: "The gift boxes are absolutely stunning. Our customers love the premium feel.", rating: 5 },
+  { id: "f6", customer_name: "Narayani Ghane", content: "Exceptional craftsmanship and elegant designs. Highly recommended for any jewelry business.", rating: 5 },
+];
+
 export const TestimonialSlider = () => {
+  const { data } = useQuery({
+    queryKey: ["testimonials"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("id, customer_name, content, rating")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as Testimonial[];
+    },
+  });
+
+  const testimonials = data && data.length > 0 ? data : fallbackTestimonials;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  useEffect(() => {
+    if (currentIndex >= testimonials.length) setCurrentIndex(0);
+  }, [testimonials.length, currentIndex]);
+
   useEffect(() => {
     if (!isAutoPlaying) return;
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % testimonials.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, testimonials.length]);
+
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
     setIsAutoPlaying(false);
@@ -55,6 +62,9 @@ export const TestimonialSlider = () => {
     setCurrentIndex(prev => (prev - 1 + testimonials.length) % testimonials.length);
     setIsAutoPlaying(false);
   };
+
+  const active = testimonials[currentIndex] ?? testimonials[0];
+
   return <section className="py-20 bg-accent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
@@ -71,13 +81,13 @@ export const TestimonialSlider = () => {
             <CardContent className="p-8 md:p-12 shadow-2xl rounded-2xl">
               <div className="text-center">
                 <div className="flex justify-center mb-6">
-                  {[...Array(testimonials[currentIndex].rating)].map((_, i) => <Star key={i} className="h-6 w-6 fill-secondary text-secondary" />)}
+                  {[...Array(active.rating)].map((_, i) => <Star key={i} className="h-6 w-6 fill-secondary text-secondary" />)}
                 </div>
                 <p className="font-inter text-lg md:text-xl text-foreground mb-6 italic">
-                  "{testimonials[currentIndex].content}"
+                  "{active.content}"
                 </p>
                 <p className="font-playfair font-semibold text-xl text-primary">
-                  {testimonials[currentIndex].name}
+                  {active.customer_name}
                 </p>
               </div>
             </CardContent>
