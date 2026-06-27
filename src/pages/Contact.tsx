@@ -18,16 +18,23 @@ const Contact = () => {
   });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedPhone = phone.trim();
+    if (!/^[\+\d][\d\s\-\(\)]{6,19}$/.test(trimmedPhone)) {
+      toast.error("Please enter a valid contact number.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       const { data, error } = await supabase.functions.invoke("send-contact-notification", {
         body: {
           name: name.trim(),
           email: email.trim(),
+          phone: trimmedPhone,
           message: message.trim()
         }
       });
@@ -37,6 +44,7 @@ const Contact = () => {
       toast.success("Message sent! We'll get back to you soon.");
       setName("");
       setEmail("");
+      setPhone("");
       setMessage("");
     } catch (error) {
       toast.error("Failed to send message. Please try again.");
