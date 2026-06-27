@@ -84,6 +84,10 @@ const Contact = () => {
                       <Input id="email" type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                     <div>
+                      <Label htmlFor="phone">Contact Number</Label>
+                      <Input id="phone" type="tel" inputMode="tel" placeholder="+91 98xxxxxxxx" value={phone} onChange={e => setPhone(e.target.value)} required />
+                    </div>
+                    <div>
                       <Label htmlFor="message">Message</Label>
                       <Textarea id="message" placeholder="How can we help you?" rows={5} value={message} onChange={e => setMessage(e.target.value)} required />
                     </div>
