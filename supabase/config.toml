@@ -6,7 +6,7 @@ additional_redirect_urls = ["https://mirghaniyasupercentre.lovable.app", "https:
 
 [auth.password]
 min_length = 8
-leaked_password_protection = "no_protection"
+leaked_password_protection = "enabled"
 
 [functions.send-order-notification]
 verify_jwt = false
