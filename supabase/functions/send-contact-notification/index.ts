@@ -113,10 +113,18 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Phone validation: 7-20 chars, digits with optional +, spaces, dashes, parens
+    if (typeof phone !== "string" || phone.length > 20 || !/^[\+\d][\d\s\-\(\)]{6,19}$/.test(phone)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid contact number" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Persist message to database (service role bypasses RLS so direct client inserts can stay blocked)
     const { error: insertError } = await supabaseAdmin
       .from("contact_messages")
-      .insert({ name: name.trim(), email: email.trim(), message: message.trim() });
+      .insert({ name: name.trim(), email: email.trim(), phone: phone.trim(), message: message.trim() });
     if (insertError) {
       console.error("contact_messages insert error:", insertError);
       return new Response(
@@ -128,6 +136,7 @@ Deno.serve(async (req) => {
     // Escape all user inputs for safe HTML interpolation
     const safeName = escapeHtml(name.trim());
     const safeEmail = escapeHtml(email.trim());
+    const safePhone = escapeHtml(phone.trim());
     const safeMessage = escapeHtml(message.trim());
 
     const adminEmail = "mirghaniyasupercentre@gmail.com";
@@ -152,6 +161,7 @@ Deno.serve(async (req) => {
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
               <p style="margin: 5px 0;"><strong>Name:</strong> ${safeName}</p>
               <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #4B164C;">${safeEmail}</a></p>
+              <p style="margin: 5px 0;"><strong>Phone:</strong> <a href="tel:${safePhone}" style="color: #4B164C;">${safePhone}</a></p>
             </div>
             
             <h3 style="color: #4B164C; border-bottom: 2px solid #DD88CF; padding-bottom: 10px;">Message</h3>
