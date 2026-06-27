@@ -17,6 +17,7 @@ const escapeHtml = (s: string): string =>
 interface ContactNotificationRequest {
   name: string;
   email: string;
+  phone: string;
   message: string;
 }
 
@@ -43,10 +44,10 @@ Deno.serve(async (req) => {
     );
 
     const body = await req.json();
-    const { name, email, message } = body as ContactNotificationRequest;
+    const { name, email, phone, message } = body as ContactNotificationRequest;
 
     // Validate required fields early so we can use email for rate limit check
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
