@@ -26,7 +26,7 @@ const FAQS = [
 
 const CustomJewelleryPackagingGuide = () => {
   useSeo({
-    title: "Custom Jewellery Packaging Guide for Startups | Delhi Manufacturer",
+    title: "Custom Jewellery Packaging Guide for Startups (Delhi)",
     description: "Learn how to package jewellery for sale with custom boxes, velvet pouches & logo embossing. Delhi manufacturer offering Pan-India delivery. MOQ from 100 pieces.",
     path: "/guides/custom-jewellery-packaging",
     image: "https://mirghaniyasupercentre.lovable.app" + guideHero,
