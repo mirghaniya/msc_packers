@@ -51,6 +51,17 @@ const CustomJewelleryPackagingGuide = () => {
       "@type": "Article",
       headline: "Custom Jewellery Packaging for Startups: A Complete Guide",
       description: "Learn how small businesses can use custom boxes and branding to elevate their product presentation. Covers material choices, logo embossing, and minimum order quantities.",
+      image: [
+        {
+          "@type": "ImageObject",
+          url: "https://mirghaniyasupercentre.lovable.app" + guideHero,
+          width: 1200,
+          height: 600
+        }
+      ],
+      datePublished: "2026-06-01",
+      dateModified: "2026-07-02",
+      inLanguage: "en-IN",
       author: {
         "@type": "Organization",
         name: "Mirghaniya Super Centre",
