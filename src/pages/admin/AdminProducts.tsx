@@ -171,6 +171,7 @@ const AdminProducts = () => {
     setFormData(initialFormData);
     setEditingProduct(null);
     setImageInputMethod("upload");
+    setPendingGalleryFiles([]);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
