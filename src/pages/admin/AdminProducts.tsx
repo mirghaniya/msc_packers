@@ -14,6 +14,7 @@ import { Pencil, Trash2, Plus, Images } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
+import { PendingGalleryUpload } from "@/components/PendingGalleryUpload";
 import { WebPConverter } from "@/components/WebPConverter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
