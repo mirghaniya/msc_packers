@@ -365,6 +365,22 @@ const AdminProducts = () => {
                 </div>
               )}
 
+              {!editingProduct && (
+                <div>
+                  <Label className="flex items-center gap-2">
+                    <Images className="h-4 w-4" />
+                    Gallery Images / Videos (for carousel)
+                  </Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Optional. Add extra images or videos to show in the product carousel. They will be uploaded after the product is created.
+                  </p>
+                  <PendingGalleryUpload
+                    files={pendingGalleryFiles}
+                    onChange={setPendingGalleryFiles}
+                  />
+                </div>
+              )}
+
               <div className="flex gap-4">
                 <Button type="submit" className="flex-1">
                   {editingProduct ? "Update Product" : "Create Product"}
