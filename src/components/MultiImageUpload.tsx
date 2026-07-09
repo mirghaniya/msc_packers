@@ -6,9 +6,14 @@ import { Upload, X, GripVertical, Plus } from "lucide-react";
 
 interface MultiImageUploadProps {
   productId: string;
-  existingImages: { id: string; image_url: string; display_order: number }[];
+  existingImages: { id: string; image_url: string; display_order: number; media_type?: string }[];
   onImagesChange: () => void;
 }
+
+const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 20 * 1024 * 1024;
 
 export const MultiImageUpload = ({
   productId,
@@ -27,49 +32,48 @@ export const MultiImageUpload = ({
 
     try {
       const uploadPromises = Array.from(files).map(async (file, index) => {
-        // Validate file type
-        const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-        if (!validTypes.includes(file.type)) {
+        const isVideo = VIDEO_TYPES.includes(file.type);
+        const isImage = IMAGE_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
           throw new Error(`Invalid file type: ${file.name}`);
         }
-
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error(`File too large: ${file.name}`);
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          throw new Error(
+            `File too large: ${file.name} (max ${isVideo ? "20MB" : "5MB"})`
+          );
         }
 
-        // Create unique filename
         const fileExt = file.name.split(".").pop();
         const fileName = `products/${productId}/${Date.now()}-${index}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        // Upload to Supabase Storage
         const { data, error } = await supabase.storage
           .from("product-images")
           .upload(fileName, file, {
             cacheControl: "3600",
             upsert: false,
+            contentType: file.type,
           });
 
         if (error) throw error;
 
-        // Get public URL
         const { data: { publicUrl } } = supabase.storage
           .from("product-images")
           .getPublicUrl(data.path);
 
-        return publicUrl;
+        return { url: publicUrl, media_type: isVideo ? "video" : "image" };
       });
 
-      const uploadedUrls = await Promise.all(uploadPromises);
+      const uploaded = await Promise.all(uploadPromises);
 
-      // Save to product_images table
       const nextOrder = existingImages.length > 0
         ? Math.max(...existingImages.map((img) => img.display_order)) + 1
         : 1;
 
-      const insertData = uploadedUrls.map((url, index) => ({
+      const insertData = uploaded.map((u, index) => ({
         product_id: productId,
-        image_url: url,
+        image_url: u.url,
+        media_type: u.media_type,
         display_order: nextOrder + index,
       }));
 
@@ -80,8 +84,8 @@ export const MultiImageUpload = ({
       if (insertError) throw insertError;
 
       toast({
-        title: "Images uploaded",
-        description: `${uploadedUrls.length} image(s) uploaded successfully`,
+        title: "Media uploaded",
+        description: `${uploaded.length} file(s) uploaded successfully`,
       });
 
       onImagesChange();
@@ -128,11 +132,25 @@ export const MultiImageUpload = ({
             key={image.id}
             className="relative group w-24 h-24 rounded-lg overflow-hidden border"
           >
-            <img
-              src={image.image_url}
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
+            {image.media_type === "video" ? (
+              <video
+                src={image.image_url}
+                className="w-full h-full object-cover"
+                muted
+                playsInline
+              />
+            ) : (
+              <img
+                src={image.image_url}
+                alt="Product"
+                className="w-full h-full object-cover"
+              />
+            )}
+            {image.media_type === "video" && (
+              <span className="absolute bottom-1 left-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded">
+                VIDEO
+              </span>
+            )}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
               <GripVertical className="h-4 w-4 text-white cursor-move" />
               <Button
@@ -163,7 +181,7 @@ export const MultiImageUpload = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime"
         multiple
         onChange={handleFileChange}
         className="hidden"
@@ -177,11 +195,11 @@ export const MultiImageUpload = ({
         disabled={isUploading}
       >
         <Upload className="h-4 w-4 mr-2" />
-        {isUploading ? "Uploading..." : "Upload Multiple Images"}
+        {isUploading ? "Uploading..." : "Upload Images or Videos"}
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Supported formats: JPG, PNG, WebP, GIF. Max 5MB each.
+        Images: JPG, PNG, WebP, GIF (max 5MB). Videos: MP4, WebM, MOV (max 20MB).
       </p>
     </div>
   );
