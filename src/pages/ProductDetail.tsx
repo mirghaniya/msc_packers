@@ -88,7 +88,7 @@ const ProductDetail = () => {
   });
 
   const allImages = product
-    ? [{ image_url: product.image_url, id: "main" }, ...(productImages || [])]
+    ? [{ image_url: product.image_url, id: "main", media_type: "image" as string }, ...((productImages || []) as any[])]
     : [];
 
   const isDisplayStand = product?.category === "Display Stands";
@@ -221,11 +221,20 @@ const ProductDetail = () => {
             {/* Image Gallery */}
             <div className="space-y-4">
               <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
-                <img
-                  src={getOptimizedImageUrl(allImages[currentImageIndex]?.image_url, { width: 800, height: 800 })}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+                {allImages[currentImageIndex]?.media_type === "video" ? (
+                  <video
+                    src={allImages[currentImageIndex]?.image_url}
+                    className="w-full h-full object-cover"
+                    controls
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={getOptimizedImageUrl(allImages[currentImageIndex]?.image_url, { width: 800, height: 800 })}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
                 {allImages.length > 1 && (
                   <>
                     <Button variant="ghost" size="icon" aria-label="Previous image" className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" onClick={prevImage}>
@@ -258,7 +267,14 @@ const ProductDetail = () => {
                       aria-current={index === currentImageIndex}
                       className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-colors ${index === currentImageIndex ? "border-primary" : "border-transparent"}`}
                     >
-                      <img src={getOptimizedImageUrl(img.image_url, { width: 150, height: 150 })} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                      {img.media_type === "video" ? (
+                        <div className="relative w-full h-full bg-black">
+                          <video src={img.image_url} className="w-full h-full object-cover" muted playsInline />
+                          <span className="absolute bottom-0.5 left-0.5 bg-black/70 text-white text-[9px] px-1 rounded">▶</span>
+                        </div>
+                      ) : (
+                        <img src={getOptimizedImageUrl(img.image_url, { width: 150, height: 150 })} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                      )}
                     </button>
                   ))}
                 </div>
