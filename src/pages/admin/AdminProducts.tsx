@@ -95,16 +95,51 @@ const AdminProducts = () => {
     enabled: !!editingProduct,
   });
 
+  const uploadPendingGallery = async (productId: string, files: File[]) => {
+    if (!files.length) return;
+    const uploaded: { url: string; media_type: string }[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const isVideo = file.type.startsWith("video/");
+      const fileExt = file.name.split(".").pop();
+      const fileName = `products/${productId}/${Date.now()}-${i}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { data, error } = await supabase.storage
+        .from("product-images")
+        .upload(fileName, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage.from("product-images").getPublicUrl(data.path);
+      uploaded.push({ url: publicUrl, media_type: isVideo ? "video" : "image" });
+    }
+    const insertRows = uploaded.map((u, idx) => ({
+      product_id: productId,
+      image_url: u.url,
+      media_type: u.media_type,
+      display_order: idx + 1,
+    }));
+    const { error: insertError } = await supabase.from("product_images").insert(insertRows);
+    if (insertError) throw insertError;
+  };
+
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { error } = await supabase.from("products").insert(data);
+      const { data: created, error } = await supabase
+        .from("products")
+        .insert(data)
+        .select("id")
+        .single();
       if (error) throw error;
+      if (pendingGalleryFiles.length > 0 && created?.id) {
+        await uploadPendingGallery(created.id, pendingGalleryFiles);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       toast({ title: "Product created successfully" });
       resetForm();
       setDialogOpen(false);
+    },
+    onError: (err: any) => {
+      toast({ title: "Failed to create product", description: err?.message, variant: "destructive" });
     },
   });
 
