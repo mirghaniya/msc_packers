@@ -422,6 +422,9 @@ export type Database = {
           is_featured: boolean | null
           name: string
           price: number
+          show_add_to_cart: boolean
+          show_call_now: boolean
+          show_enquiry: boolean
           sr_number: string
           stock_quantity: number | null
           updated_at: string | null
@@ -435,6 +438,9 @@ export type Database = {
           is_featured?: boolean | null
           name: string
           price: number
+          show_add_to_cart?: boolean
+          show_call_now?: boolean
+          show_enquiry?: boolean
           sr_number: string
           stock_quantity?: number | null
           updated_at?: string | null
@@ -448,6 +454,9 @@ export type Database = {
           is_featured?: boolean | null
           name?: string
           price?: number
+          show_add_to_cart?: boolean
+          show_call_now?: boolean
+          show_enquiry?: boolean
           sr_number?: string
           stock_quantity?: number | null
           updated_at?: string | null
