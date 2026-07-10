@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Heart, Filter } from "lucide-react";
+import { ShoppingCart, Heart, Filter, Phone } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
@@ -216,7 +216,7 @@ const Products = () => {
                             </span>
                           </div>
                           <div className="flex flex-col gap-2">
-                            {!isDisplayStand(product.category) && (
+                            {(product.show_add_to_cart ?? true) && !isDisplayStand(product.category) && (
                               <Button
                                 size="sm"
                                 variant="default"
@@ -229,15 +229,27 @@ const Products = () => {
                                 <span className="sm:hidden">Add</span>
                               </Button>
                             )}
-                            <a
-                              href={getEnquiryUrl(product.name)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
-                            >
-                              Enquiry
-                            </a>
+                            {(product.show_enquiry ?? true) && (
+                              <a
+                                href={getEnquiryUrl(product.name)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
+                              >
+                                Enquiry
+                              </a>
+                            )}
+                            {(product.show_call_now ?? true) && (
+                              <a
+                                href="tel:+918851882465"
+                                className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-8 md:h-9 px-2 md:px-3"
+                              >
+                                <Phone className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                                Call Now
+                              </a>
+                            )}
                           </div>
+
                         </div>
                       </CardContent>
                     </Card>

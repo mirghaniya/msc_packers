@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Phone } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
@@ -141,12 +141,12 @@ export const FeaturedProducts = () => {
                       ₹{product.price}
                     </span>
                   </div>
-                  <div className="flex gap-1 md:gap-2">
-                    {product.category !== "Display Stands" && (
+                  <div className="flex flex-col gap-2">
+                    {((product as any).show_add_to_cart ?? true) && product.category !== "Display Stands" && (
                       <Button
                         size="sm"
                         variant="default"
-                        className="flex-1 group/btn text-xs md:text-sm h-8 md:h-9"
+                        className="w-full group/btn text-xs md:text-sm h-8 md:h-9"
                         onClick={() => addToCart(product.id)}
                         disabled={isAddingToCart}
                       >
@@ -155,15 +155,27 @@ export const FeaturedProducts = () => {
                         <span className="sm:hidden">Add</span>
                       </Button>
                     )}
-                    <a
-                      href={getEnquiryUrl(product.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3 ${product.category === "Display Stands" ? "flex-1" : ""}`}
-                    >
-                      Enquiry
-                    </a>
+                    {((product as any).show_enquiry ?? true) && (
+                      <a
+                        href={getEnquiryUrl(product.name)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 md:h-9 px-2 md:px-3"
+                      >
+                        Enquiry
+                      </a>
+                    )}
+                    {((product as any).show_call_now ?? true) && (
+                      <a
+                        href="tel:+918851882465"
+                        className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-8 md:h-9 px-2 md:px-3"
+                      >
+                        <Phone className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                        Call Now
+                      </a>
+                    )}
                   </div>
+
                 </div>
               </CardContent>
             </Card>
