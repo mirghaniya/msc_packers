@@ -221,6 +221,9 @@ const AdminProducts = () => {
       image_url: product.image_url || "",
       is_out_of_stock: (product.stock_quantity !== null && product.stock_quantity <= 0),
       is_featured: product.is_featured || false,
+      show_add_to_cart: product.show_add_to_cart ?? true,
+      show_enquiry: product.show_enquiry ?? true,
+      show_call_now: product.show_call_now ?? true,
     });
     setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
     setDialogOpen(true);
