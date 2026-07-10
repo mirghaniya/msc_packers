@@ -45,6 +45,9 @@ interface ProductFormData {
   image_url: string;
   is_out_of_stock: boolean;
   is_featured: boolean;
+  show_add_to_cart: boolean;
+  show_enquiry: boolean;
+  show_call_now: boolean;
 }
 
 const initialFormData: ProductFormData = {
@@ -56,6 +59,9 @@ const initialFormData: ProductFormData = {
   image_url: "",
   is_out_of_stock: false,
   is_featured: false,
+  show_add_to_cart: true,
+  show_enquiry: true,
+  show_call_now: true,
 };
 
 const AdminProducts = () => {
@@ -215,6 +221,9 @@ const AdminProducts = () => {
       image_url: product.image_url || "",
       is_out_of_stock: (product.stock_quantity !== null && product.stock_quantity <= 0),
       is_featured: product.is_featured || false,
+      show_add_to_cart: product.show_add_to_cart ?? true,
+      show_enquiry: product.show_enquiry ?? true,
+      show_call_now: product.show_call_now ?? true,
     });
     setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
     setDialogOpen(true);
@@ -310,6 +319,33 @@ const AdminProducts = () => {
                     <SelectItem value="Gift Items">Gift Items</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-3 rounded-md border p-3">
+                <Label className="text-sm font-semibold">Buttons on product page</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-cart-toggle" className="font-normal">Show "Add to Cart" button</Label>
+                  <Switch
+                    id="show-cart-toggle"
+                    checked={formData.show_add_to_cart}
+                    onCheckedChange={(checked) => handleFieldChange("show_add_to_cart", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-enquiry-toggle" className="font-normal">Show "Enquiry" button</Label>
+                  <Switch
+                    id="show-enquiry-toggle"
+                    checked={formData.show_enquiry}
+                    onCheckedChange={(checked) => handleFieldChange("show_enquiry", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-call-toggle" className="font-normal">Show "Call Now" button</Label>
+                  <Switch
+                    id="show-call-toggle"
+                    checked={formData.show_call_now}
+                    onCheckedChange={(checked) => handleFieldChange("show_call_now", checked)}
+                  />
+                </div>
               </div>
               <div>
                 <Label>Product Image</Label>
