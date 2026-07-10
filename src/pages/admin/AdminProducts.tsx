@@ -45,6 +45,9 @@ interface ProductFormData {
   image_url: string;
   is_out_of_stock: boolean;
   is_featured: boolean;
+  show_add_to_cart: boolean;
+  show_enquiry: boolean;
+  show_call_now: boolean;
 }
 
 const initialFormData: ProductFormData = {
@@ -56,6 +59,9 @@ const initialFormData: ProductFormData = {
   image_url: "",
   is_out_of_stock: false,
   is_featured: false,
+  show_add_to_cart: true,
+  show_enquiry: true,
+  show_call_now: true,
 };
 
 const AdminProducts = () => {
