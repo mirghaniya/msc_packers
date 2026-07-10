@@ -320,6 +320,33 @@ const AdminProducts = () => {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-3 rounded-md border p-3">
+                <Label className="text-sm font-semibold">Buttons on product page</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-cart-toggle" className="font-normal">Show "Add to Cart" button</Label>
+                  <Switch
+                    id="show-cart-toggle"
+                    checked={formData.show_add_to_cart}
+                    onCheckedChange={(checked) => handleFieldChange("show_add_to_cart", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-enquiry-toggle" className="font-normal">Show "Enquiry" button</Label>
+                  <Switch
+                    id="show-enquiry-toggle"
+                    checked={formData.show_enquiry}
+                    onCheckedChange={(checked) => handleFieldChange("show_enquiry", checked)}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="show-call-toggle" className="font-normal">Show "Call Now" button</Label>
+                  <Switch
+                    id="show-call-toggle"
+                    checked={formData.show_call_now}
+                    onCheckedChange={(checked) => handleFieldChange("show_call_now", checked)}
+                  />
+                </div>
+              </div>
               <div>
                 <Label>Product Image</Label>
                 <p className="text-xs text-muted-foreground mt-1">Recommended: 800 × 800 px (square). Displayed at 320px on cards, 800px on detail page. Formats: JPG, PNG, WebP. Max 5MB.</p>
