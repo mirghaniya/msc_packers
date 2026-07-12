@@ -168,7 +168,7 @@ export const FeaturedProducts = () => {
                     {((product as any).show_call_now ?? true) && (
                       <a
                         href="tel:+918851882465"
-                        className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-8 md:h-9 px-2 md:px-3"
+                        className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-8 md:h-9 px-2 md:px-3"
                       >
                         <Phone className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
                         Call Now
