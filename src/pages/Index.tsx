@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroCarousel } from "@/components/HeroCarousel";
-import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { useSeo } from "@/lib/useSeo";
 
+const FeaturedProducts = lazy(() => import("@/components/FeaturedProducts").then(m => ({ default: m.FeaturedProducts })));
 const Footer = lazy(() => import("@/components/Footer").then(m => ({ default: m.Footer })));
 const PromotionalBanner = lazy(() => import("@/components/PromotionalBanner").then(m => ({ default: m.PromotionalBanner })));
 const BrandCarousel = lazy(() => import("@/components/BrandCarousel").then(m => ({ default: m.BrandCarousel })));
@@ -65,7 +65,11 @@ const Index = () => {
       <Navbar />
       <main className="flex-1">
         <HeroCarousel />
-        <FeaturedProducts />
+        <LazySection minHeight="600px">
+          <Suspense fallback={<div className="min-h-[600px]" />}>
+            <FeaturedProducts />
+          </Suspense>
+        </LazySection>
         <LazySection minHeight="200px">
           <Suspense fallback={<div className="min-h-[200px]" />}>
             <PromotionalBanner />
