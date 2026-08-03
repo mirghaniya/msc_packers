@@ -19,15 +19,25 @@ const About = () => {
     title: "About Mirghaniya Super Centre — Delhi Jewellery Packaging",
     description: "Delhi's wholesale jewellery packaging supplier since 1990. 500+ clients, 100+ box, stand, tray & pouch varieties with Pan-India delivery.",
     path: "/about",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: ABOUT_FAQS.map(({ q, a }) => ({
-        "@type": "Question",
-        name: q,
-        acceptedAnswer: { "@type": "Answer", text: a }
-      }))
-    }
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: ABOUT_FAQS.map(({ q, a }) => ({
+          "@type": "Question",
+          name: q,
+          acceptedAnswer: { "@type": "Answer", text: a }
+        }))
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://mscpackers.in/" },
+          { "@type": "ListItem", position: 2, name: "About Us", item: "https://mscpackers.in/about" },
+        ],
+      }
+    ]
   });
 
   return (
