@@ -101,10 +101,10 @@ export const HeroCarousel = () => {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
         <div className="max-w-2xl">
-          <h1 className="font-playfair font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6 animate-fade-in">
+          <h1 className="font-playfair font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6">
             {currentSlide.title || "Luxury Jewelry Packaging"}
           </h1>
-          <p className="font-inter text-lg md:text-xl text-white/90 mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+          <p className="font-inter text-lg md:text-xl text-white/90 mb-8">
             {currentSlide.subtitle || "Elevate your brand with our premium packaging and display solutions."}
           </p>
           {currentSlide.button_text && currentSlide.button_link && (
