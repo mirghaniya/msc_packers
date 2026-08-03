@@ -34,10 +34,9 @@ Deno.serve(async (req) => {
     const staticPages = [
       { loc: "/", changefreq: "daily", priority: "1.0" },
       { loc: "/products", changefreq: "daily", priority: "0.9" },
+      { loc: "/guides/custom-jewellery-packaging", changefreq: "monthly", priority: "0.8" },
       { loc: "/about", changefreq: "monthly", priority: "0.7" },
       { loc: "/contact", changefreq: "monthly", priority: "0.7" },
-      { loc: "/auth", changefreq: "monthly", priority: "0.5" },
-      { loc: "/cart", changefreq: "weekly", priority: "0.6" },
     ];
 
     // Generate static page URLs
