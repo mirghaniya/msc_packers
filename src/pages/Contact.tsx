@@ -15,6 +15,22 @@ const Contact = () => {
     title: "Contact Mirghaniya Super Centre — Delhi Jewellery Packaging",
     description: "Get in touch for wholesale jewellery packaging quotes, custom branding and Pan-India delivery. Call +91-88518-82465 or message us online.",
     path: "/contact",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: "Contact Mirghaniya Super Centre",
+        url: "https://mscpackers.in/contact",
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://mscpackers.in/" },
+          { "@type": "ListItem", position: 2, name: "Contact", item: "https://mscpackers.in/contact" },
+        ],
+      },
+    ],
   });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
