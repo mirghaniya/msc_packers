@@ -18,9 +18,26 @@ import { useSeo } from "@/lib/useSeo";
 
 const Products = () => {
   useSeo({
-    title: "Shop Jewellery Packaging & Display Stands | Mirghaniya",
-    description: "Browse 100+ wholesale jewellery boxes, display stands, trays and pouches. Filter by category and order online with Pan-India delivery.",
+    title: "Jewellery Packaging & Display Products | Wholesale Online",
+    description:
+      "Browse wholesale jewellery boxes, ring boxes, necklace boxes, display stands, trays, pouches and carry bags. Filter by category and order with Pan-India delivery.",
     path: "/products",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://mscpackers.in/" },
+          { "@type": "ListItem", position: 2, name: "Products", item: "https://mscpackers.in/products" },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Jewellery Packaging & Display Products",
+        url: "https://mscpackers.in/products",
+      },
+    ],
   });
   const [category, setCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
