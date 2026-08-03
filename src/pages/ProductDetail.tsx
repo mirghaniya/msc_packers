@@ -123,23 +123,34 @@ const ProductDetail = () => {
         ]
       : undefined,
     jsonLd: product
-      ? {
-          "@context": "https://schema.org",
-          "@type": "Product",
-          name: product.name,
-          description: product.description || `${product.name} from Mirghaniya Super Centre`,
-          sku: product.sr_number || product.id,
-          category: product.category,
-          image: productImageUrl ? [productImageUrl] : undefined,
-          brand: { "@type": "Brand", name: "Mirghaniya Super Centre" },
-          offers: {
-            "@type": "Offer",
-            price: String(product.price ?? ""),
-            priceCurrency: "INR",
-            availability: "https://schema.org/InStock",
-            url: `${SITE}/product/${id}`,
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: product.name,
+            description: product.description || `${product.name} from Mirghaniya Super Centre`,
+            sku: product.sr_number || product.id,
+            category: product.category,
+            image: productImageUrl ? [productImageUrl] : undefined,
+            brand: { "@type": "Brand", name: "Mirghaniya Super Centre" },
+            offers: {
+              "@type": "Offer",
+              price: String(product.price ?? ""),
+              priceCurrency: "INR",
+              availability: "https://schema.org/InStock",
+              url: `${SITE}/product/${id}`,
+            },
           },
-        }
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+              { "@type": "ListItem", position: 2, name: "Products", item: `${SITE}/products` },
+              { "@type": "ListItem", position: 3, name: product.name, item: `${SITE}/product/${id}` },
+            ],
+          },
+        ]
       : undefined,
   });
 
