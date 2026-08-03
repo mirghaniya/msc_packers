@@ -27,17 +27,16 @@ Deno.serve(async (req) => {
       throw error;
     }
 
-    const baseUrl = "https://mirghaniyasupercentre.lovable.app";
+    const baseUrl = "https://mscpackers.in";
     const today = new Date().toISOString().split("T")[0];
 
     // Static pages
     const staticPages = [
       { loc: "/", changefreq: "daily", priority: "1.0" },
       { loc: "/products", changefreq: "daily", priority: "0.9" },
+      { loc: "/guides/custom-jewellery-packaging", changefreq: "monthly", priority: "0.8" },
       { loc: "/about", changefreq: "monthly", priority: "0.7" },
       { loc: "/contact", changefreq: "monthly", priority: "0.7" },
-      { loc: "/auth", changefreq: "monthly", priority: "0.5" },
-      { loc: "/cart", changefreq: "weekly", priority: "0.6" },
     ];
 
     // Generate static page URLs
@@ -82,7 +81,7 @@ Deno.serve(async (req) => {
       `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/</loc>
+    <loc>https://mscpackers.in/</loc>
     <priority>1.0</priority>
   </url>
 </urlset>`,

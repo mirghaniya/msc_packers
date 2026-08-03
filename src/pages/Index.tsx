@@ -45,9 +45,19 @@ const LazySection = ({ children, minHeight = "200px" }: { children: React.ReactN
 
 const Index = () => {
   useSeo({
-    title: "Jewellery Packaging & Display Stands — Mirghaniya, Delhi",
-    description: "Wholesale jewellery boxes, display stands, trays & pouches from Delhi since 1990. 100+ varieties with Pan-India delivery.",
+    title: "Mirghaniya Super Centre | Jewellery Packaging & Display",
+    description:
+      "Mirghaniya Super Centre supplies premium jewellery boxes, display stands, trays, pouches and carry bags to jewellers across India. Wholesale pricing.",
     path: "/",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "Jewellery Packaging & Display Products",
+      url: "https://mscpackers.in/",
+      description:
+        "Wholesale jewellery packaging and display products: jewellery boxes, ring boxes, necklace boxes, display stands, trays, pouches and carry bags.",
+      isPartOf: { "@type": "WebSite", name: "Mirghaniya Super Centre", url: "https://mscpackers.in" },
+    },
   });
 
   return (
