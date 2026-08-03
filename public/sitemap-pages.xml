@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/</loc>
+    <loc>https://mscpackers.in/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/products</loc>
+    <loc>https://mscpackers.in/products</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/about</loc>
+    <loc>https://mscpackers.in/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/contact</loc>
+    <loc>https://mscpackers.in/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/auth</loc>
+    <loc>https://mscpackers.in/auth</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/cart</loc>
+    <loc>https://mscpackers.in/cart</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/checkout</loc>
+    <loc>https://mscpackers.in/checkout</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/forgot-password</loc>
+    <loc>https://mscpackers.in/forgot-password</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://mirghaniyasupercentre.lovable.app/dashboard</loc>
+    <loc>https://mscpackers.in/dashboard</loc>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

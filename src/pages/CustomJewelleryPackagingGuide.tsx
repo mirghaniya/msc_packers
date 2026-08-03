@@ -29,7 +29,7 @@ const CustomJewelleryPackagingGuide = () => {
     title: "Custom Jewellery Packaging Guide for Startups (Delhi)",
     description: "Learn how to package jewellery for sale with custom boxes, velvet pouches & logo embossing. Delhi manufacturer offering Pan-India delivery. MOQ from 100 pieces.",
     path: "/guides/custom-jewellery-packaging",
-    image: "https://mirghaniyasupercentre.lovable.app" + guideHero,
+    image: "https://mscpackers.in" + guideHero,
     imageAlt: "Custom jewellery packaging boxes and pouches with logo embossing for Indian startups",
     imageWidth: 1024,
     imageHeight: 1024,
@@ -54,7 +54,7 @@ const CustomJewelleryPackagingGuide = () => {
       image: [
         {
           "@type": "ImageObject",
-          url: "https://mirghaniyasupercentre.lovable.app" + guideHero,
+          url: "https://mscpackers.in" + guideHero,
           width: 1200,
           height: 600
         }
@@ -65,7 +65,7 @@ const CustomJewelleryPackagingGuide = () => {
       author: {
         "@type": "Organization",
         name: "Mirghaniya Super Centre",
-        url: "https://mirghaniyasupercentre.lovable.app"
+        url: "https://mscpackers.in"
       },
       publisher: {
         "@type": "Organization",
@@ -77,7 +77,7 @@ const CustomJewelleryPackagingGuide = () => {
       },
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": "https://mirghaniyasupercentre.lovable.app/guides/custom-jewellery-packaging"
+        "@id": "https://mscpackers.in/guides/custom-jewellery-packaging"
       }
     }
   });
