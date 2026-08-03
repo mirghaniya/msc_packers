@@ -12,5 +12,12 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /cart
+Disallow: /auth
+Disallow: /forgot-password
+Disallow: /reset-password
 
 Sitemap: https://mscpackers.in/sitemap.xml
