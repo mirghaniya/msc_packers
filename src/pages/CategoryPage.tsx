@@ -119,9 +119,18 @@ const CategoryPage = () => {
               )}
             </>
           ) : (
-            <p className="font-inter text-muted-foreground py-12 text-center">
-              No products listed here yet — <Link to="/products" className="text-primary hover:underline">browse the full catalogue</Link>.
-            </p>
+            <div className="py-6">
+              <p className="font-inter text-muted-foreground mb-8">
+                {category.name} are made to order for wholesale buyers — call{" "}
+                <a href="tel:+918851882465" className="text-primary hover:underline">+91 88518 82465</a> or send an
+                enquiry for current designs, sizes and rates. In the meantime, here are products currently in stock.
+              </p>
+              <h2 className="font-playfair font-bold text-2xl text-foreground mb-6">Currently Available Products</h2>
+              <ProductGrid products={(products || []).slice(0, 8) as any} />
+              <p className="font-inter text-sm text-muted-foreground mt-6">
+                <Link to="/products" className="text-primary hover:underline">Browse the full catalogue</Link>
+              </p>
+            </div>
           )}
 
           <FaqSection faqs={category.faqs} heading={`${category.name} — Frequently Asked Questions`} />
