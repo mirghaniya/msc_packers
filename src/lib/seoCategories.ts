@@ -11,6 +11,8 @@ export type SeoCategory = {
   intro: string;
   dbCategories?: string[];
   keywords?: string[];
+  /** Keyword matching only applies to products in these database categories. */
+  restrictTo?: string[];
   faqs: { q: string; a: string }[];
 };
 
@@ -25,6 +27,7 @@ export const SEO_CATEGORIES: SeoCategory[] = [
     intro:
       "Our ring boxes are built for retail counters and gifting — snug slot inserts, soft velvet interiors and durable hinges. Available in bulk with custom logo printing.",
     keywords: ["ring"],
+    restrictTo: ["Stock Boxes", "Gift Items"],
     faqs: [
       { q: "What is the minimum order quantity for ring boxes?", a: "The minimum order quantity is 100 pieces per design." },
       { q: "Can ring boxes be printed with our logo?", a: "Yes. We offer foil stamping and screen printing on ring boxes for bulk orders." },
@@ -41,6 +44,7 @@ export const SEO_CATEGORIES: SeoCategory[] = [
     intro:
       "Necklace and set boxes with cushioned inserts that hold chains, pendants and full sets securely during display and transit.",
     keywords: ["necklace", "neckless", "pendant", "set box"],
+    restrictTo: ["Stock Boxes", "Gift Items"],
     faqs: [
       { q: "Do necklace boxes come with inserts?", a: "Yes, most necklace boxes include padded inserts or hooks to hold chains in place." },
       { q: "Are custom sizes available?", a: "Yes, custom sizes are available for bulk orders above the 100 piece minimum." },
@@ -88,6 +92,7 @@ export const SEO_CATEGORIES: SeoCategory[] = [
     intro:
       "Stackable display trays with slotted and flat velvet inserts, ideal for counters, safes and showcase drawers.",
     keywords: ["tray"],
+    restrictTo: ["Stock Boxes", "Gift Items", "Display Stands"],
     faqs: [
       { q: "Are trays stackable?", a: "Yes, our standard trays are designed to stack inside showcases and safes." },
       { q: "Which insert options are available?", a: "Ring slots, bangle rolls, chain pads and plain velvet inserts." },
@@ -103,6 +108,7 @@ export const SEO_CATEGORIES: SeoCategory[] = [
     intro:
       "Soft velvet and satin pouches for gifting, courier packing and everyday retail handovers — light, protective and inexpensive in bulk.",
     keywords: ["pouch", "potli", "drawstring"],
+    restrictTo: ["Bags", "Purses", "Stock Boxes", "Gift Items"],
     faqs: [
       { q: "Can pouches be branded?", a: "Yes, we print logos on velvet and satin pouches for bulk orders." },
       { q: "What sizes do pouches come in?", a: "Standard sizes range from small ring pouches to large set pouches." },
@@ -136,6 +142,7 @@ export function productMatchesCategory(
   category: SeoCategory,
 ): boolean {
   if (category.dbCategories?.includes(product.category || "")) return true;
+  if (category.restrictTo && !category.restrictTo.includes(product.category || "")) return false;
   const haystack = `${product.name || ""} ${product.description || ""}`.toLowerCase();
   // Word-boundary matching so "earrings" doesn't match the "ring" keyword.
   return (category.keywords || []).some((k) =>
