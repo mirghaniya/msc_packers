@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Index from "./pages/Index";
+import { SEO_CATEGORIES } from "@/lib/seoCategories";
 
 const Toaster = lazy(() => import("@/components/ui/toaster").then(m => ({ default: m.Toaster })));
 const Sonner = lazy(() => import("@/components/ui/sonner").then(m => ({ default: m.Toaster })));
@@ -48,6 +49,9 @@ const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
 const AdminBrandTestimonials = lazy(() => import("./pages/admin/AdminBrandTestimonials"));
 const AdminTestimonials = lazy(() => import("./pages/admin/AdminTestimonials"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const SitemapPage = lazy(() => import("./pages/SitemapPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,6 +87,11 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/sitemap" element={<SitemapPage />} />
+            {SEO_CATEGORIES.map((c) => (
+              <Route key={c.slug} path={`/${c.slug}`} element={<CategoryPage />} />
+            ))}
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/guides/custom-jewellery-packaging" element={<CustomJewelleryPackagingGuide />} />

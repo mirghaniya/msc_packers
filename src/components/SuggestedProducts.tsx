@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
+import { productPath } from "@/lib/slug";
 import { useState, useEffect, useCallback } from "react";
 
 interface SuggestedProductsProps {
@@ -73,7 +74,7 @@ export const SuggestedProducts = ({ currentProductId, category }: SuggestedProdu
         )}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 overflow-hidden">
           {getVisibleProducts(suggestedProducts, slideIndex, Math.min(4, suggestedProducts.length)).map((product) => (
-            <Link key={`suggested-${product.id}-${slideIndex}`} to={`/product/${product.id}`}>
+            <Link key={`suggested-${product.id}-${slideIndex}`} to={productPath(product)}>
               <Card className="group overflow-hidden hover:shadow-elegant transition-all duration-300 h-full">
                 <CardContent className="p-0">
                   <div className="relative overflow-hidden aspect-square">

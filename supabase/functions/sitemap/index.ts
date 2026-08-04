@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     // Fetch all products
     const { data: products, error } = await supabase
       .from("products")
-      .select("id, updated_at")
+      .select("id, name, updated_at")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -28,12 +28,33 @@ Deno.serve(async (req) => {
     }
 
     const baseUrl = "https://mscpackers.in";
+
+    // Mirrors src/lib/slug.ts so sitemap URLs match the canonical product URLs.
+    const slugify = (input: string) =>
+      (input || "")
+        .toLowerCase()
+        .normalize("NFKD")
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .slice(0, 70)
+        .replace(/^-|-$/g, "");
     const today = new Date().toISOString().split("T")[0];
 
     // Static pages
     const staticPages = [
       { loc: "/", changefreq: "daily", priority: "1.0" },
       { loc: "/products", changefreq: "daily", priority: "0.9" },
+      { loc: "/ring-boxes", changefreq: "weekly", priority: "0.9" },
+      { loc: "/necklace-boxes", changefreq: "weekly", priority: "0.9" },
+      { loc: "/jewellery-boxes", changefreq: "weekly", priority: "0.9" },
+      { loc: "/display-stands", changefreq: "weekly", priority: "0.9" },
+      { loc: "/trays", changefreq: "weekly", priority: "0.9" },
+      { loc: "/pouches", changefreq: "weekly", priority: "0.9" },
+      { loc: "/carry-bags", changefreq: "weekly", priority: "0.9" },
+      { loc: "/search", changefreq: "weekly", priority: "0.5" },
+      { loc: "/sitemap", changefreq: "weekly", priority: "0.5" },
       { loc: "/guides/custom-jewellery-packaging", changefreq: "monthly", priority: "0.8" },
       { loc: "/about", changefreq: "monthly", priority: "0.7" },
       { loc: "/contact", changefreq: "monthly", priority: "0.7" },
@@ -55,7 +76,7 @@ Deno.serve(async (req) => {
         : today;
       return `
   <url>
-    <loc>${baseUrl}/product/${product.id}</loc>
+    <loc>${baseUrl}/product/${slugify(product.name) ? `${slugify(product.name)}-${product.id}` : product.id}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
