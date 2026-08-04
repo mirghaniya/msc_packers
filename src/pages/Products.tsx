@@ -9,12 +9,23 @@ import { ShoppingCart, Heart, Filter, Phone } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/contexts/CartContext";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
+import { productPath } from "@/lib/slug";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useSeo } from "@/lib/useSeo";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FaqSection } from "@/components/FaqSection";
+import { SEO_CATEGORIES, faqJsonLd } from "@/lib/seoCategories";
+
+const PRODUCTS_FAQS = [
+  { q: "What is the minimum order quantity?", a: "Our minimum order quantity is 100 pieces per design across all jewellery packaging products." },
+  { q: "Do you deliver across India?", a: "Yes, we dispatch Pan-India from our Delhi facility, and we also handle bulk export enquiries." },
+  { q: "Can packaging be customised with our brand?", a: "Yes, logo printing, foil stamping and custom sizes are available on bulk orders." },
+  { q: "How do I get a wholesale price list?", a: "Call us on +91 88518 82465 or send an enquiry from any product page and we will share current wholesale rates." },
+];
 
 const Products = () => {
   useSeo({
@@ -31,6 +42,7 @@ const Products = () => {
           { "@type": "ListItem", position: 2, name: "Products", item: "https://mscpackers.in/products" },
         ],
       },
+      faqJsonLd(PRODUCTS_FAQS),
       {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -139,6 +151,20 @@ const Products = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Products" }]} />
+
+          <nav aria-label="Product categories" className="mb-8">
+            <ul className="flex flex-wrap gap-3 font-inter text-sm">
+              {SEO_CATEGORIES.map((c) => (
+                <li key={c.slug}>
+                  <Link to={`/${c.slug}`} className="inline-block px-3 py-2 rounded-md border hover:bg-accent transition-colors">
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
           <div className="flex flex-col lg:flex-row gap-8">
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="sticky top-4 bg-card rounded-lg border p-6">
@@ -180,7 +206,7 @@ const Products = () => {
                       className="group overflow-hidden hover:shadow-elegant transition-all duration-300"
                     >
                       <CardContent className="p-0">
-                        <Link to={`/product/${product.id}`}>
+                        <Link to={productPath(product)}>
                           <div className="relative overflow-hidden aspect-square">
                             <img
                               src={getOptimizedImageUrl(product.image_url, { width: 280, height: 280, quality: 55 })}
@@ -222,7 +248,7 @@ const Products = () => {
                           <p className="text-xs font-inter uppercase tracking-wide text-secondary mb-1 md:mb-2">
                             {product.category}
                           </p>
-                          <Link to={`/product/${product.id}`}>
+                          <Link to={productPath(product)}>
                             <h3 className="font-playfair font-bold text-[20px] md:text-xl text-foreground mb-1 md:mb-2 hover:text-primary transition-colors line-clamp-2">
                               {product.name}
                             </h3>
@@ -286,6 +312,8 @@ const Products = () => {
               )}
             </div>
           </div>
+
+          <FaqSection faqs={PRODUCTS_FAQS} />
         </div>
       </main>
       <Footer />

@@ -13,6 +13,9 @@ import { SuggestedProducts } from "@/components/SuggestedProducts";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { ProductReviews } from "@/components/ProductReviews";
 import { useSeo, SITE } from "@/lib/useSeo";
+import { parseProductId, productPath } from "@/lib/slug";
+import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
+import { SEO_CATEGORIES, productMatchesCategory } from "@/lib/seoCategories";
 
 const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimit?: number }) => {
   const [expanded, setExpanded] = useState(false);
@@ -37,7 +40,8 @@ const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimi
 };
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id: idParam } = useParams<{ id: string }>();
+  const id = parseProductId(idParam);
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -97,6 +101,8 @@ const ProductDetail = () => {
     ? getOptimizedImageUrl(product.image_url, { width: 1200, height: 1200 })
     : undefined;
 
+  const seoCategory = product ? SEO_CATEGORIES.find((c) => productMatchesCategory(product, c)) : undefined;
+
   const buildDescription = () => {
     if (!product) return "Premium wholesale jewellery packaging and display stands from Mirghaniya Super Centre, Delhi.";
     const base = (product.description || "").trim();
@@ -108,7 +114,7 @@ const ProductDetail = () => {
   useSeo({
     title: product ? `${product.name} — Mirghaniya Super Centre` : "Product — Mirghaniya Super Centre",
     description: buildDescription(),
-    path: id ? `/product/${id}` : undefined,
+    path: product ? productPath(product) : undefined,
     image: productImageUrl,
     ogType: "product",
     extraMeta: product
@@ -138,18 +144,23 @@ const ProductDetail = () => {
               price: String(product.price ?? ""),
               priceCurrency: "INR",
               availability: "https://schema.org/InStock",
-              url: `${SITE}/product/${id}`,
+              url: `${SITE}${productPath(product)}`,
             },
           },
-          {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-              { "@type": "ListItem", position: 2, name: "Products", item: `${SITE}/products` },
-              { "@type": "ListItem", position: 3, name: product.name, item: `${SITE}/product/${id}` },
-            ],
-          },
+          breadcrumbJsonLd(
+            seoCategory
+              ? [
+                  { name: "Home", path: "/" },
+                  { name: "Products", path: "/products" },
+                  { name: seoCategory.name, path: `/${seoCategory.slug}` },
+                  { name: product.name, path: productPath(product) },
+                ]
+              : [
+                  { name: "Home", path: "/" },
+                  { name: "Products", path: "/products" },
+                  { name: product.name, path: productPath(product) },
+                ],
+          ),
         ]
       : undefined,
   });
@@ -223,6 +234,15 @@ const ProductDetail = () => {
       <Navbar />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Breadcrumbs
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Products", path: "/products" },
+              ...(seoCategory ? [{ name: seoCategory.name, path: `/${seoCategory.slug}` }] : []),
+              { name: product.name },
+            ]}
+          />
+
           <Link to="/products" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Products
@@ -353,7 +373,7 @@ const ProductDetail = () => {
                 )}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 overflow-hidden">
                   {getVisibleProducts(relatedProducts, relatedSlideIndex, Math.min(4, relatedProducts.length)).map((relatedProduct) => (
-                    <Link key={`related-${relatedProduct.id}-${relatedSlideIndex}`} to={`/product/${relatedProduct.id}`}>
+                    <Link key={`related-${relatedProduct.id}-${relatedSlideIndex}`} to={productPath(relatedProduct)}>
                       <Card className="group overflow-hidden hover:shadow-elegant transition-all duration-300">
                         <CardContent className="p-0">
                           <div className="relative overflow-hidden aspect-square">

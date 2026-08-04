@@ -7,6 +7,7 @@ import { ShoppingCart, Heart, Phone } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
+import { productPath } from "@/lib/slug";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
@@ -131,7 +132,7 @@ export const FeaturedProducts = () => {
                   <p className="text-xs font-inter uppercase tracking-wide text-muted-foreground mb-1 md:mb-2">
                     {product.category}
                   </p>
-                  <Link to={`/product/${product.id}`}>
+                  <Link to={productPath(product)}>
                     <h3 className="font-playfair font-semibold text-sm md:text-xl text-foreground mb-1 md:mb-2 group-hover:text-primary transition-colors line-clamp-2">
                       {product.name}
                     </h3>

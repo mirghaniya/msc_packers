@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { SEO_CATEGORIES } from "@/lib/seoCategories";
 
 export const Footer = () => {
   return (
@@ -43,6 +44,16 @@ export const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link to="/search" className="text-sm hover:text-secondary transition-colors">
+                  Search
+                </Link>
+              </li>
+              <li>
+                <Link to="/sitemap" className="text-sm hover:text-secondary transition-colors">
+                  Sitemap
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -82,6 +93,18 @@ export const Footer = () => {
             </a>
           </div>
         </div>
+
+        <nav aria-label="Product categories" className="mt-8 pt-8 border-t border-background/20">
+          <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 font-inter text-sm opacity-90">
+            {SEO_CATEGORIES.map((c) => (
+              <li key={c.slug}>
+                <Link to={`/${c.slug}`} className="hover:text-secondary transition-colors">
+                  {c.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         <div className="mt-8 pt-8 border-t border-background/20 text-center">
           <p className="text-sm opacity-90 font-inter">
