@@ -137,7 +137,22 @@ export function productMatchesCategory(
 ): boolean {
   if (category.dbCategories?.includes(product.category || "")) return true;
   const haystack = `${product.name || ""} ${product.description || ""}`.toLowerCase();
-  return (category.keywords || []).some((k) => haystack.includes(k.toLowerCase()));
+  // Word-boundary matching so "earrings" doesn't match the "ring" keyword.
+  return (category.keywords || []).some((k) =>
+    new RegExp(`\\b${k.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(s|es)?\\b`).test(haystack),
+  );
+}
+
+/** The single best category page for a product (database category wins over keywords). */
+export function primarySeoCategory(product: {
+  name?: string | null;
+  description?: string | null;
+  category?: string | null;
+}): SeoCategory | undefined {
+  return (
+    SEO_CATEGORIES.find((c) => c.dbCategories?.includes(product.category || "")) ||
+    SEO_CATEGORIES.find((c) => productMatchesCategory(product, c))
+  );
 }
 
 export function faqJsonLd(faqs: { q: string; a: string }[]) {

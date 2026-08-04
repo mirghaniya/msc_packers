@@ -15,7 +15,7 @@ import { ProductReviews } from "@/components/ProductReviews";
 import { useSeo, SITE } from "@/lib/useSeo";
 import { parseProductId, productPath } from "@/lib/slug";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
-import { SEO_CATEGORIES, productMatchesCategory } from "@/lib/seoCategories";
+import { primarySeoCategory } from "@/lib/seoCategories";
 
 const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimit?: number }) => {
   const [expanded, setExpanded] = useState(false);
@@ -101,7 +101,7 @@ const ProductDetail = () => {
     ? getOptimizedImageUrl(product.image_url, { width: 1200, height: 1200 })
     : undefined;
 
-  const seoCategory = product ? SEO_CATEGORIES.find((c) => productMatchesCategory(product, c)) : undefined;
+  const seoCategory = product ? primarySeoCategory(product) : undefined;
 
   const buildDescription = () => {
     if (!product) return "Premium wholesale jewellery packaging and display stands from Mirghaniya Super Centre, Delhi.";
@@ -112,7 +112,13 @@ const ProductDetail = () => {
   };
 
   useSeo({
-    title: product ? `${product.name} — Mirghaniya Super Centre` : "Product — Mirghaniya Super Centre",
+    title: product
+      ? (`${product.name} | Mirghaniya Super Centre`.length <= 60
+          ? `${product.name} | Mirghaniya Super Centre`
+          : product.name.length <= 60
+            ? product.name
+            : `${product.name.slice(0, 57).trimEnd()}...`)
+      : "Product — Mirghaniya Super Centre",
     description: buildDescription(),
     path: product ? productPath(product) : undefined,
     image: productImageUrl,
