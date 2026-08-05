@@ -32,6 +32,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/__l5e/assets-v1": {
+        target: "https://id-preview--85ae2f6a-c5f8-4e93-8cd0-7d7a94c45b45.lovable.app",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   plugins: [react(), mode === "development" && componentTagger(), asyncCssPlugin()].filter(Boolean),
 
