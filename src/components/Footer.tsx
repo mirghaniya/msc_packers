@@ -19,7 +19,7 @@ export const Footer = () => {
           {/* Quick Links */}
           <div className="space-y-4">
             <h4 className="font-playfair font-semibold text-lg">Quick Links</h4>
-            <ul className="space-y-2 font-inter">
+            <ul className="grid grid-cols-2 md:grid-cols-1 gap-2 font-inter">
               <li>
                 <Link to="/" className="text-sm hover:text-secondary transition-colors">
                   Home
