@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { SEO_CATEGORIES } from "@/lib/seoCategories";
+import msmeLogo from "@/assets/msme-logo.png.asset.json";
 
 export const Footer = () => {
   return (
@@ -91,6 +92,16 @@ export const Footer = () => {
               <Instagram className="h-6 w-6" />
               <span className="text-sm font-inter">@mirghaniyasupercentre</span>
             </a>
+            <div className="pt-2">
+              <img
+                src={msmeLogo.url}
+                alt="Ministry of MSME, Government of India - Registered MSME Logo"
+                width={160}
+                height={80}
+                loading="lazy"
+                className="w-40 h-auto object-contain"
+              />
+            </div>
           </div>
         </div>
 
