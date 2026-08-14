@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { SEO_CATEGORIES } from "@/lib/seoCategories";
-import msmeLogo from "@/assets/msme-logo.png.asset.json";
+const MSME_LOGO_URL =
+  "https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/object/public/product-images/site/msme-logo.png?width=320&quality=80&format=webp";
 
 export const Footer = () => {
   return (
