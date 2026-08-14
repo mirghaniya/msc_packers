@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { SEO_CATEGORIES } from "@/lib/seoCategories";
-import msmeLogo from "@/assets/msme-logo.png.asset.json";
+const MSME_LOGO_URL =
+  "https://fjpunfvhezivlhyrnyym.supabase.co/storage/v1/object/public/product-images/site/msme-logo.png?width=320&quality=80&format=webp";
 
 export const Footer = () => {
   return (
@@ -94,7 +95,7 @@ export const Footer = () => {
             </a>
             <div className="pt-4 flex justify-center md:justify-start">
               <img
-                src={msmeLogo.url}
+                src={MSME_LOGO_URL}
                 alt="Ministry of MSME, Government of India - Registered MSME Logo"
                 width={160}
                 height={80}
