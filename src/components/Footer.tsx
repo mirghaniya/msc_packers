@@ -95,7 +95,7 @@ export const Footer = () => {
             </a>
             <div className="pt-4 flex justify-center md:justify-start">
               <img
-                src={msmeLogo.url}
+                src={MSME_LOGO_URL}
                 alt="Ministry of MSME, Government of India - Registered MSME Logo"
                 width={160}
                 height={80}
