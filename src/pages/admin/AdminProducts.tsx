@@ -55,7 +55,7 @@ const initialFormData: ProductFormData = {
   sr_number: "",
   description: "",
   price: "",
-  category: "Bags",
+  category: "",
   image_url: "",
   is_out_of_stock: false,
   is_featured: false,
