@@ -309,17 +309,18 @@ const AdminProducts = () => {
                 <Label>Category</Label>
                 <Select value={formData.category} onValueChange={(val) => handleFieldChange("category", val)}>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Bags">Bags</SelectItem>
-                    <SelectItem value="Purses">Purses</SelectItem>
-                    <SelectItem value="Display Stands">Display Stands</SelectItem>
-                    <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
-                    <SelectItem value="Gift Items">Gift Items</SelectItem>
+                    {categoryOptions.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="space-y-3 rounded-md border p-3">
                 <Label className="text-sm font-semibold">Buttons on product page</Label>
                 <div className="flex items-center justify-between">
