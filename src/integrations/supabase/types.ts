@@ -414,7 +414,7 @@ export type Database = {
       }
       products: {
         Row: {
-          category: Database["public"]["Enums"]["product_category"]
+          category: string
           created_at: string | null
           description: string | null
           id: string
@@ -430,7 +430,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          category: Database["public"]["Enums"]["product_category"]
+          category: string
           created_at?: string | null
           description?: string | null
           id?: string
@@ -446,7 +446,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          category?: Database["public"]["Enums"]["product_category"]
+          category?: string
           created_at?: string | null
           description?: string | null
           id?: string

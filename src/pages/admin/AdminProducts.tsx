@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Pencil, Trash2, Plus, Images } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
@@ -55,7 +55,7 @@ const initialFormData: ProductFormData = {
   sr_number: "",
   description: "",
   price: "",
-  category: "Bags",
+  category: "",
   image_url: "",
   is_out_of_stock: false,
   is_featured: false,
@@ -84,6 +84,26 @@ const AdminProducts = () => {
       return data;
     },
   });
+
+  const { data: dbCategories } = useQuery({
+    queryKey: ["admin-categories-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("name, is_active, display_order")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Categories from the admin Categories page, plus any legacy values already in use
+  const categoryOptions = useMemo(() => {
+    const names = (dbCategories ?? []).map((c) => c.name);
+    const used = (products ?? []).map((p: any) => p.category).filter(Boolean);
+    return Array.from(new Set([...names, ...used]));
+  }, [dbCategories, products]);
 
   // Fetch additional images for the editing product
   const { data: productImages, refetch: refetchProductImages } = useQuery({
@@ -195,7 +215,13 @@ const AdminProducts = () => {
         return;
       }
     }
-    
+
+    if (!formData.category) {
+      toast({ title: "Please select a category", variant: "destructive" });
+      return;
+    }
+
+
     const data = {
       ...formData,
       price: parseFloat(formData.price),
@@ -309,17 +335,18 @@ const AdminProducts = () => {
                 <Label>Category</Label>
                 <Select value={formData.category} onValueChange={(val) => handleFieldChange("category", val)}>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Bags">Bags</SelectItem>
-                    <SelectItem value="Purses">Purses</SelectItem>
-                    <SelectItem value="Display Stands">Display Stands</SelectItem>
-                    <SelectItem value="Stock Boxes">Stock Boxes</SelectItem>
-                    <SelectItem value="Gift Items">Gift Items</SelectItem>
+                    {categoryOptions.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="space-y-3 rounded-md border p-3">
                 <Label className="text-sm font-semibold">Buttons on product page</Label>
                 <div className="flex items-center justify-between">
