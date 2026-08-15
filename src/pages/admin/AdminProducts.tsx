@@ -85,6 +85,26 @@ const AdminProducts = () => {
     },
   });
 
+  const { data: dbCategories } = useQuery({
+    queryKey: ["admin-categories-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("name, is_active, display_order")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Categories from the admin Categories page, plus any legacy values already in use
+  const categoryOptions = useMemo(() => {
+    const names = (dbCategories ?? []).map((c) => c.name);
+    const used = (products ?? []).map((p: any) => p.category).filter(Boolean);
+    return Array.from(new Set([...names, ...used]));
+  }, [dbCategories, products]);
+
   // Fetch additional images for the editing product
   const { data: productImages, refetch: refetchProductImages } = useQuery({
     queryKey: ["product-images", editingProduct?.id],
