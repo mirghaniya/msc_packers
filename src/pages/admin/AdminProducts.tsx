@@ -215,7 +215,13 @@ const AdminProducts = () => {
         return;
       }
     }
-    
+
+    if (!formData.category) {
+      toast({ title: "Please select a category", variant: "destructive" });
+      return;
+    }
+
+
     const data = {
       ...formData,
       price: parseFloat(formData.price),
