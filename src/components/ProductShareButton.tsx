@@ -23,7 +23,7 @@ export const ProductShareButton = ({
     e.preventDefault();
     e.stopPropagation();
 
-    const url = `${window.location.origin}${productPath(productId, productName)}`;
+    const url = `${window.location.origin}${productPath({ id: productId, name: productName })}`;
 
     try {
       if (navigator.share) {
