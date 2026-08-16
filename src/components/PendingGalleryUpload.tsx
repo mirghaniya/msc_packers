@@ -107,13 +107,19 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
         className="hidden"
       />
 
-      <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={isConverting}
+        onClick={() => inputRef.current?.click()}
+      >
         <Upload className="h-4 w-4 mr-2" />
-        Add Images or Videos
+        {isConverting ? "Converting to WebP..." : "Add Images or Videos"}
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Images: JPG, PNG, WebP, GIF (max 5MB). Videos: MP4, WebM, MOV (max 20MB). Uploaded after product is created.
+        Images: JPG, PNG, WebP, GIF (max 5MB) — JPG/PNG are auto-converted to WebP. Videos: MP4, WebM, MOV (max 20MB). Select multiple files to batch add; uploaded after the product is created.
       </p>
     </div>
   );
