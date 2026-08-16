@@ -6,6 +6,7 @@ import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { productPath } from "@/lib/slug";
+import { ProductShareButton } from "@/components/ProductShareButton";
 
 type P = {
   id: string;
