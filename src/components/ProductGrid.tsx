@@ -65,6 +65,7 @@ export const ProductGrid = ({ products }: { products: P[] }) => {
                     }`}
                   />
                 </Button>
+                <ProductShareButton productId={product.id} productName={product.name} />
               </div>
             </Link>
             <div className="p-3 md:p-6">
