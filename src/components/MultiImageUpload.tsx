@@ -205,11 +205,15 @@ export const MultiImageUpload = ({
         disabled={isUploading}
       >
         <Upload className="h-4 w-4 mr-2" />
-        {isUploading ? "Uploading..." : "Upload Images or Videos"}
+        {isUploading
+          ? progress
+            ? `Uploading ${progress.done}/${progress.total}...`
+            : "Uploading..."
+          : "Upload Images or Videos"}
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Images: JPG, PNG, WebP, GIF (max 5MB). Videos: MP4, WebM, MOV (max 20MB).
+        Images: JPG, PNG, WebP, GIF (max 5MB) — JPG/PNG are auto-converted to WebP. Videos: MP4, WebM, MOV (max 20MB). Select multiple files to batch upload.
       </p>
     </div>
   );
