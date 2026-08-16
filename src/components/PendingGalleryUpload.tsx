@@ -1,5 +1,6 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { convertImageToWebP } from "@/lib/webp";
 import { Plus, X, Upload } from "lucide-react";
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
