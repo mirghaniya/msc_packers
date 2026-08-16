@@ -23,6 +23,7 @@ export const MultiImageUpload = ({
 }: MultiImageUploadProps) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,20 +31,25 @@ export const MultiImageUpload = ({
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    const all = Array.from(files);
+    setProgress({ done: 0, total: all.length });
 
     try {
-      const uploadPromises = Array.from(files).map(async (file, index) => {
-        const isVideo = VIDEO_TYPES.includes(file.type);
-        const isImage = IMAGE_TYPES.includes(file.type);
+      const uploadPromises = all.map(async (original, index) => {
+        const isVideo = VIDEO_TYPES.includes(original.type);
+        const isImage = IMAGE_TYPES.includes(original.type);
         if (!isImage && !isVideo) {
-          throw new Error(`Invalid file type: ${file.name}`);
+          throw new Error(`Invalid file type: ${original.name}`);
         }
         const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
-        if (file.size > maxSize) {
+        if (original.size > maxSize) {
           throw new Error(
-            `File too large: ${file.name} (max ${isVideo ? "20MB" : "5MB"})`
+            `File too large: ${original.name} (max ${isVideo ? "20MB" : "5MB"})`
           );
         }
+
+        // Convert JPG/PNG images to WebP before upload
+        const file = isVideo ? original : await convertImageToWebP(original);
 
         const fileExt = file.name.split(".").pop();
         const fileName = `products/${productId}/${Date.now()}-${index}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -61,6 +67,8 @@ export const MultiImageUpload = ({
         const { data: { publicUrl } } = supabase.storage
           .from("product-images")
           .getPublicUrl(data.path);
+
+        setProgress((p) => (p ? { ...p, done: p.done + 1 } : p));
 
         return { url: publicUrl, media_type: isVideo ? "video" : "image" };
       });
