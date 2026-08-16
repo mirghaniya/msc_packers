@@ -8,6 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { productPath } from "@/lib/slug";
+import { ProductShareButton } from "@/components/ProductShareButton";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
@@ -127,6 +128,7 @@ export const FeaturedProducts = () => {
                       }`}
                     />
                   </Button>
+                  <ProductShareButton productId={product.id} productName={product.name} />
                 </div>
                 <div className="p-3 md:p-6">
                   <p className="text-xs font-inter uppercase tracking-wide text-muted-foreground mb-1 md:mb-2">

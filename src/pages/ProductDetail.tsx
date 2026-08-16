@@ -16,6 +16,7 @@ import { useSeo, SITE } from "@/lib/useSeo";
 import { parseProductId, productPath } from "@/lib/slug";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { primarySeoCategory } from "@/lib/seoCategories";
+import { ProductShareButton } from "@/components/ProductShareButton";
 
 const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimit?: number }) => {
   const [expanded, setExpanded] = useState(false);
