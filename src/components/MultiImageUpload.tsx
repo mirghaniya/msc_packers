@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { convertImageToWebP } from "@/lib/webp";
 import { Upload, X, GripVertical, Plus } from "lucide-react";
 
 interface MultiImageUploadProps {
@@ -22,6 +23,7 @@ export const MultiImageUpload = ({
 }: MultiImageUploadProps) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,20 +31,25 @@ export const MultiImageUpload = ({
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    const all = Array.from(files);
+    setProgress({ done: 0, total: all.length });
 
     try {
-      const uploadPromises = Array.from(files).map(async (file, index) => {
-        const isVideo = VIDEO_TYPES.includes(file.type);
-        const isImage = IMAGE_TYPES.includes(file.type);
+      const uploadPromises = all.map(async (original, index) => {
+        const isVideo = VIDEO_TYPES.includes(original.type);
+        const isImage = IMAGE_TYPES.includes(original.type);
         if (!isImage && !isVideo) {
-          throw new Error(`Invalid file type: ${file.name}`);
+          throw new Error(`Invalid file type: ${original.name}`);
         }
         const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
-        if (file.size > maxSize) {
+        if (original.size > maxSize) {
           throw new Error(
-            `File too large: ${file.name} (max ${isVideo ? "20MB" : "5MB"})`
+            `File too large: ${original.name} (max ${isVideo ? "20MB" : "5MB"})`
           );
         }
+
+        // Convert JPG/PNG images to WebP before upload
+        const file = isVideo ? original : await convertImageToWebP(original);
 
         const fileExt = file.name.split(".").pop();
         const fileName = `products/${productId}/${Date.now()}-${index}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -60,6 +67,8 @@ export const MultiImageUpload = ({
         const { data: { publicUrl } } = supabase.storage
           .from("product-images")
           .getPublicUrl(data.path);
+
+        setProgress((p) => (p ? { ...p, done: p.done + 1 } : p));
 
         return { url: publicUrl, media_type: isVideo ? "video" : "image" };
       });
@@ -98,6 +107,7 @@ export const MultiImageUpload = ({
       });
     } finally {
       setIsUploading(false);
+      setProgress(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -195,11 +205,15 @@ export const MultiImageUpload = ({
         disabled={isUploading}
       >
         <Upload className="h-4 w-4 mr-2" />
-        {isUploading ? "Uploading..." : "Upload Images or Videos"}
+        {isUploading
+          ? progress
+            ? `Uploading ${progress.done}/${progress.total}...`
+            : "Uploading..."
+          : "Upload Images or Videos"}
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Images: JPG, PNG, WebP, GIF (max 5MB). Videos: MP4, WebM, MOV (max 20MB).
+        Images: JPG, PNG, WebP, GIF (max 5MB) — JPG/PNG are auto-converted to WebP. Videos: MP4, WebM, MOV (max 20MB). Select multiple files to batch upload.
       </p>
     </div>
   );

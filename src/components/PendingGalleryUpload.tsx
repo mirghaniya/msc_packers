@@ -1,5 +1,6 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { convertImageToWebP } from "@/lib/webp";
 import { Plus, X, Upload } from "lucide-react";
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -14,6 +15,7 @@ interface Props {
 
 export const PendingGalleryUpload = ({ files, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isConverting, setIsConverting] = useState(false);
 
   const previews = useMemo(
     () =>
@@ -25,7 +27,7 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
     [files]
   );
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (!selected) return;
     const valid: File[] = [];
@@ -37,8 +39,21 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
       if (f.size > maxSize) continue;
       valid.push(f);
     }
-    onChange([...files, ...valid]);
     if (inputRef.current) inputRef.current.value = "";
+    if (valid.length === 0) return;
+
+    setIsConverting(true);
+    try {
+      const processed: File[] = [];
+      for (const f of valid) {
+        processed.push(
+          VIDEO_TYPES.includes(f.type) ? f : await convertImageToWebP(f)
+        );
+      }
+      onChange([...files, ...processed]);
+    } finally {
+      setIsConverting(false);
+    }
   };
 
   const remove = (idx: number) => {
@@ -92,13 +107,19 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
         className="hidden"
       />
 
-      <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={isConverting}
+        onClick={() => inputRef.current?.click()}
+      >
         <Upload className="h-4 w-4 mr-2" />
-        Add Images or Videos
+        {isConverting ? "Converting to WebP..." : "Add Images or Videos"}
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Images: JPG, PNG, WebP, GIF (max 5MB). Videos: MP4, WebM, MOV (max 20MB). Uploaded after product is created.
+        Images: JPG, PNG, WebP, GIF (max 5MB) — JPG/PNG are auto-converted to WebP. Videos: MP4, WebM, MOV (max 20MB). Select multiple files to batch add; uploaded after the product is created.
       </p>
     </div>
   );
