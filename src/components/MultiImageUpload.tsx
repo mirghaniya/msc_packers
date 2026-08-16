@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { convertImageToWebP } from "@/lib/webp";
 import { Upload, X, GripVertical, Plus } from "lucide-react";
 
 interface MultiImageUploadProps {
