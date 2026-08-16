@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCart } from "@/contexts/CartContext";
 import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { productPath } from "@/lib/slug";
+import { ProductShareButton } from "@/components/ProductShareButton";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Link } from "react-router-dom";
 import { ProductSearch } from "@/components/ProductSearch";
@@ -242,6 +243,7 @@ const Products = () => {
                                 }`}
                               />
                             </Button>
+                            <ProductShareButton productId={product.id} productName={product.name} />
                           </div>
                         </Link>
                         <div className="p-3 md:p-6">

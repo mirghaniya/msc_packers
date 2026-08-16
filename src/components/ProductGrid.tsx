@@ -6,6 +6,7 @@ import { getOptimizedImageUrl } from "@/lib/imageUtils";
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { productPath } from "@/lib/slug";
+import { ProductShareButton } from "@/components/ProductShareButton";
 
 type P = {
   id: string;
@@ -65,6 +66,7 @@ export const ProductGrid = ({ products }: { products: P[] }) => {
                     }`}
                   />
                 </Button>
+                <ProductShareButton productId={product.id} productName={product.name} />
               </div>
             </Link>
             <div className="p-3 md:p-6">

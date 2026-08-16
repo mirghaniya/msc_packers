@@ -16,6 +16,7 @@ import { useSeo, SITE } from "@/lib/useSeo";
 import { parseProductId, productPath } from "@/lib/slug";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/Breadcrumbs";
 import { primarySeoCategory } from "@/lib/seoCategories";
+import { ProductShareButton } from "@/components/ProductShareButton";
 
 const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimit?: number }) => {
   const [expanded, setExpanded] = useState(false);
@@ -292,6 +293,12 @@ const ProductDetail = () => {
                 >
                   <Heart className={`h-5 w-5 transition-colors ${isFavorite(product.id) ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-500"}`} />
                 </Button>
+                <ProductShareButton
+                  productId={product.id}
+                  productName={product.name}
+                  className="absolute top-16 right-4 bg-white/80 hover:bg-white shadow-md h-10 w-10"
+                  iconClassName="h-5 w-5 text-muted-foreground transition-colors hover:text-primary"
+                />
               </div>
 
               {allImages.length > 1 && (
