@@ -107,6 +107,7 @@ export const MultiImageUpload = ({
       });
     } finally {
       setIsUploading(false);
+      setProgress(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
