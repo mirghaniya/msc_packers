@@ -15,6 +15,7 @@ interface Props {
 
 export const PendingGalleryUpload = ({ files, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isConverting, setIsConverting] = useState(false);
 
   const previews = useMemo(
     () =>
@@ -26,7 +27,7 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
     [files]
   );
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (!selected) return;
     const valid: File[] = [];
@@ -38,8 +39,21 @@ export const PendingGalleryUpload = ({ files, onChange }: Props) => {
       if (f.size > maxSize) continue;
       valid.push(f);
     }
-    onChange([...files, ...valid]);
     if (inputRef.current) inputRef.current.value = "";
+    if (valid.length === 0) return;
+
+    setIsConverting(true);
+    try {
+      const processed: File[] = [];
+      for (const f of valid) {
+        processed.push(
+          VIDEO_TYPES.includes(f.type) ? f : await convertImageToWebP(f)
+        );
+      }
+      onChange([...files, ...processed]);
+    } finally {
+      setIsConverting(false);
+    }
   };
 
   const remove = (idx: number) => {
