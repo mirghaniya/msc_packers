@@ -11,6 +11,7 @@ import { ProductShareButton } from "@/components/ProductShareButton";
 type P = {
   id: string;
   name: string;
+  slug?: string | null;
   price: number;
   category: string;
   image_url: string | null;
