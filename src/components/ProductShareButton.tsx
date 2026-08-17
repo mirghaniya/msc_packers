@@ -15,6 +15,7 @@ interface ProductShareButtonProps {
 export const ProductShareButton = ({
   productId,
   productName,
+  productSlug,
   className = "absolute top-12 right-2 bg-white/80 hover:bg-white shadow-md h-8 w-8 md:top-14 md:h-10 md:w-10",
   iconClassName = "h-4 w-4 md:h-5 md:w-5 text-muted-foreground transition-colors hover:text-primary",
 }: ProductShareButtonProps) => {
