@@ -243,7 +243,7 @@ const Products = () => {
                                 }`}
                               />
                             </Button>
-                            <ProductShareButton productId={product.id} productName={product.name} />
+                            <ProductShareButton productId={product.id} productName={product.name} productSlug={(product as any).slug} />
                           </div>
                         </Link>
                         <div className="p-3 md:p-6">

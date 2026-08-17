@@ -11,6 +11,7 @@ import { ProductShareButton } from "@/components/ProductShareButton";
 type P = {
   id: string;
   name: string;
+  slug?: string | null;
   price: number;
   category: string;
   image_url: string | null;
@@ -66,7 +67,7 @@ export const ProductGrid = ({ products }: { products: P[] }) => {
                     }`}
                   />
                 </Button>
-                <ProductShareButton productId={product.id} productName={product.name} />
+                <ProductShareButton productId={product.id} productName={product.name} productSlug={(product as any).slug} />
               </div>
             </Link>
             <div className="p-3 md:p-6">
