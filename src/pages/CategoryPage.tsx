@@ -9,6 +9,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { ProductGrid } from "@/components/ProductGrid";
 import { useSeo, SITE } from "@/lib/useSeo";
 import { SEO_CATEGORIES, faqJsonLd, getSeoCategory, productMatchesCategory } from "@/lib/seoCategories";
+import { productPath } from "@/lib/slug";
 
 const PAGE_SIZE = 24;
 
