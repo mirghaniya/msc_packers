@@ -65,7 +65,7 @@ const CategoryPage = () => {
                 "@type": "ListItem",
                 position: (currentPage - 1) * PAGE_SIZE + i + 1,
                 name: p.name,
-                url: `${SITE}/product/${p.id}`,
+                url: `${SITE}${productPath(p)}`,
               })),
             },
           },
