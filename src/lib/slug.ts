@@ -1,6 +1,7 @@
 // SEO-friendly slug helpers for product URLs.
-// Product URLs look like /product/gold-ring-box-<uuid>. The UUID stays at the
-// end so existing /product/<uuid> links keep working.
+// Public product URLs are /product/<slug> — no UUID exposed.
+// Legacy /product/<uuid> and /product/<slug>-<uuid> links still resolve and
+// are redirected to the clean slug URL by the product detail page.
 
 const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
@@ -12,18 +13,20 @@ export function slugify(input: string): string {
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-    .slice(0, 70)
+    .slice(0, 120)
     .replace(/^-|-$/g, "");
 }
 
-export function productPath(product: { id: string; name?: string | null }): string {
-  const s = slugify(product.name || "");
-  return s ? `/product/${s}-${product.id}` : `/product/${product.id}`;
+type ProductLike = { id: string; name?: string | null; slug?: string | null };
+
+export function productPath(product: ProductLike): string {
+  const s = (product.slug || "").trim() || slugify(product.name || "");
+  return s ? `/product/${s}` : `/product/${product.id}`;
 }
 
-/** Extract the raw product id from a slugged route param. */
+/** Extract the raw product id from a legacy route param (slug-uuid or uuid). */
 export function parseProductId(param?: string): string | undefined {
   if (!param) return undefined;
   const match = param.match(UUID_RE);
-  return match ? match[0] : param;
+  return match ? match[0] : undefined;
 }
