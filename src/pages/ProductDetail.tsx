@@ -42,25 +42,39 @@ const TruncatedDescription = ({ text, wordLimit = 30 }: { text: string; wordLimi
 
 const ProductDetail = () => {
   const { id: idParam } = useParams<{ id: string }>();
-  const id = parseProductId(idParam);
+  const navigate = useNavigate();
+  // Legacy URLs carry the UUID (/product/<uuid> or /product/<slug>-<uuid>);
+  // clean URLs carry only the slug.
+  const legacyId = parseProductId(idParam);
+  const slugParam = legacyId ? undefined : idParam;
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [relatedSlideIndex, setRelatedSlideIndex] = useState(0);
 
   const { data: product, isLoading } = useQuery({
-    queryKey: ["product", id],
+    queryKey: ["product", legacyId ?? slugParam],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const query = supabase.from("products").select("*");
+      const { data, error } = legacyId
+        ? await query.eq("id", legacyId).maybeSingle()
+        : await query.eq("slug", slugParam!).maybeSingle();
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!(legacyId || slugParam),
   });
+
+  const id = product?.id ?? legacyId;
+
+  // Old UUID-based URLs resolve, then permanently move to the clean slug URL.
+  useEffect(() => {
+    if (!product) return;
+    const clean = productPath(product);
+    if (window.location.pathname !== clean) {
+      navigate(clean, { replace: true });
+    }
+  }, [product, navigate]);
 
   const { data: productImages } = useQuery({
     queryKey: ["product-images", id],
