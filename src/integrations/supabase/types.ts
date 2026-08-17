@@ -425,6 +425,7 @@ export type Database = {
           show_add_to_cart: boolean
           show_call_now: boolean
           show_enquiry: boolean
+          slug: string | null
           sr_number: string
           stock_quantity: number | null
           updated_at: string | null
@@ -441,6 +442,7 @@ export type Database = {
           show_add_to_cart?: boolean
           show_call_now?: boolean
           show_enquiry?: boolean
+          slug?: string | null
           sr_number: string
           stock_quantity?: number | null
           updated_at?: string | null
@@ -457,6 +459,7 @@ export type Database = {
           show_add_to_cart?: boolean
           show_call_now?: boolean
           show_enquiry?: boolean
+          slug?: string | null
           sr_number?: string
           stock_quantity?: number | null
           updated_at?: string | null
@@ -661,6 +664,7 @@ export type Database = {
         Args: { p_address_id: string }
         Returns: undefined
       }
+      slugify_text: { Args: { input: string }; Returns: string }
       submit_product_review: {
         Args: {
           p_content?: string
