@@ -21,7 +21,7 @@ const SitemapPage = () => {
   const { data: products } = useQuery({
     queryKey: ["products", "sitemap"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("id,name,category").order("name");
+      const { data, error } = await supabase.from("products").select("id,name,slug,category").order("name");
       if (error) throw error;
       return data;
     },

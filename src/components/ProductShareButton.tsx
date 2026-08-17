@@ -6,6 +6,7 @@ import { productPath } from "@/lib/slug";
 interface ProductShareButtonProps {
   productId: string;
   productName: string;
+  productSlug?: string | null;
   /** Extra classes for positioning (defaults to sitting below the favourite icon) */
   className?: string;
   iconClassName?: string;
