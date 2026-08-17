@@ -128,7 +128,7 @@ export const FeaturedProducts = () => {
                       }`}
                     />
                   </Button>
-                  <ProductShareButton productId={product.id} productName={product.name} />
+                  <ProductShareButton productId={product.id} productName={product.name} productSlug={(product as any).slug} />
                 </div>
                 <div className="p-3 md:p-6">
                   <p className="text-xs font-inter uppercase tracking-wide text-muted-foreground mb-1 md:mb-2">
