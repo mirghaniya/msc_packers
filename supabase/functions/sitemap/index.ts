@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     // Fetch all products
     const { data: products, error } = await supabase
       .from("products")
-      .select("id, name, updated_at")
+      .select("id, name, slug, updated_at")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
         : today;
       return `
   <url>
-    <loc>${baseUrl}/product/${slugify(product.name) ? `${slugify(product.name)}-${product.id}` : product.id}</loc>
+    <loc>${baseUrl}/product/${product.slug || slugify(product.name) || product.id}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
