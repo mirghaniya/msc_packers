@@ -148,7 +148,7 @@ const ProductDetail = () => {
           ? `${product.name} | Mirghaniya Super Centre`
           : product.name.length <= 60
             ? product.name
-            : `${product.name.slice(0, 57).trimEnd()}...`)
+            : `${product.name.slice(0, 57).trimEnd()}...`))
       : "Product — Mirghaniya Super Centre",
     description: buildDescription(),
     path: product ? productPath(product) : undefined,
