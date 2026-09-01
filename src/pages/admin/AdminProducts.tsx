@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useCallback, useMemo } from "react";
-import { Pencil, Trash2, Plus, Images } from "lucide-react";
+import { Pencil, Trash2, Plus, Images, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageUpload } from "@/components/ImageUpload";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
@@ -48,6 +48,10 @@ interface ProductFormData {
   show_add_to_cart: boolean;
   show_enquiry: boolean;
   show_call_now: boolean;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string[];
+  seo_image_alt: string;
 }
 
 const initialFormData: ProductFormData = {
@@ -62,6 +66,10 @@ const initialFormData: ProductFormData = {
   show_add_to_cart: true,
   show_enquiry: true,
   show_call_now: true,
+  meta_title: "",
+  meta_description: "",
+  meta_keywords: [],
+  seo_image_alt: "",
 };
 
 const AdminProducts = () => {
@@ -72,6 +80,7 @@ const AdminProducts = () => {
   const [formData, setFormData] = useState<ProductFormData>(initialFormData);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
+  const [keywordInput, setKeywordInput] = useState("");
 
   const { data: products } = useQuery({
     queryKey: ["admin-products"],
@@ -198,6 +207,7 @@ const AdminProducts = () => {
     setEditingProduct(null);
     setImageInputMethod("upload");
     setPendingGalleryFiles([]);
+    setKeywordInput("");
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -250,7 +260,12 @@ const AdminProducts = () => {
       show_add_to_cart: product.show_add_to_cart ?? true,
       show_enquiry: product.show_enquiry ?? true,
       show_call_now: product.show_call_now ?? true,
+      meta_title: product.meta_title || "",
+      meta_description: product.meta_description || "",
+      meta_keywords: product.meta_keywords || [],
+      seo_image_alt: product.seo_image_alt || "",
     });
+    setKeywordInput("");
     setImageInputMethod(product.image_url?.includes("supabase") ? "upload" : "url");
     setDialogOpen(true);
   };
@@ -265,8 +280,21 @@ const AdminProducts = () => {
   };
 
   // Handle individual field changes to prevent full re-render issues
-  const handleFieldChange = useCallback((field: keyof ProductFormData, value: string | boolean) => {
+  const handleFieldChange = useCallback((field: keyof ProductFormData, value: string | boolean | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const addKeyword = useCallback(() => {
+    const kw = keywordInput.trim().replace(/,+$/, "");
+    if (!kw) return;
+    setFormData(prev =>
+      prev.meta_keywords.includes(kw) ? prev : { ...prev, meta_keywords: [...prev.meta_keywords, kw] }
+    );
+    setKeywordInput("");
+  }, [keywordInput]);
+
+  const removeKeyword = useCallback((kw: string) => {
+    setFormData(prev => ({ ...prev, meta_keywords: prev.meta_keywords.filter(k => k !== kw) }));
   }, []);
 
   return (
@@ -374,6 +402,89 @@ const AdminProducts = () => {
                   />
                 </div>
               </div>
+              <div className="space-y-4 rounded-md border p-3">
+                <div>
+                  <Label className="text-sm font-semibold">SEO Settings</Label>
+                  <p className="text-xs text-muted-foreground">Leave any field empty to use the automatic fallback.</p>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="meta-title">SEO Meta Title</Label>
+                    <span className={`text-xs ${formData.meta_title.length > 60 ? "text-destructive" : "text-muted-foreground"}`}>
+                      {formData.meta_title.length}/60
+                    </span>
+                  </div>
+                  <Input
+                    id="meta-title"
+                    value={formData.meta_title}
+                    onChange={(e) => handleFieldChange("meta_title", e.target.value)}
+                    placeholder={`${formData.name || "Product Name"} | Mirghaniya Super Centre (MSC Packers)`}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="meta-description">SEO Meta Description</Label>
+                    <span className={`text-xs ${formData.meta_description.length > 160 ? "text-destructive" : "text-muted-foreground"}`}>
+                      {formData.meta_description.length}/160
+                    </span>
+                  </div>
+                  <Textarea
+                    id="meta-description"
+                    value={formData.meta_description}
+                    onChange={(e) => handleFieldChange("meta_description", e.target.value)}
+                    placeholder="Falls back to the product description."
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="meta-keywords">SEO Keywords</Label>
+                  <div className="flex gap-2 mt-1">
+                    <Input
+                      id="meta-keywords"
+                      value={keywordInput}
+                      onChange={(e) => setKeywordInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === ",") {
+                          e.preventDefault();
+                          addKeyword();
+                        }
+                      }}
+                      placeholder="Type a keyword and press Enter"
+                    />
+                    <Button type="button" variant="outline" onClick={addKeyword}>Add</Button>
+                  </div>
+                  {formData.meta_keywords.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {formData.meta_keywords.map((kw) => (
+                        <span key={kw} className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs">
+                          {kw}
+                          <button
+                            type="button"
+                            aria-label={`Remove keyword ${kw}`}
+                            onClick={() => removeKeyword(kw)}
+                            className="hover:text-destructive"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="seo-alt">SEO Image ALT Text</Label>
+                  <Input
+                    id="seo-alt"
+                    value={formData.seo_image_alt}
+                    onChange={(e) => handleFieldChange("seo_image_alt", e.target.value)}
+                    placeholder={`${formData.name || "Product Name"} | Mirghaniya Super Centre (MSC Packers)`}
+                  />
+                </div>
+              </div>
+
               <div>
                 <Label>Product Image</Label>
                 <p className="text-xs text-muted-foreground mt-1">Recommended: 800 × 800 px (square). Displayed at 320px on cards, 800px on detail page. Formats: JPG, PNG, WebP. Max 5MB.</p>
