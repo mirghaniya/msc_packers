@@ -182,6 +182,7 @@ const ProductDetail = () => {
             sku: product.sr_number || product.id,
             category: product.category,
             image: productImageUrl ? [productImageUrl] : undefined,
+            keywords: keywords.length ? keywords.join(", ") : undefined,
             brand: { "@type": "Brand", name: "Mirghaniya Super Centre" },
             offers: {
               "@type": "Offer",
@@ -306,7 +307,7 @@ const ProductDetail = () => {
                 ) : (
                   <img
                     src={getOptimizedImageUrl(allImages[currentImageIndex]?.image_url, { width: 800, height: 800 })}
-                    alt={product.name}
+                    alt={currentImageIndex === 0 ? seoAlt : `${product.name} — image ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover"
                   />
                 )}
