@@ -112,23 +112,39 @@ const ProductDetail = () => {
 
   const isDisplayStand = product?.category === "Display Stands";
 
-  const productImageUrl = product?.image_url
-    ? getOptimizedImageUrl(product.image_url, { width: 1200, height: 1200 })
-    : undefined;
+  // Cover image = designated primary (products.image_url); otherwise the first
+  // valid gallery image. The brand logo is only used when neither exists.
+  const coverImage =
+    (product?.image_url || "").trim() ||
+    ((productImages || []) as any[]).find((i) => i.media_type !== "video" && i.image_url)?.image_url ||
+    undefined;
+
+  const productImageUrl = coverImage
+    ? getOptimizedImageUrl(coverImage, { width: 1200, height: 1200 })
+    : `${SITE}/images/hero-bg.jpg`;
+
+  const seoAlt = product
+    ? (product as any).seo_image_alt?.trim() || `${product.name} | Mirghaniya Super Centre (MSC Packers)`
+    : "";
 
   const seoCategory = product ? primarySeoCategory(product) : undefined;
 
   const buildDescription = () => {
     if (!product) return "Premium wholesale jewellery packaging and display stands from Mirghaniya Super Centre, Delhi.";
+    const custom = ((product as any).meta_description || "").trim();
+    if (custom) return custom.slice(0, 160);
     const base = (product.description || "").trim();
     const fallback = `Buy ${product.name} (${product.category}) wholesale from Mirghaniya Super Centre, Delhi. Premium jewellery packaging with Pan-India delivery.`;
     const candidate = base.length >= 50 ? base : `${base ? base + ". " : ""}${fallback}`;
     return candidate.slice(0, 158);
   };
 
+  const keywords: string[] = product ? ((product as any).meta_keywords || []) : [];
+
   useSeo({
     title: product
-      ? (`${product.name} | Mirghaniya Super Centre`.length <= 60
+      ? ((product as any).meta_title?.trim() ||
+        (`${product.name} | Mirghaniya Super Centre`.length <= 60
           ? `${product.name} | Mirghaniya Super Centre`
           : product.name.length <= 60
             ? product.name
