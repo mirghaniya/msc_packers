@@ -153,9 +153,16 @@ const ProductDetail = () => {
     description: buildDescription(),
     path: product ? productPath(product) : undefined,
     image: productImageUrl,
+    imageAlt: seoAlt,
+    imageWidth: 1200,
+    imageHeight: 1200,
     ogType: "product",
     extraMeta: product
       ? [
+          ...(keywords.length ? [{ name: "keywords", content: keywords.join(", ") }] : []),
+          { property: "og:image:secure_url", content: productImageUrl },
+          { property: "og:image:type", content: "image/webp" },
+          { name: "twitter:image:alt", content: seoAlt },
           { property: "product:brand", content: "Mirghaniya Super Centre" },
           { property: "product:availability", content: (product.stock_quantity ?? 1) > 0 ? "in stock" : "out of stock" },
           { property: "product:condition", content: "new" },
