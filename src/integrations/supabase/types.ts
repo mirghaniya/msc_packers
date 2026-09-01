@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -420,8 +420,12 @@ export type Database = {
           id: string
           image_url: string | null
           is_featured: boolean | null
+          meta_description: string | null
+          meta_keywords: string[]
+          meta_title: string | null
           name: string
           price: number
+          seo_image_alt: string | null
           show_add_to_cart: boolean
           show_call_now: boolean
           show_enquiry: boolean
@@ -437,8 +441,12 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          meta_description?: string | null
+          meta_keywords?: string[]
+          meta_title?: string | null
           name: string
           price: number
+          seo_image_alt?: string | null
           show_add_to_cart?: boolean
           show_call_now?: boolean
           show_enquiry?: boolean
@@ -454,8 +462,12 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          meta_description?: string | null
+          meta_keywords?: string[]
+          meta_title?: string | null
           name?: string
           price?: number
+          seo_image_alt?: string | null
           show_add_to_cart?: boolean
           show_call_now?: boolean
           show_enquiry?: boolean
