@@ -55,6 +55,14 @@ const Products = () => {
   });
   const [category, setCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get("sort") || "newest";
+  const setSort = (value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value === "newest") next.delete("sort");
+    else next.set("sort", value);
+    setSearchParams(next, { replace: true });
+  };
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { toggleFavorite, isFavorite, isPending: isFavoritePending } = useFavorites();
 
