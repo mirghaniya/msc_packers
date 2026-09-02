@@ -80,11 +80,30 @@ const Products = () => {
   });
 
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products", category],
+    queryKey: ["products", category, sort],
     queryFn: async () => {
       let query = supabase.from("products").select("*");
       if (category !== "all") {
         query = query.eq("category", category as any);
+      }
+      switch (sort) {
+        case "oldest":
+          query = query.order("created_at", { ascending: true });
+          break;
+        case "price-low-to-high":
+          query = query.order("price", { ascending: true });
+          break;
+        case "price-high-to-low":
+          query = query.order("price", { ascending: false });
+          break;
+        case "name-a-to-z":
+          query = query.order("name", { ascending: true });
+          break;
+        case "name-z-to-a":
+          query = query.order("name", { ascending: false });
+          break;
+        default:
+          query = query.order("created_at", { ascending: false });
       }
       const { data, error } = await query;
       if (error) throw error;
