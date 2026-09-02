@@ -139,6 +139,22 @@ const Products = () => {
   const FilterContent = () => (
     <div className="space-y-6">
       <div>
+        <Label className="text-sm font-medium mb-2 block">Sort By</Label>
+        <Select value={sort} onValueChange={setSort}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="oldest">Oldest</SelectItem>
+            <SelectItem value="price-low-to-high">Price: Low to High</SelectItem>
+            <SelectItem value="price-high-to-low">Price: High to Low</SelectItem>
+            <SelectItem value="name-a-to-z">Name: A to Z</SelectItem>
+            <SelectItem value="name-z-to-a">Name: Z to A</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
         <Label className="text-sm font-medium mb-2 block">Category</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className="w-full">
